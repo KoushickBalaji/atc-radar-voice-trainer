@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VEJS",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Jamshedpur CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 70
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Jamshedpur/AD 2.1VEJS.pdf",
+        "page": 14,
+        "section": "AD 2.17",
+        "effective_date": "2026-01-22",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Area bounded by lines joining points 231000N 0855700E; 230000N 0860000E; 230000N 0862500E; 223900N 0862500E; 223845N 0863500E then along the clockwise arc of a circle of 25NM radius centred on 224847N 0861026E to 222900N 0862700E; 223000N 0860900E; 222600N 0855800E then along the clockwise arc of a circle of 25NM radius centred on 224847N 0861026E to point of origin. | Vertical: FL 70 | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        22.813055555555557,
+        86.1738888888889
+      ],
+      "radius_nm": 25.0
+    }
+  ]
+}

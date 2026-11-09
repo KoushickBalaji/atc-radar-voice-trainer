@@ -1,0 +1,139 @@
+{
+  "icao": "VOPB",
+  "name": "Portblair",
+  "country_code": "IN",
+  "center": [
+    11.647222222222222,
+    92.73333333333333
+  ],
+  "elevation_ft": 93.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "04/22",
+    "length_m": 3277.0,
+    "width_m": 45.0,
+    "ends": [
+      {
+        "name": "04",
+        "lat": 11.629308333333334,
+        "lon": 92.72073333333334,
+        "elevation_ft": 93.0,
+        "bearing_true": 36.4,
+        "bearing_magnetic_chart": 37
+      },
+      {
+        "name": "22",
+        "lat": 11.64481111111111,
+        "lon": 92.732325,
+        "elevation_ft": 17.0,
+        "bearing_true": 216.4
+      }
+    ]
+  },
+  "approach": {
+    "runway": "04",
+    "threshold_index": 0,
+    "course_true": 36.4,
+    "course_magnetic": 37,
+    "glide_deg": 3,
+    "rdh_ft": 55,
+    "intercept_alt_ft": 2100,
+    "line_length_nm": 16,
+    "reference_fixes": []
+  },
+  "navaids": [
+    {
+      "name": "LOC 04 IPBR 110.100 MHz H24",
+      "lat": 11.65461111111111,
+      "lon": 92.73963888888889,
+      "type": "loc"
+    },
+    {
+      "name": "GP 04 IPBR 334.400 MHz H24",
+      "lat": 11.631833333333335,
+      "lon": 92.72397222222223,
+      "type": "gs"
+    },
+    {
+      "name": "DME ILS 04 IPBR CH38X H24",
+      "lat": 11.631805555555555,
+      "lon": 92.72402777777778,
+      "type": "dme"
+    },
+    {
+      "name": "DVOR/DME PPB 115.700 MHz CH104X H24",
+      "lat": 11.649305555555555,
+      "lon": 92.74719444444445,
+      "type": "vor"
+    },
+    {
+      "name": "NDB PB 369 kHz H24",
+      "lat": 11.639472222222222,
+      "lon": 92.73386111111111,
+      "type": "ndb"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 4000,
+    "command_alt_min_ft": 1900,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5000,
+      "spd_kt": 220,
+      "hdg": 51
+    },
+    "suggested_heading": 66,
+    "pre_capture_floor_ft": 1900
+  },
+  "sources": [
+    "Airport Layouts/Portblair/AD 2.1VOPB.pdf",
+    "Airport Layouts/Portblair/VOPB-ILS-LOC Y-RWY-04.pdf"
+  ],
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Portblair/AD 2.1VOPB.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Portblair/AD 2.1VOPB.pdf",
+        "page": 21,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Portblair/AD 2.1VOPB.pdf",
+        "page": 24,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [
+      "RWY 04/22: threshold separation 2135 m vs published length 3277 m; displacement needs review"
+    ],
+    "ils": {
+      "source_file": "Airport Layouts/Portblair/VOPB-ILS-LOC Y-RWY-04.pdf",
+      "source_page": 1,
+      "level_basis": "Published horizontal final segment visually checked; only vector-to-final segment modeled",
+      "visually_reviewed": true,
+      "warnings": []
+    },
+    "training": "Spawn, speed envelope, localizer capture window, and tolerances are exercise settings, not published procedure minima. Final segment only; omitted chart fixes are not synthesized."
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. Minimum-altitude warnings unavailable for this airport.",
+  "training_overrides": {
+    "localizer_min_nm": 7,
+    "localizer_max_nm": 12
+  },
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

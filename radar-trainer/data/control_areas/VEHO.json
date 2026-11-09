@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VEHO",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Hollongi CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "AMSL",
+        "value": 6500.0
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Hollongi/AD 2.1VEHO.pdf",
+        "page": 11,
+        "section": "AD 2.17",
+        "effective_date": "2026-07-09",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits ATZ: Circular area centered on 265756N 0933721E within a 10NM radius. | Vertical: 6500 FT AMSL | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        26.965555555555554,
+        93.62249999999999
+      ],
+      "radius_nm": 10.0
+    }
+  ]
+}

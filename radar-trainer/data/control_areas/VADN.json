@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "icao": "VADN",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Daman CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 60
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Daman/AD 2.1VADN.pdf",
+        "page": 10,
+        "section": "AD 2.17",
+        "effective_date": "2023-06-15",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Area bounded by lines joining points 200303N 0724958E; 202003N 0722558E; 204103N 0722958E; 205103N 0724958E; 204203N 0730958E; 200703N 0730758E to point of origin. | Vertical: FL 60 | Class: D | Hours: HO"
+      },
+      "shape": "polygon",
+      "edges": [
+        {
+          "point": [
+            20.050833333333333,
+            72.83277777777778
+          ]
+        },
+        {
+          "point": [
+            20.334166666666665,
+            72.43277777777779
+          ]
+        },
+        {
+          "point": [
+            20.684166666666666,
+            72.49944444444445
+          ]
+        },
+        {
+          "point": [
+            20.850833333333334,
+            72.83277777777778
+          ]
+        },
+        {
+          "point": [
+            20.700833333333332,
+            73.16611111111112
+          ]
+        },
+        {
+          "point": [
+            20.1175,
+            73.13277777777778
+          ]
+        }
+      ]
+    }
+  ]
+}

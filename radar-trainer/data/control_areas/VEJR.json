@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VEJR",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Jagdalpur CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 105
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Jagdalpur/AD 2.1VEJR.pdf",
+        "page": 15,
+        "section": "AD 2.17",
+        "effective_date": "2026-07-09",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Area bounded by lines joining points 184526N 0821927E then along the clockwise arc of a circle of 25NM radius centred on 190426N 0820213E to 190712N 0822827E then along the counter clockwise arc of a circle of 15NM radius centred on 185250N 0823313E to point of origin. | Vertical: FL 105 | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        19.073888888888888,
+        82.03694444444444
+      ],
+      "radius_nm": 25.0
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "icao": "VOCL",
+  "name": "Calicut",
+  "country_code": "IN",
+  "center": [
+    11.137777777777778,
+    75.95055555555555
+  ],
+  "elevation_ft": 343.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "10/28",
+    "length_m": 2860.0,
+    "width_m": 45.0,
+    "ends": [
+      {
+        "name": "10",
+        "lat": 11.138444444444444,
+        "lon": 75.94273333333334,
+        "elevation_ft": 315.0,
+        "bearing_true": 100.9,
+        "bearing_magnetic_chart": 103
+      },
+      {
+        "name": "28",
+        "lat": 11.133555555555555,
+        "lon": 75.96844722222222,
+        "elevation_ft": 326.0,
+        "bearing_true": 280.9
+      }
+    ]
+  },
+  "approach": {
+    "runway": "10",
+    "threshold_index": 0,
+    "course_true": 100.9,
+    "course_magnetic": 103,
+    "glide_deg": 3,
+    "rdh_ft": 54,
+    "intercept_alt_ft": 2200,
+    "line_length_nm": 16,
+    "reference_fixes": []
+  },
+  "navaids": [
+    {
+      "name": "LOC 28 CAT I ICAC 109.500 MHz H24",
+      "lat": 11.138694444444443,
+      "lon": 75.94144444444444,
+      "type": "loc"
+    },
+    {
+      "name": "LOC 10 CAT I ICLB 110.700 MHz H24",
+      "lat": 11.133305555555555,
+      "lon": 75.96972222222223,
+      "type": "loc"
+    },
+    {
+      "name": "GP 28 ICAC 332.600 MHz H24",
+      "lat": 11.134722222222221,
+      "lon": 75.96569444444445,
+      "type": "gs"
+    },
+    {
+      "name": "GP 10 ICLB 330.200 MHz H24",
+      "lat": 11.136861111111111,
+      "lon": 75.94513888888889,
+      "type": "gs"
+    },
+    {
+      "name": "DME ILS 28 ICAC CH32X H24",
+      "lat": 11.13475,
+      "lon": 75.96572222222223,
+      "type": "dme"
+    },
+    {
+      "name": "DME ILS 10 ICLB CH44X H24",
+      "lat": 11.136861111111111,
+      "lon": 75.94513888888889,
+      "type": "dme"
+    },
+    {
+      "name": "DVOR/DME CLC 116.500 MHz CH112X H24 AD 2 VOCL -12 27 NOV 2025 AMDT 06-25 Airports Authority of India AIRAC effective date India AIP",
+      "lat": 11.134166666666665,
+      "lon": 75.95658333333334,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 4000,
+    "command_alt_min_ft": 2000,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5000,
+      "spd_kt": 220,
+      "hdg": 116
+    },
+    "suggested_heading": 131,
+    "pre_capture_floor_ft": 2000
+  },
+  "sources": [
+    "Airport Layouts/Calicut/AD 2.1VOCL.pdf",
+    "Airport Layouts/Calicut/VOCL-ILS Z-RWY-10.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": -2.11,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Calicut/AD 2.1VOCL.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Calicut/AD 2.1VOCL.pdf",
+        "page": 9,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Calicut/AD 2.1VOCL.pdf",
+        "page": 12,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [],
+    "ils": {
+      "source_file": "Airport Layouts/Calicut/VOCL-ILS Z-RWY-10.pdf",
+      "source_page": 1,
+      "level_basis": "Published horizontal final segment visually checked; only vector-to-final segment modeled",
+      "visually_reviewed": true,
+      "warnings": [
+        "Cat C/D restricted to 220 KIAS MAX."
+      ]
+    },
+    "training": "Spawn, speed envelope, localizer capture window, and tolerances are exercise settings, not published procedure minima. Final segment only; omitted chart fixes are not synthesized."
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. Minimum-altitude warnings unavailable for this airport.",
+  "training_overrides": {
+    "localizer_min_nm": 7,
+    "localizer_max_nm": 12
+  },
+  "msaw_availability": "chart supplied; boundary validation pending"
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VAPO",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Pune CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "H24",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 80
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Pune/AD 2.1VAPO.pdf",
+        "page": 12,
+        "section": "AD 2.17",
+        "effective_date": "2025-01-23",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits MCTR: Area bounded by lines joining points 185507N 0735457E; 185507N 0744315E then along the clockwise arc of a circle of 50NM radius centred on 183503N 0735457E to 174546N 0740452E; 182349N 0733731E then along the clockwise arc of a circle of 20NM radius centred on 183503N 0735457E to point of origin. | Vertical: FL 80 | Class: D | Hours: H24"
+      },
+      "shape": "circle",
+      "center": [
+        18.584166666666665,
+        73.91583333333334
+      ],
+      "radius_nm": 50.0
+    }
+  ]
+}

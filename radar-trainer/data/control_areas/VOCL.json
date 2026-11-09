@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "icao": "VOCL",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Calicut CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "H24",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "AMSL",
+        "value": 5500.0
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Calicut/AD 2.1VOCL.pdf",
+        "page": 11,
+        "section": "AD 2.17",
+        "effective_date": "2025-11-27",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Circular area centered on 110816N 0755702E within a 12NM radius. | Vertical: 5500 FT AMSL | Class: D | Hours: H24"
+      },
+      "shape": "circle",
+      "center": [
+        11.137777777777778,
+        75.95055555555555
+      ],
+      "radius_nm": 12.0
+    },
+    {
+      "id": "cta-a",
+      "name": "Calicut CTA Area A",
+      "kind": "CTA",
+      "classification": "D",
+      "hours": "H24",
+      "lower": {
+        "reference": "AMSL",
+        "value": 1200.0
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 145
+      },
+      "excludes": [
+        "ctr"
+      ],
+      "source": {
+        "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+        "section": "ENR 2.1",
+        "edition": "July 2026",
+        "evidence": "Calicut Control Area- A Area bounded by 111559N 0762114E; 111500N 0763100E; 105500N 0762900E; 105559N 0761912E then along clockwise arc of 25 NM radius centered 110816N 0755702E to 111559N 0762114E, excluding the airspace contained within Calicut CTR. \u2022 FL145 / 1200 FT AMSL. Airspace classified as Class \u2018D\u2019. FL 145 / 1200FT AMSL D",
+        "snapshot": "scratch/enr-2.1.html"
+      },
+      "shape": "polygon",
+      "edges": [
+        {
+          "point": [
+            11.266388888888889,
+            76.35388888888889
+          ]
+        },
+        {
+          "point": [
+            11.25,
+            76.51666666666667
+          ]
+        },
+        {
+          "point": [
+            10.916666666666666,
+            76.48333333333333
+          ]
+        },
+        {
+          "point": [
+            10.933055555555555,
+            76.32
+          ]
+        },
+        {
+          "point": [
+            11.266388888888889,
+            76.35388888888889
+          ],
+          "center": [
+            11.137777777777778,
+            75.95055555555555
+          ],
+          "radius_nm": 25.0,
+          "clockwise": true
+        }
+      ]
+    },
+    {
+      "id": "cta-b",
+      "name": "Calicut CTA Area B",
+      "kind": "CTA",
+      "classification": "D",
+      "hours": "H24",
+      "lower": {
+        "reference": "AMSL",
+        "value": 7500.0
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 145
+      },
+      "excludes": [],
+      "source": {
+        "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+        "section": "ENR 2.1",
+        "edition": "July 2026",
+        "evidence": "Calicut Control Area- B Area bounded by lines joining points 104318N 0755424E; 104318N 0750000E; 113000N 0750000E; 113000N 0753828E; 112713N 0754021E then along the counter clockwise arc of a circle of 25NM radius centred on 110816N 0755702E to point of origin. FL 145 / 7500FT AMSL D",
+        "snapshot": "scratch/enr-2.1.html"
+      },
+      "shape": "polygon",
+      "edges": [
+        {
+          "point": [
+            10.721666666666668,
+            75.90666666666667
+          ]
+        },
+        {
+          "point": [
+            10.721666666666668,
+            75.0
+          ]
+        },
+        {
+          "point": [
+            11.5,
+            75.0
+          ]
+        },
+        {
+          "point": [
+            11.5,
+            75.64111111111112
+          ]
+        },
+        {
+          "point": [
+            11.45361111111111,
+            75.6725
+          ]
+        },
+        {
+          "point": [
+            10.721666666666668,
+            75.90666666666667
+          ],
+          "center": [
+            11.137777777777778,
+            75.95055555555555
+          ],
+          "radius_nm": 25.0,
+          "clockwise": false
+        }
+      ]
+    }
+  ]
+}

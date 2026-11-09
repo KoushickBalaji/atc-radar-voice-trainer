@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--background);
+      color: var(--foreground);
+      font-family: inherit;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .mono { font-family: 'Consolas', 'Courier New', monospace; }
+
+    /* ── Radar canvas placeholder ── */
+    .radar-area {
+      background:
+        radial-gradient(ellipse at 50% 50%, #0a1f0d 0%, #040d06 55%, #020704 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .radar-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(34,197,94,0.12);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .radar-sweep {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 50%; height: 1px;
+      transform-origin: left center;
+      background: linear-gradient(to right, rgba(34,197,94,0.6), transparent);
+      animation: sweep 4s linear infinite;
+      border-radius: 1px;
+    }
+    @keyframes sweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    /* Aircraft blips */
+    .blip {
+      position: absolute;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .blip::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      animation: ping 2s ease-out infinite;
+    }
+    @keyframes ping {
+      0% { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+    .blip-label {
+      position: absolute;
+      left: 10px; top: -4px;
+      font-size: 11px;
+      white-space: nowrap;
+      font-family: 'Consolas', monospace;
+      line-height: 1.3;
+      pointer-events: none;
+    }
+    /* Leader line */
+    .blip-line {
+      position: absolute;
+      width: 20px; height: 1px;
+      background: rgba(34,197,94,0.5);
+      left: 7px; top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* ── Right sidebar ── */
+    .sidebar {
+      width: 300px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--sidebar, var(--background));
+      border-left: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    /* ── Filter tabs ── */
+    .filter-tabs {
+      display: flex;
+      gap: 2px;
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--border);
+      background: var(--card);
+      flex-shrink: 0;
+    }
+    .filter-tab {
+      flex: 1;
+      padding: 4px 0;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.12s;
+      color: var(--muted-foreground);
+      letter-spacing: 0.04em;
+      font-family: 'Consolas', monospace;
+      border: 1px solid transparent;
+    }
+    .filter-tab.active {
+      background: rgba(255,255,255,0.08);
+      color: var(--foreground);
+      border-color: var(--border);
+    }
+    .filter-tab:hover:not(.active) { color: var(--foreground); background: rgba(255,255,255,0.04); }
+    .filter-tab.alert-tab { color: #f87171; }
+    .filter-tab.alert-tab.active { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.3); }
+
+    /* ── Column headers ── */
+    .col-header {
+      display: grid;
+      grid-template-columns: 10px 90px 68px 42px 42px 1fr;
+      gap: 0;
+      padding: 4px 10px;
+      font-size: 10px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+      border-bottom: 1px solid var(--border);
+      font-family: 'Consolas', monospace;
+      background: var(--card);
+      flex-shrink: 0;
+    }
+
+    /* ── Strip rows ── */
+    .strip-row {
+      display: grid;
+      grid-template-columns: 10px 90px 68px 42px 42px 1fr;
+      gap: 0;
+      align-items: center;
+      padding: 0 10px;
+      cursor: pointer;
+      border-left: 2px solid transparent;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.12s, border-left-color 0.12s;
+      min-height: 34px;
+    }
+    .strip-row:hover { background: rgba(255,255,255,0.04); }
+    .strip-row.selected {
+      background: rgba(255,255,255,0.06) !important;
+    }
+    .strip-row.selected.sel-cft { border-left-color: #ef4444; }
+    .strip-row.selected.sel-arr { border-left-color: #06b6d4; }
+    .strip-row.selected.sel-dep { border-left-color: #f59e0b; }
+    .strip-row.selected.sel-enr { border-left-color: #22c55e; }
+
+    /* Conflict row background pulse */
+    @keyframes cft-row-pulse {
+      0%,100% { background: rgba(239,68,68,0.08); }
+      50%      { background: rgba(239,68,68,0.14); }
+    }
+    .cft-row { animation: cft-row-pulse 1.2s ease-in-out infinite; border-left: 2px solid #ef4444 !important; }
+
+    /* ── Status dot ── */
+    .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    @keyframes dot-blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+    .dot-blink { animation: dot-blink 0.8s ease-in-out infinite; }
+
+    /* ── Trend arrows ── */
+    .up { color: #4ade80; }
+    .dn { color: #f87171; }
+    .lv { color: #475569; }
+
+    /* ── State badge ── */
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 1px 5px; border-radius: 3px;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.04em;
+      font-family: 'Consolas', monospace;
+      white-space: nowrap;
+    }
+
+    /* ── Scrollable strip list ── */
+    .strip-list { overflow-y: auto; flex: 1; min-height: 0; }
+
+    /* ── Detail panel ── */
+    .detail-panel {
+      flex-shrink: 0;
+      overflow: hidden;
+      transition: max-height 0.22s ease;
+      max-height: 0;
+      border-top: 1px solid var(--border);
+      background: var(--card);
+    }
+    .detail-panel.open { max-height: 310px; overflow-y: auto; }
+
+    /* Detail internals */
+    .detail-header {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 12px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .detail-ac-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      margin: 0;
+    }
+    .detail-cell {
+      background: var(--card);
+      padding: 7px 12px;
+      font-size: 11px;
+    }
+    .detail-cell-label {
+      color: var(--muted-foreground);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: block;
+      margin-bottom: 2px;
+      font-family: 'Consolas', monospace;
+    }
+    .detail-cell-val {
+      font-family: 'Consolas', monospace;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .detail-note {
+      margin: 8px 10px;
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+    .detail-note-cft { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.35); color: #fca5a5; }
+    .detail-note-info { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: #fcd34d; }
+
+    /* ── Status bar ── */
+    .status-bar {
+      display: flex; gap: 8px; align-items: center;
+      padding: 5px 10px;
+      border-top: 1px solid var(--border);
+      background: var(--card);
+      font-size: 10px;
+      font-family: 'Consolas', monospace;
+      color: var(--muted-foreground);
+      flex-shrink: 0;
+    }
+    .status-conn {
+      display: flex; align-items: center; gap: 3px;
+    }
+    .status-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: #22c55e;
+    }
+
+    /* ── PTT button ── */
+    .ptt-wrap {
+      flex-shrink: 0;
+      padding: 10px 12px 12px;
+      background: var(--card);
+      border-top: 2px solid var(--border);
+    }
+    .ptt-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 11px 16px;
+      border-radius: 9px;
+      border: 1.5px solid rgba(239,68,68,0.5);
+      background: rgba(239,68,68,0.08);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.1s;
+      position: relative;
+      overflow: hidden;
+    }
+    .ptt-btn:hover { background: rgba(239,68,68,0.13); border-color: rgba(239,68,68,0.7); }
+    .ptt-btn.active {
+      background: rgba(239,68,68,0.22);
+      border-color: #ef4444;
+      box-shadow: 0 0 18px rgba(239,68,68,0.3), inset 0 0 12px rgba(239,68,68,0.08);
+    }
+    .ptt-icon {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(239,68,68,0.15);
+      border: 1.5px solid #ef4444;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      transition: all 0.1s;
+      flex-shrink: 0;
+    }
+    .ptt-btn.active .ptt-icon {
+      background: #ef4444;
+      box-shadow: 0 0 12px rgba(239,68,68,0.7);
+    }
+    .ptt-text-wrap { display: flex; flex-direction: column; gap: 1px; }
+    .ptt-label { font-size: 13px; font-weight: 700; letter-spacing: 0.03em; color: var(--foreground); }
+    .ptt-sub   { font-size: 10px; color: var(--muted-foreground); font-family: 'Consolas', monospace; }
+    .ptt-btn.active .ptt-label { color: #fca5a5; }
+
+    /* TX wave bars */
+    .tx-wave { display: none; align-items: center; gap: 2px; margin-left: auto; }
+    .ptt-btn.active .tx-wave { display: flex; }
+    @keyframes wave { from { height: 4px; } to { height: 20px; } }
+    .wbar {
+      width: 3px; border-radius: 2px; height: 4px;
+      background: #ef4444;
+      animation: wave 0.45s ease-in-out infinite alternate;
+    }
+
+    /* TX status blink */
+    @keyframes tx-blink { 0%,100%{opacity:1} 50%{opacity:0.1} }
+    .tx-live { color: #ef4444; animation: tx-blink 0.5s step-end infinite; font-weight: 700; }
+
+    /* Topbar */
+    .topbar {
+      display: flex; align-items: center;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 0 16px;
+      height: 44px;
+      flex-shrink: 0;
+    }
+    .scenario-badge {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-family: 'Consolas', monospace;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .radar-area { display: none; }
+      .sidebar { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ Top Bar ══════════════════════════════════════════════════ -->
+  <div class="topbar">
+    <div style="flex:1">
+      <span style="font-weight:700;font-size:14px;">Voice Radar Trainer</span>
+      <span style="color:var(--muted-foreground);font-size:12px;margin-left:10px;">Coimbatore (VOCB) · RWY 23 · ILS approach</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span class="scenario-badge" style="color:#f59e0b;">⏸ Paused — ready for practice</span>
+      <button onclick="togglePause(this)" style="background:var(--primary);color:var(--primary-foreground);border:none;border-radius:7px;padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer;">▶ Start / Resume</button>
+    </div>
+  </div>
+
+  <!-- ══ Main area ════════════════════════════════════════════════ -->
+  <div style="display:flex;flex:1;min-height:0;overflow:hidden;">
+
+    <!-- ── Radar scope (placeholder) ───────────────────────────── -->
+    <div class="radar-area" style="flex:1;min-width:0;position:relative;">
+
+      <!-- Range rings -->
+      <div class="radar-ring" style="width:15%;height:15%;"></div>
+      <div class="radar-ring" style="width:30%;height:30%;"></div>
+      <div class="radar-ring" style="width:50%;height:50%;"></div>
+      <div class="radar-ring" style="width:70%;height:70%;"></div>
+      <div class="radar-ring" style="width:90%;height:90%;"></div>
+
+      <!-- Cross-hairs -->
+      <div style="position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(34,197,94,0.07);"></div>
+      <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(34,197,94,0.07);"></div>
+
+      <!-- Sweep arm -->
+      <div class="radar-sweep"></div>
+
+      <!-- Compass labels -->
+      <span style="position:absolute;top:4px;left:50%;transform:translateX(-50%);font-size:11px;color:rgba(34,197,94,0.4);font-family:monospace;">N 000°</span>
+      <span style="position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:11px;color:rgba(34,197,94,0.4);font-family:monospace;">S 180°</span>
+      <span style="position:absolute;left:6px;top:50%;transform:translateY(-50%);font-size:11px;color:rgba(34,197,94,0.4);font-family:monospace;">W 270°</span>
+      <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:11px;color:rgba(34,197,94,0.4);font-family:monospace;">E 090°</span>
+
+      <!-- Aircraft blip: AFR123 (arrival, NW quadrant) -->
+      <div style="position:absolute;top:34%;left:28%;">
+        <div class="blip" style="background:#06b6d4;" id="blip-AFR">
+          <div style="width:100%;height:100%;border-radius:50%;background:#06b6d4;"></div>
+          <div style="position:absolute;inset:-3px;border-radius:50%;border:1px solid #06b6d4;animation:ping 2s ease-out infinite;opacity:0.4;"></div>
+        </div>
+        <div class="blip-line" style="background:rgba(6,182,212,0.4);"></div>
+        <div class="blip-label" style="color:#06b6d4;">
+          <div style="font-weight:700;font-size:11px;">AFR123</div>
+          <div style="font-size:10px;opacity:0.8;">50 ↓ 220kt 240°</div>
+        </div>
+        <!-- velocity vector -->
+        <div style="position:absolute;top:3px;left:3px;width:22px;height:1px;background:rgba(6,182,212,0.5);transform-origin:left center;transform:rotate(240deg);"></div>
+      </div>
+
+      <!-- Aircraft blip: UAE512 (conflict, center) -->
+      <div style="position:absolute;top:44%;left:44%;">
+        <div class="blip" style="background:#ef4444;animation:dot-pulse 0.6s ease-in-out infinite;" id="blip-UAE">
+          <div style="width:100%;height:100%;border-radius:50%;background:#ef4444;"></div>
+          <div style="position:absolute;inset:-3px;border-radius:50%;border:2px solid #ef4444;animation:ping 0.8s ease-out infinite;opacity:0.6;"></div>
+        </div>
+        <div class="blip-line" style="background:rgba(239,68,68,0.5);"></div>
+        <div class="blip-label" style="color:#f87171;">
+          <div style="font-weight:700;font-size:11px;">UAE512 ⚠</div>
+          <div style="font-size:10px;opacity:0.8;">92 ↓ 190kt 215°</div>
+        </div>
+        <div style="position:absolute;top:3px;left:3px;width:20px;height:1px;background:rgba(239,68,68,0.5);transform-origin:left center;transform:rotate(215deg);"></div>
+      </div>
+
+      <!-- Aircraft blip: IGO456 (departure, SW) -->
+      <div style="position:absolute;top:62%;left:52%;">
+        <div class="blip" style="background:#f59e0b;" id="blip-IGO">
+          <div style="width:100%;height:100%;border-radius:50%;background:#f59e0b;"></div>
+          <div style="position:absolute;inset:-3px;border-radius:50%;border:1px solid #f59e0b;animation:ping 2s ease-out infinite 0.5s;opacity:0.4;"></div>
+        </div>
+        <div class="blip-line" style="background:rgba(245,158,11,0.4);"></div>
+        <div class="blip-label" style="color:#fbbf24;">
+          <div style="font-weight:700;font-size:11px;">IGO456</div>
+          <div style="font-size:10px;opacity:0.8;">80 ↑ 280kt 095°</div>
+        </div>
+        <div style="position:absolute;top:3px;left:3px;width:26px;height:1px;background:rgba(245,158,11,0.5);transform-origin:left center;transform:rotate(95deg);"></div>
+      </div>
+
+      <!-- Aircraft blip: SIA871 (enroute, NE) -->
+      <div style="position:absolute;top:28%;left:60%;">
+        <div class="blip" style="background:#22c55e;" id="blip-SIA">
+          <div style="width:100%;height:100%;border-radius:50%;background:#22c55e;"></div>
+          <div style="position:absolute;inset:-3px;border-radius:50%;border:1px solid #22c55e;animation:ping 2.5s ease-out infinite 1s;opacity:0.3;"></div>
+        </div>
+        <div class="blip-line" style="background:rgba(34,197,94,0.4);"></div>
+        <div class="blip-label" style="color:#4ade80;">
+          <div style="font-weight:700;font-size:11px;">SIA871</div>
+          <div style="font-size:10px;opacity:0.8;">FL18 → 320kt 330°</div>
+        </div>
+        <div style="position:absolute;top:3px;left:3px;width:20px;height:1px;background:rgba(34,197,94,0.4);transform-origin:left center;transform:rotate(330deg);"></div>
+      </div>
+
+      <!-- Airport label -->
+      <div style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);text-align:center;">
+        <span style="font-size:11px;color:rgba(34,197,94,0.5);font-family:monospace;letter-spacing:0.1em;">VOCB · COIMBATORE · 39 NM</span>
+      </div>
+
+      <!-- Scale indicator -->
+      <div style="position:absolute;bottom:16px;left:16px;font-size:10px;color:rgba(34,197,94,0.35);font-family:monospace;">
+        Scroll to zoom · drag to pan
+      </div>
+
+      <!-- Conflict alert banner -->
+      <div id="conflict-banner" style="position:absolute;top:12px;left:50%;transform:translateX(-50%);background:rgba(239,68,68,0.9);color:white;padding:4px 14px;border-radius:6px;font-size:12px;font-family:monospace;font-weight:700;animation:cft-pulse 1s ease-out infinite;display:flex;align-items:center;gap:6px;white-space:nowrap;">
+        ⚠ CONFLICT · UAE512 ↔ AFR123 · 2.1 NM · 200 ft
+      </div>
+    </div>
+
+    <!-- ── Right sidebar ─────────────────────────────────────────── -->
+    <div class="sidebar">
+
+      <!-- Filter tabs -->
+      <div class="filter-tabs">
+        <span class="filter-tab active" onclick="setFilter('ALL',this)">ALL <span style="opacity:0.55;">4</span></span>
+        <span class="filter-tab" onclick="setFilter('ARR',this)">ARR <span style="opacity:0.55;">2</span></span>
+        <span class="filter-tab" onclick="setFilter('DEP',this)">DEP <span style="opacity:0.55;">1</span></span>
+        <span class="filter-tab alert-tab" onclick="setFilter('CFT',this)">⚠ <span style="opacity:0.8;">1</span></span>
+      </div>
+
+      <!-- Column headers -->
+      <div class="col-header">
+        <span></span>
+        <span>Callsign</span>
+        <span>Alt / Clrd</span>
+        <span>Spd</span>
+        <span>Hdg</span>
+        <span>State</span>
+      </div>
+
+      <!-- Strip list (scrollable) -->
+      <div class="strip-list" id="strip-list">
+
+        <!-- ① CONFLICT — UAE512 -->
+        <div class="strip-row cft-row" id="row-UAE" onclick="selectAircraft('UAE',this)">
+          <div class="dot dot-blink" style="background:#ef4444;"></div>
+          <span class="mono" style="font-weight:700;color:#fca5a5;font-size:12px;">UAE512</span>
+          <span class="mono" style="font-size:11px;">
+            <span class="dn">9.2↓</span><span style="color:#ef4444;font-size:10px;"> 7.0</span>
+          </span>
+          <span class="mono" style="font-size:11px;color:#fca5a5;">190</span>
+          <span class="mono" style="font-size:11px;color:#fca5a5;">215°</span>
+          <span class="badge" style="background:rgba(239,68,68,0.25);color:#fca5a5;border:1px solid rgba(239,68,68,0.45);">⚠ SEP</span>
+        </div>
+
+        <!-- ② AFR123 — Arrival -->
+        <div class="strip-row" id="row-AFR" onclick="selectAircraft('AFR',this)">
+          <div class="dot" style="background:#06b6d4;"></div>
+          <span class="mono" style="font-weight:700;color:#67e8f9;font-size:12px;">AFR123</span>
+          <span class="mono" style="font-size:11px;">
+            <span class="dn">5.0↓</span><span style="color:#06b6d4;font-size:10px;"> 3.0</span>
+          </span>
+          <span class="mono" style="font-size:11px;color:var(--foreground);">220</span>
+          <span class="mono" style="font-size:11px;color:var(--foreground);">240°</span>
+          <span class="badge" style="background:rgba(6,182,212,0.12);color:#67e8f9;border:1px solid rgba(6,182,212,0.28);">ILS 23</span>
+        </div>
+
+        <!-- ③ IGO456 — Departure -->
+        <div class="strip-row" id="row-IGO" onclick="selectAircraft('IGO',this)">
+          <div class="dot" style="background:#f59e0b;"></div>
+          <span class="mono" style="font-weight:700;color:#fcd34d;font-size:12px;">IGO456</span>
+          <span class="mono" style="font-size:11px;">
+            <span class="up">8.0↑</span><span style="color:#f59e0b;font-size:10px;"> FL16</span>
+          </span>
+          <span class="mono" style="font-size:11px;color:var(--foreground);">280</span>
+          <span class="mono" style="font-size:11px;color:var(--foreground);">095°</span>
+          <span class="badge" style="background:rgba(245,158,11,0.12);color:#fcd34d;border:1px solid rgba(245,158,11,0.28);">SID</span>
+        </div>
+
+        <!-- ④ SIA871 — Enroute -->
+        <div class="strip-row" id="row-SIA" onclick="selectAircraft('SIA',this)">
+          <div class="dot" style="background:#22c55e;"></div>
+          <span class="mono" style="font-weight:700;color:#86efac;font-size:12px;">SIA871</span>
+          <span class="mono lv" style="font-size:11px;">FL18 →</span>
+          <span class="mono" style="font-size:11px;color:var(--foreground);">320</span>
+          <span class="mono" style="font-size:11px;color:var(--foreground);">330°</span>
+          <span class="badge" style="background:rgba(34,197,94,0.08);color:#86efac;border:1px solid rgba(34,197,94,0.22);">Level</span>
+        </div>
+
+      </div><!-- end strip-list -->
+
+      <!-- Detail panel — slides open on row click -->
+      <div class="detail-panel" id="detail-panel">
+
+        <!-- Header row: dot + callsign + full name -->
+        <div class="detail-header" id="detail-header"></div>
+
+        <!-- Data grid: 2-col, edge-to-edge cells -->
+        <div class="detail-grid" id="detail-grid"></div>
+
+        <!-- Conflict / note banners -->
+        <div id="detail-banners"></div>
+
+      </div>
+
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span class="status-conn"><span class="status-dot"></span>STT</span>
+        <span class="status-conn"><span class="status-dot"></span>LLM</span>
+        <span class="status-conn"><span class="status-dot"></span>TTS</span>
+        <span style="margin-left:auto;" id="tx-label">Voice only · V to transmit</span>
+      </div>
+
+      <!-- PTT button -->
+      <div class="ptt-wrap">
+        <div class="ptt-btn" id="ptt"
+          onmousedown="startTX()" onmouseup="stopTX()"
+          ontouchstart="startTX(event)" ontouchend="stopTX()">
+          <div class="ptt-icon">🎙</div>
+          <div class="ptt-text-wrap">
+            <span class="ptt-label" id="ptt-label">Hold to Talk</span>
+            <span class="ptt-sub">Press &amp; hold · or hold <kbd style="font-family:monospace;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:3px;padding:0 3px;">V</kbd></span>
+          </div>
+          <div class="tx-wave" id="tx-wave">
+            <div class="wbar" style="animation-delay:0s;"></div>
+            <div class="wbar" style="animation-delay:0.08s;"></div>
+            <div class="wbar" style="animation-delay:0.16s;"></div>
+            <div class="wbar" style="animation-delay:0.24s;"></div>
+            <div class="wbar" style="animation-delay:0.32s;"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end sidebar -->
+  </div>
+
+  <style>
+    @keyframes wave {
+      from { height: 4px; }
+      to   { height: 20px; }
+    }
+    .wbar { height: 4px; }
+  </style>
+
+  <script>
+    // ── Aircraft data ──────────────────────────────────────────────
+    const aircraft = {
+      UAE: {
+        callsign: 'UAE512', full: 'Emirates 512', type: 'B77W', squawk: '4201',
+        from: 'OMDB', to: 'VOCB', alt: '9,200 ft', trend: '↓', clrdAlt: '7,000 ft',
+        spd: '190 kt', hdg: '215°', rwy: 'RWY 23',
+        acColor: '#ef4444', selClass: 'sel-cft',
+        conflict: 'SEP ALERT with AFR123 · ETA 2:00 · Vert: 200 ft · Horiz: 2.1 NM',
+        note: null,
+      },
+      AFR: {
+        callsign: 'AFR123', full: 'Air France 123', type: 'A320', squawk: '3425',
+        from: 'OMDB', to: 'VOCB', alt: '5,000 ft', trend: '↓', clrdAlt: '3,000 ft',
+        spd: '220 kt', hdg: '240°', rwy: 'RWY 23',
+        acColor: '#06b6d4', selClass: 'sel-arr',
+        conflict: null,
+        note: 'Pilot requested go-around hold at 3,000 ft if unstabilised. Tower: 118.150 MHz.',
+      },
+      IGO: {
+        callsign: 'IGO456', full: 'IndiGo 456', type: 'B737', squawk: '2301',
+        from: 'VOCB', to: 'VIDP', alt: '8,000 ft', trend: '↑', clrdAlt: 'FL160',
+        spd: '280 kt', hdg: '095°', rwy: 'RWY 05',
+        acColor: '#f59e0b', selClass: 'sel-dep',
+        conflict: null, note: null,
+      },
+      SIA: {
+        callsign: 'SIA871', full: 'Singapore 871', type: 'A350', squawk: '0712',
+        from: 'VHHH', to: 'VOBL', alt: 'FL180', trend: '→', clrdAlt: 'FL180',
+        spd: '320 kt', hdg: '330°', rwy: 'Coordinated',
+        acColor: '#22c55e', selClass: 'sel-enr',
+        conflict: null, note: null,
+      },
+    };
+
+    let selectedAC = null;
+
+    function selectAircraft(id, rowEl) {
+      if (selectedAC === id) {
+        selectedAC = null;
+        document.querySelectorAll('.strip-row').forEach(r => r.classList.remove('selected','sel-cft','sel-arr','sel-dep','sel-enr'));
+        document.getElementById('detail-panel').classList.remove('open');
+        return;
+      }
+      selectedAC = id;
+      document.querySelectorAll('.strip-row').forEach(r => r.classList.remove('selected','sel-cft','sel-arr','sel-dep','sel-enr'));
+      rowEl.classList.add('selected', aircraft[id].selClass);
+
+      const ac = aircraft[id];
+      const trendColor = ac.trend === '↑' ? '#4ade80' : ac.trend === '↓' ? '#f87171' : '#475569';
+
+      // Header
+      document.getElementById('detail-header').innerHTML = `
+        <div class="detail-ac-dot" style="background:${ac.acColor};"></div>
+        <div>
+          <div style="font-family:monospace;font-weight:700;font-size:14px;color:${ac.acColor};line-height:1.2;">${ac.callsign}</div>
+          <div style="font-size:11px;color:var(--muted-foreground);">${ac.full} · ${ac.type}</div>
+        </div>`;
+
+      // Data grid — 8 cells, 2 columns
+      const cells = [
+        ['Altitude',   `<span style="color:${trendColor}">${ac.alt} ${ac.trend}</span>`],
+        ['Cleared to', ac.clrdAlt],
+        ['Airspeed',   ac.spd],
+        ['Heading',    ac.hdg],
+        ['Squawk',     ac.squawk],
+        ['Runway',     ac.rwy],
+        ['Origin',     ac.from],
+        ['Dest',       ac.to],
+      ];
+      document.getElementById('detail-grid').innerHTML = cells.map(([lbl, val]) => `
+        <div class="detail-cell">
+          <span class="detail-cell-label">${lbl}</span>
+          <span class="detail-cell-val">${val}</span>
+        </div>`).join('');
+
+      // Banners
+      let banners = '';
+      if (ac.conflict) banners += `
+        <div class="detail-note detail-note-cft">
+          ⚠ <strong>CONFLICT ALERT</strong> — ${ac.conflict}
+        </div>`;
+      if (ac.note) banners += `
+        <div class="detail-note detail-note-info">
+          📋 <strong>Note:</strong> ${ac.note}
+        </div>`;
+      document.getElementById('detail-banners').innerHTML = banners;
+
+      document.getElementById('detail-panel').classList.add('open');
+    }
+
+    // ── Filter tabs ───────────────────────────────────────────────
+    function setFilter(filter, tabEl) {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      tabEl.classList.add('active');
+    }
+
+    // ── PTT ──────────────────────────────────────────────────────
+    let txActive = false;
+
+    function startTX(e) {
+      if (e) e.preventDefault();
+      if (txActive) return;
+      txActive = true;
+      const ptt = document.getElementById('ptt');
+      ptt.classList.add('active');
+      document.getElementById('ptt-label').textContent = 'Transmitting…';
+      document.getElementById('tx-wave').style.display = 'flex';
+      document.getElementById('tx-label').innerHTML = '<span class="tx-live">● TX</span>';
+    }
+
+    function stopTX() {
+      if (!txActive) return;
+      txActive = false;
+      document.getElementById('ptt').classList.remove('active');
+      document.getElementById('ptt-label').textContent = 'Hold to Talk';
+      document.getElementById('tx-wave').style.display = 'none';
+      document.getElementById('tx-label').textContent = 'Voice only · V to transmit';
+    }
+
+    // Keyboard PTT — hold V
+    document.addEventListener('keydown', e => { if (e.code === 'KeyV' && !e.repeat) startTX(); });
+    document.addEventListener('keyup',   e => { if (e.code === 'KeyV') stopTX(); });
+
+    // Auto-select the conflict row on load
+    setTimeout(() => selectAircraft('UAE', document.getElementById('row-UAE')), 200);
+  </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+{
+  "icao": "VOJV",
+  "name": "Jindal Vijayanagar",
+  "country_code": "IN",
+  "center": [
+    15.174999999999999,
+    76.635
+  ],
+  "elevation_ft": 1686.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "13/31",
+    "length_m": 1956.0,
+    "width_m": 30.0,
+    "ends": [
+      {
+        "name": "13",
+        "lat": 15.179030555555554,
+        "lon": 76.62984722222221,
+        "elevation_ft": 1636.5,
+        "bearing_true": 134.39
+      },
+      {
+        "name": "31",
+        "lat": 15.16728611111111,
+        "lon": 76.6422,
+        "elevation_ft": 1686.4,
+        "bearing_true": 314.39
+      }
+    ]
+  },
+  "approach": null,
+  "navaids": [
+    {
+      "name": "NDB VN 217 kHz AS ATS",
+      "lat": 15.176027777777778,
+      "lon": 76.62883333333333,
+      "type": "ndb"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 5000,
+    "command_alt_min_ft": 2700,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 6000,
+      "spd_kt": 220,
+      "hdg": 149
+    },
+    "suggested_heading": 164
+  },
+  "sources": [
+    "Airport Layouts/Jindal Vijayanagar/AD 2.1VOJV.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": -1.33,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Jindal Vijayanagar/AD 2.1VOJV.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Jindal Vijayanagar/AD 2.1VOJV.pdf",
+        "page": 23,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Jindal Vijayanagar/AD 2.1VOJV.pdf",
+        "page": 25,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [
+      "RWY 13 dimensions from ordered AD 2.12 remarks",
+      "RWY 31 dimensions from ordered AD 2.12 remarks",
+      "RWY 13/31: threshold separation 1860 m vs published length 1956 m; displacement needs review"
+    ]
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. No ILS is identified in the supplied documents; no automatic approach capture. Minimum-altitude warnings unavailable for this airport.",
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

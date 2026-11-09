@@ -1,0 +1,174 @@
+{
+  "icao": "VOHS",
+  "name": "Shamshabad (RGI)",
+  "country_code": "IN",
+  "center": [
+    17.240555555555556,
+    78.42888888888889
+  ],
+  "elevation_ft": 2030.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "09R/27L",
+    "length_m": 4260.0,
+    "width_m": 60.0,
+    "ends": [
+      {
+        "name": "09R",
+        "lat": 17.22858611111111,
+        "lon": 78.41280833333334,
+        "elevation_ft": 1970.0,
+        "bearing_true": 88.91,
+        "bearing_magnetic_chart": 90
+      },
+      {
+        "name": "27L",
+        "lat": 17.22913611111111,
+        "lon": 78.45285277777778,
+        "elevation_ft": 2026.0,
+        "bearing_true": 268.91
+      }
+    ]
+  },
+  "approach": {
+    "runway": "09R",
+    "threshold_index": 0,
+    "course_true": 88.91,
+    "course_magnetic": 90,
+    "glide_deg": 3,
+    "rdh_ft": 56.3,
+    "intercept_alt_ft": 3600,
+    "line_length_nm": 16,
+    "reference_fixes": []
+  },
+  "navaids": [
+    {
+      "name": "LOC 09R CAT III IHBD 108.500 MHz H24",
+      "lat": 17.229194444444442,
+      "lon": 78.45702777777778,
+      "type": "loc"
+    },
+    {
+      "name": "LOC 09L CAT I IHYN 108.900 MHz H24",
+      "lat": 17.23125,
+      "lon": 78.45733333333334,
+      "type": "loc"
+    },
+    {
+      "name": "LOC 27L CAT I ISAM 110.900 MHz H24",
+      "lat": 17.228527777777778,
+      "lon": 78.40869444444445,
+      "type": "loc"
+    },
+    {
+      "name": "GP 09R IHBD 329.900 MHz H24",
+      "lat": 17.2275,
+      "lon": 78.41602777777778,
+      "type": "gs"
+    },
+    {
+      "name": "GP 09L 329.300 MHz H24",
+      "lat": 17.231805555555553,
+      "lon": 78.41833333333334,
+      "type": "gs"
+    },
+    {
+      "name": "GP 27L ISAM 330.800 MHz H24",
+      "lat": 17.22797222222222,
+      "lon": 78.44947222222223,
+      "type": "gs"
+    },
+    {
+      "name": "DME ILS 09R IHBD CH22X H24",
+      "lat": 17.22747222222222,
+      "lon": 78.41602777777778,
+      "type": "dme"
+    },
+    {
+      "name": "DME ILS 09L IHYN CH26X H24",
+      "lat": 17.231805555555553,
+      "lon": 78.41833333333334,
+      "type": "dme"
+    },
+    {
+      "name": "DME ILS 27L ISAM CH46X H24",
+      "lat": 17.22797222222222,
+      "lon": 78.44947222222223,
+      "type": "dme"
+    },
+    {
+      "name": "DVOR/DME HIA 113.800 MHz CH85X H24 AD 2 VOHS -12 29 OCT 2026 AMDT 10-26 Airports Authority of India India AIP",
+      "lat": 17.229638888888886,
+      "lon": 78.40575000000001,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 6000,
+    "command_alt_min_ft": 3400,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5600,
+      "spd_kt": 220,
+      "hdg": 104
+    },
+    "suggested_heading": 119,
+    "pre_capture_floor_ft": 3400
+  },
+  "sources": [
+    "Airport Layouts/Shamshabad (RGI)/AD 2.1VOHS.pdf",
+    "Airport Layouts/Shamshabad (RGI)/VOHS-ILS-LOC-RWY-09R.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": -1.25,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Shamshabad (RGI)/AD 2.1VOHS.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Shamshabad (RGI)/AD 2.1VOHS.pdf",
+        "page": 7,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Shamshabad (RGI)/AD 2.1VOHS.pdf",
+        "page": 12,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [],
+    "ils": {
+      "source_file": "Airport Layouts/Shamshabad (RGI)/VOHS-ILS-LOC-RWY-09R.pdf",
+      "source_page": 1,
+      "level_basis": "Published horizontal final segment visually checked; only vector-to-final segment modeled",
+      "visually_reviewed": true,
+      "warnings": [
+        "Cat C/D restricted to 210 KIAS MAX."
+      ]
+    },
+    "training": "Spawn, speed envelope, localizer capture window, and tolerances are exercise settings, not published procedure minima. Final segment only; omitted chart fixes are not synthesized."
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. Other airport runways are not modeled. Minimum-altitude warnings unavailable for this airport.",
+  "training_overrides": {
+    "localizer_min_nm": 7,
+    "localizer_max_nm": 12
+  },
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

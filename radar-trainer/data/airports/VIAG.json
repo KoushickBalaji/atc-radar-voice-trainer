@@ -1,0 +1,136 @@
+{
+  "icao": "VIAG",
+  "name": "Agra",
+  "country_code": "IN",
+  "center": [
+    27.159166666666664,
+    77.96055555555556
+  ],
+  "elevation_ft": 550.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "05/23",
+    "length_m": 2866.0,
+    "width_m": 46.0,
+    "ends": [
+      {
+        "name": "05",
+        "lat": 27.148611111111112,
+        "lon": 77.95055555555555,
+        "elevation_ft": 550.2,
+        "bearing_true": 46.0,
+        "bearing_magnetic_chart": 46
+      },
+      {
+        "name": "23",
+        "lat": 27.166666666666668,
+        "lon": 77.97111111111111,
+        "elevation_ft": 550.3,
+        "bearing_true": 226.0
+      }
+    ]
+  },
+  "approach": {
+    "runway": "05",
+    "threshold_index": 0,
+    "course_true": 46.0,
+    "course_magnetic": 46,
+    "glide_deg": 3,
+    "rdh_ft": 72,
+    "intercept_alt_ft": 2500,
+    "line_length_nm": 16,
+    "reference_fixes": []
+  },
+  "navaids": [
+    {
+      "name": "LOC 05 IARA 110.700 MHz As Required",
+      "lat": 27.16888888888889,
+      "lon": 77.9738888888889,
+      "type": "loc"
+    },
+    {
+      "name": "GP 05 GP 330.200 MHz As Required",
+      "lat": 27.149722222222223,
+      "lon": 77.95361111111112,
+      "type": "gs"
+    },
+    {
+      "name": "DME ILS 05 IARA CH44X As Required",
+      "lat": 27.149722222222223,
+      "lon": 77.95361111111112,
+      "type": "dme"
+    },
+    {
+      "name": "VOR/DME AGG 112.000 MHz CH57X As Required",
+      "lat": 27.157277777777775,
+      "lon": 77.95655555555555,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 4000,
+    "command_alt_min_ft": 2300,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5000,
+      "spd_kt": 220,
+      "hdg": 61
+    },
+    "suggested_heading": 76,
+    "pre_capture_floor_ft": 2300
+  },
+  "sources": [
+    "Airport Layouts/Agra/AD 2.1VIAG.pdf",
+    "Airport Layouts/Agra/VIAG-ILS-RWY-05-CAT-II.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": -0.25,
+    "epoch": 1995,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Agra/AD 2.1VIAG.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Agra/AD 2.1VIAG.pdf",
+        "page": 4,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Agra/AD 2.1VIAG.pdf",
+        "page": 8,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [],
+    "ils": {
+      "source_file": "Airport Layouts/Agra/VIAG-ILS-RWY-05-CAT-II.pdf",
+      "source_page": 1,
+      "level_basis": "Published horizontal final segment visually checked; only vector-to-final segment modeled",
+      "visually_reviewed": true,
+      "warnings": []
+    },
+    "training": "Spawn, speed envelope, localizer capture window, and tolerances are exercise settings, not published procedure minima. Final segment only; omitted chart fixes are not synthesized."
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. Other airport runways are not modeled. Minimum-altitude warnings unavailable for this airport.",
+  "training_overrides": {
+    "localizer_min_nm": 7,
+    "localizer_max_nm": 12
+  },
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

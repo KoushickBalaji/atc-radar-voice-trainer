@@ -1,0 +1,161 @@
+{
+  "icao": "VANM",
+  "name": "Navi Mumbai",
+  "country_code": "IN",
+  "center": [
+    18.994444444444447,
+    73.07027777777778
+  ],
+  "elevation_ft": 33.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "08/26",
+    "length_m": 3700.0,
+    "width_m": 45.0,
+    "ends": [
+      {
+        "name": "08",
+        "lat": 18.982405555555555,
+        "lon": 73.04793333333333,
+        "elevation_ft": 31.5,
+        "bearing_true": 82.37
+      },
+      {
+        "name": "26",
+        "lat": 18.986122222222225,
+        "lon": 73.07711111111111,
+        "elevation_ft": 29.9,
+        "bearing_true": 262.37,
+        "bearing_magnetic_chart": 263
+      }
+    ]
+  },
+  "approach": {
+    "runway": "26",
+    "threshold_index": 1,
+    "course_true": 262.37,
+    "course_magnetic": 263,
+    "glide_deg": 3,
+    "rdh_ft": 55,
+    "intercept_alt_ft": 3300,
+    "line_length_nm": 18,
+    "reference_fixes": []
+  },
+  "navaids": [
+    {
+      "name": "LOC 08 CAT I INVM 109.300 MHz As ATS",
+      "lat": 18.987444444444446,
+      "lon": 73.08749999999999,
+      "type": "loc"
+    },
+    {
+      "name": "LOC 26 CAT I INMB 108.900 MHz As ATS",
+      "lat": 18.982027777777777,
+      "lon": 73.04505555555555,
+      "type": "loc"
+    },
+    {
+      "name": "GP 08 332.000 MHz As ATS",
+      "lat": 18.98172222222222,
+      "lon": 73.05125,
+      "type": "gs"
+    },
+    {
+      "name": "GP 26 329.300 MHz As ATS",
+      "lat": 18.98461111111111,
+      "lon": 73.07402777777777,
+      "type": "gs"
+    },
+    {
+      "name": "DME ILS 08 INVM CH30X As ATS",
+      "lat": 18.981694444444443,
+      "lon": 73.05125,
+      "type": "dme"
+    },
+    {
+      "name": "DME ILS 26 INMB CH26X As ATS",
+      "lat": 18.984583333333333,
+      "lon": 73.07402777777777,
+      "type": "dme"
+    },
+    {
+      "name": "DVOR/DME NMB 117.800 MHz CH125X As ATS AD 2 V ANM -23 19 MAR 2026 AMDT 02-26 Airports Authority of India India AIP",
+      "lat": 18.982138888888887,
+      "lon": 73.06652777777778,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 1,
+    "practice_alt_ft": 4000,
+    "command_alt_min_ft": 3100,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 18,
+      "cross_nm": 3,
+      "alt_ft": 5300,
+      "spd_kt": 220,
+      "hdg": 277
+    },
+    "suggested_heading": 292,
+    "pre_capture_floor_ft": 3100
+  },
+  "sources": [
+    "Airport Layouts/Navi Mumbai/AD 2.1VANM.pdf",
+    "Airport Layouts/Navi Mumbai/VANM-ILS Y- CATII-III-OR LOC-RWY-26.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": -0.75,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Navi Mumbai/AD 2.1VANM.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Navi Mumbai/AD 2.1VANM.pdf",
+        "page": 18,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Navi Mumbai/AD 2.1VANM.pdf",
+        "page": 23,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [
+      "RWY 08/26: threshold separation 3094 m vs published length 3700 m; displacement documented"
+    ],
+    "ils": {
+      "source_file": "Airport Layouts/Navi Mumbai/VANM-ILS Y- CATII-III-OR LOC-RWY-26.pdf",
+      "source_page": 1,
+      "level_basis": "Published horizontal final segment visually checked; only vector-to-final segment modeled",
+      "visually_reviewed": true,
+      "warnings": [
+        "Speed restricted to 185 KIAS MAX",
+        " LLZ  COVERAGE RESTRICTED TO 16NM FROM THRESHOLD",
+        "CAUTION - GP interception beyond ",
+        "CAUTION FOR HIGH TERRAIN BETWEEN 8-14NM FROM"
+      ]
+    },
+    "training": "Spawn, speed envelope, localizer capture window, and tolerances are exercise settings, not published procedure minima. Final segment only; omitted chart fixes are not synthesized."
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. Minimum-altitude warnings unavailable for this airport.",
+  "training_overrides": {
+    "localizer_min_nm": 11,
+    "localizer_max_nm": 14
+  },
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

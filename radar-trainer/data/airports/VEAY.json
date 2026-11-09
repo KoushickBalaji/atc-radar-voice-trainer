@@ -1,0 +1,139 @@
+{
+  "icao": "VEAY",
+  "name": "Ayodhya",
+  "country_code": "IN",
+  "center": [
+    26.753888888888888,
+    82.15027777777779
+  ],
+  "elevation_ft": 329.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "11/29",
+    "length_m": 2200.0,
+    "width_m": 45.0,
+    "ends": [
+      {
+        "name": "11",
+        "lat": 26.75236111111111,
+        "lon": 82.15268055555556,
+        "elevation_ft": 329.0,
+        "bearing_true": 114.03
+      },
+      {
+        "name": "29",
+        "lat": 26.744194444444446,
+        "lon": 82.17283888888889,
+        "elevation_ft": 328.0,
+        "bearing_true": 294.03,
+        "bearing_magnetic_chart": 294
+      }
+    ]
+  },
+  "approach": {
+    "runway": "29",
+    "threshold_index": 1,
+    "course_true": 294.03,
+    "course_magnetic": 294,
+    "glide_deg": 3,
+    "rdh_ft": 55.7,
+    "intercept_alt_ft": 2000,
+    "line_length_nm": 16,
+    "reference_fixes": []
+  },
+  "navaids": [
+    {
+      "name": "LOC 29 CAT I IAYD 108.500 MHz As ATS",
+      "lat": 26.753555555555554,
+      "lon": 82.14975000000001,
+      "type": "loc"
+    },
+    {
+      "name": "GP 29 IAYD 329.090 MHz As ATS",
+      "lat": 26.746472222222224,
+      "lon": 82.17022222222222,
+      "type": "gs"
+    },
+    {
+      "name": "DME ILS 29 IAYD CH22X As ATS",
+      "lat": 26.7465,
+      "lon": 82.17025000000001,
+      "type": "dme"
+    },
+    {
+      "name": "DVOR/DME AYD 116.000 MHz CH107X AS ATS",
+      "lat": 26.74663888888889,
+      "lon": 82.17266666666667,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 1,
+    "practice_alt_ft": 4000,
+    "command_alt_min_ft": 1800,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5000,
+      "spd_kt": 220,
+      "hdg": 309
+    },
+    "suggested_heading": 324,
+    "pre_capture_floor_ft": 1800
+  },
+  "sources": [
+    "Airport Layouts/Ayodhya/AD 2.1VEAY.pdf",
+    "Airport Layouts/Ayodhya/VEAY-ILS (Z)-RWY-29.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": 0.25,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Ayodhya/AD 2.1VEAY.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Ayodhya/AD 2.1VEAY.pdf",
+        "page": 6,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Ayodhya/AD 2.1VEAY.pdf",
+        "page": 9,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [],
+    "ils": {
+      "source_file": "Airport Layouts/Ayodhya/VEAY-ILS (Z)-RWY-29.pdf",
+      "source_page": 1,
+      "level_basis": "Published horizontal final segment visually checked; only vector-to-final segment modeled",
+      "visually_reviewed": true,
+      "warnings": [
+        "Speed restricted to 185 KIAS Max",
+        "for Cat C  restricted to"
+      ]
+    },
+    "training": "Spawn, speed envelope, localizer capture window, and tolerances are exercise settings, not published procedure minima. Final segment only; omitted chart fixes are not synthesized."
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. Minimum-altitude warnings unavailable for this airport.",
+  "training_overrides": {
+    "localizer_min_nm": 7,
+    "localizer_max_nm": 12
+  },
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

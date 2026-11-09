@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "icao": "VAHS",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Rajkot INTL CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 65
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Rajkot INTL/AD 2.1VAHS.pdf",
+        "page": 7,
+        "section": "AD 2.17",
+        "effective_date": "2026-01-22",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Circular area centered on 222318N 0710246E within a 25NM radius. | Vertical: FL 65 | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        22.388333333333332,
+        71.0461111111111
+      ],
+      "radius_nm": 25.0
+    },
+    {
+      "id": "cta-a",
+      "name": "Rajkot INTL CTA",
+      "kind": "CTA",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "FL",
+        "value": 65
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 145
+      },
+      "excludes": [],
+      "source": {
+        "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+        "section": "ENR 2.1",
+        "edition": "July 2026",
+        "evidence": "Rajkot Control Area- Area bounded by lines joining points 214847N 0705135E; 220404N 0704226E then along the clockwise arc of a circle of 15NM radius centred on 221834N 0704646E to 222951N 0703603E; 224815N 0703900E; 224830N 0704952E; 224821N 0710127E then along the clockwise arc of a circle of 25NM radius centred on 222318N 0710246E to 220154N 0711650E to point of origin. FL 145 / FL 65 D",
+        "snapshot": "scratch/enr-2.1.html"
+      },
+      "shape": "polygon",
+      "edges": [
+        {
+          "point": [
+            21.813055555555557,
+            70.85972222222222
+          ]
+        },
+        {
+          "point": [
+            22.067777777777778,
+            70.70722222222223
+          ]
+        },
+        {
+          "point": [
+            22.497500000000002,
+            70.60083333333333
+          ],
+          "center": [
+            22.309444444444445,
+            70.77944444444444
+          ],
+          "radius_nm": 15.0,
+          "clockwise": true
+        },
+        {
+          "point": [
+            22.804166666666667,
+            70.65
+          ]
+        },
+        {
+          "point": [
+            22.808333333333334,
+            70.83111111111111
+          ]
+        },
+        {
+          "point": [
+            22.805833333333332,
+            71.02416666666666
+          ]
+        },
+        {
+          "point": [
+            22.031666666666666,
+            71.28055555555555
+          ],
+          "center": [
+            22.388333333333332,
+            71.0461111111111
+          ],
+          "radius_nm": 25.0,
+          "clockwise": true
+        }
+      ]
+    }
+  ]
+}

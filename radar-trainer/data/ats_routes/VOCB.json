@@ -1,0 +1,158 @@
+{
+  "edition": "July 2026",
+  "base_url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/",
+  "section": "ENR 3.1 and 3.2",
+  "route_pages_checked": 521,
+  "area": "cta-b",
+  "hub": "CCB",
+  "fixes": {
+    "CCB": [
+      11.0330556,
+      77.0486111
+    ],
+    "MATPA": [
+      10.9222222,
+      77.76
+    ],
+    "CLC": [
+      11.1341667,
+      75.9566667
+    ],
+    "MDI": [
+      9.8308333,
+      78.0902778
+    ],
+    "PAMLU": [
+      12.1811111,
+      76.4811111
+    ],
+    "LUNTA": [
+      11.3833333,
+      76.3244444
+    ],
+    "IBETI": [
+      11.2972222,
+      77.4480556
+    ],
+    "MEVOP": [
+      11.2947222,
+      77.8647222
+    ],
+    "SATBI": [
+      11.4061111,
+      77.2416667
+    ],
+    "AKTIM": [
+      12.0611111,
+      77.5827778
+    ],
+    "CIA": [
+      10.1505556,
+      76.3725
+    ],
+    "DODSI": [
+      9.9047222,
+      76.9936111
+    ],
+    "LENBO": [
+      11.4427778,
+      77.1372222
+    ],
+    "UGABA": [
+      12.1497222,
+      77.2913889
+    ]
+  },
+  "routes": {
+    "J16": {
+      "source": "IN-ENR%203.1J16-en-GB.html",
+      "branches": [
+        [
+          "CCB",
+          "MATPA"
+        ],
+        [
+          "CCB",
+          "CLC"
+        ]
+      ]
+    },
+    "R461": {
+      "source": "IN-ENR%203.1R461-en-GB.html",
+      "branches": [
+        [
+          "CCB",
+          "MDI"
+        ],
+        [
+          "CCB",
+          "PAMLU"
+        ]
+      ]
+    },
+    "V34": {
+      "source": "IN-ENR%203.1V34-en-GB.html",
+      "branches": [
+        [
+          "CCB",
+          "LUNTA"
+        ]
+      ]
+    },
+    "W114": {
+      "source": "IN-ENR%203.1W114-en-GB.html",
+      "branches": [
+        [
+          "CCB",
+          "IBETI"
+        ]
+      ]
+    },
+    "W115": {
+      "source": "IN-ENR%203.1W115-en-GB.html",
+      "branches": [
+        [
+          "CCB",
+          "MEVOP"
+        ]
+      ]
+    },
+    "W118": {
+      "source": "IN-ENR%203.1W118-en-GB.html",
+      "branches": [
+        [
+          "CCB",
+          "SATBI",
+          "AKTIM"
+        ],
+        [
+          "CCB",
+          "CIA"
+        ]
+      ]
+    },
+    "W119": {
+      "source": "IN-ENR%203.1W119-en-GB.html",
+      "branches": [
+        [
+          "CCB",
+          "CLC"
+        ]
+      ]
+    },
+    "W43": {
+      "source": "IN-ENR%203.1W43-en-GB.html",
+      "branches": [
+        [
+          "CCB",
+          "DODSI"
+        ],
+        [
+          "CCB",
+          "LENBO",
+          "UGABA"
+        ]
+      ]
+    }
+  }
+}

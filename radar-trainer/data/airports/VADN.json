@@ -1,0 +1,96 @@
+{
+  "icao": "VADN",
+  "name": "Daman",
+  "country_code": "IN",
+  "center": [
+    20.433888888888887,
+    72.8425
+  ],
+  "elevation_ft": 42.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "03/21",
+    "length_m": 1801.0,
+    "width_m": 45.0,
+    "ends": [
+      {
+        "name": "03",
+        "lat": 20.425294444444447,
+        "lon": 72.83886388888888,
+        "elevation_ft": 29.4,
+        "bearing_true": 26.0
+      },
+      {
+        "name": "21",
+        "lat": 20.438369444444444,
+        "lon": 72.84540277777778,
+        "elevation_ft": 41.8,
+        "bearing_true": 206.0
+      }
+    ]
+  },
+  "approach": null,
+  "navaids": [
+    {
+      "name": "DVOR/DME DMN 113.300 MHz CH80X 0200-0800 (UTC) except Sat/ Sun & holidays",
+      "lat": 20.44236111111111,
+      "lon": 72.85444444444444,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 4000,
+    "command_alt_min_ft": 1100,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5000,
+      "spd_kt": 220,
+      "hdg": 41
+    },
+    "suggested_heading": 56
+  },
+  "sources": [
+    "Airport Layouts/Daman/AD 2.1VADN.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": 0.06,
+    "epoch": 2015,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Daman/AD 2.1VADN.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Daman/AD 2.1VADN.pdf",
+        "page": 7,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Daman/AD 2.1VADN.pdf",
+        "page": 11,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [
+      "RWY 03/21: threshold separation 1605 m vs published length 1801 m; displacement needs review",
+      "RWY 10/28: threshold separation 881 m vs published length 1035 m; displacement needs review"
+    ]
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. Other airport runways are not modeled. No ILS is identified in the supplied documents; no automatic approach capture. Minimum-altitude warnings unavailable for this airport.",
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

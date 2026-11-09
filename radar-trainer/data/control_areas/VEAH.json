@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VEAH",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Azamgarh CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "AMSL",
+        "value": 2000.0
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Azamgarh/AD 2.1VEAH.pdf",
+        "page": 7,
+        "section": "AD 2.17",
+        "effective_date": "2024-10-03",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits ATZ: Circular area centered on 260926N 0830650E within a 5NM radius. | Vertical: 2000 FT AMSL | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        26.15722222222222,
+        83.11388888888888
+      ],
+      "radius_nm": 5.0
+    }
+  ]
+}

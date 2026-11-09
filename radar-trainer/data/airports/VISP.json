@@ -1,0 +1,139 @@
+{
+  "icao": "VISP",
+  "name": "Sarsawaa",
+  "country_code": "IN",
+  "center": [
+    29.994722222222222,
+    77.42444444444445
+  ],
+  "elevation_ft": 896.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "09/27",
+    "length_m": 2743.0,
+    "width_m": 45.0,
+    "ends": [
+      {
+        "name": "09",
+        "lat": 29.994286111111112,
+        "lon": 77.41038611111112,
+        "elevation_ft": 888.0,
+        "bearing_true": 89.0
+      },
+      {
+        "name": "27",
+        "lat": 29.994344444444444,
+        "lon": 77.43882222222223,
+        "elevation_ft": 896.0,
+        "bearing_true": 269.0,
+        "bearing_magnetic_chart": 268
+      }
+    ]
+  },
+  "approach": {
+    "runway": "27",
+    "threshold_index": 1,
+    "course_true": 269.0,
+    "course_magnetic": 268,
+    "glide_deg": 3,
+    "rdh_ft": 57,
+    "intercept_alt_ft": 2600,
+    "line_length_nm": 16,
+    "reference_fixes": []
+  },
+  "navaids": [
+    {
+      "name": "LOC 27 CAT I ISSW 110.100 MHz HJ",
+      "lat": 29.99427777777778,
+      "lon": 77.40727777777778,
+      "type": "loc"
+    },
+    {
+      "name": "GP 27 ISSW 334.400 MHz HJ",
+      "lat": 29.99325,
+      "lon": 77.4353888888889,
+      "type": "gs"
+    },
+    {
+      "name": "DME ILS 27 ISSW CH38Y HJ",
+      "lat": 29.99325,
+      "lon": 77.4353888888889,
+      "type": "dme"
+    },
+    {
+      "name": "DVOR/DME SSW 111.600 MHz CH53X HJ",
+      "lat": 29.991944444444446,
+      "lon": 77.4161388888889,
+      "type": "vor"
+    },
+    {
+      "name": "NDB SP 298 kHz HJ",
+      "lat": 29.989166666666666,
+      "lon": 77.43791666666667,
+      "type": "ndb"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 1,
+    "practice_alt_ft": 4000,
+    "command_alt_min_ft": 2400,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5000,
+      "spd_kt": 220,
+      "hdg": 284
+    },
+    "suggested_heading": 299,
+    "pre_capture_floor_ft": 2400
+  },
+  "sources": [
+    "Airport Layouts/Sarsawaa/AD 2.1VISP.pdf",
+    "Airport Layouts/Sarsawaa/VISP-ILS-CAT-I-RWY-27.PDF"
+  ],
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Sarsawaa/AD 2.1VISP.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Sarsawaa/AD 2.1VISP.pdf",
+        "page": 8,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Sarsawaa/AD 2.1VISP.pdf",
+        "page": 12,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [],
+    "ils": {
+      "source_file": "Airport Layouts/Sarsawaa/VISP-ILS-CAT-I-RWY-27.PDF",
+      "source_page": 1,
+      "level_basis": "Published horizontal final segment visually checked; chart TCH used as RDH when so labeled; only vector-to-final segment modeled",
+      "visually_reviewed": true,
+      "warnings": [
+        "Caution:-"
+      ]
+    },
+    "training": "Spawn, speed envelope, localizer capture window, and tolerances are exercise settings, not published procedure minima. Final segment only; omitted chart fixes are not synthesized."
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. Minimum-altitude warnings unavailable for this airport.",
+  "training_overrides": {
+    "localizer_min_nm": 7,
+    "localizer_max_nm": 12
+  },
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VAKS",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Keshod CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 105
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Keshod/AD 2.1VAKS.pdf",
+        "page": 9,
+        "section": "AD 2.17",
+        "effective_date": "2026-01-22",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Area bounded by lines joining points 212802N 0702359E; 213402N 0702859E; 213202N 0703459E; 211903N 0703959E; 205703N 0701559E; 210803N 0701759E then along the clockwise arc of a circle of 11NM radius centred on 211905N 0701542E to point of origin. | Vertical: FL 105 | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        21.318055555555556,
+        70.26166666666667
+      ],
+      "radius_nm": 11.0
+    }
+  ]
+}

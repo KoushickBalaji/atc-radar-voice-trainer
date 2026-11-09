@@ -1,0 +1,778 @@
+% =============================================================================
+%  Article de recherche - Simulateur d'entraînement au contrôle aérien
+%  augmenté par IA : validation systématique et étude comparative multi-modèles
+%  Auteur : Nicolas Marano - URCA / supercalculateur ROMEO (NVIDIA GH200)
+%
+%  Compilation :  docs/article/build.sh  (copie les figures, génère les
+%  tableaux depuis bench/results/*.json puis pdflatex x2 via WSL).
+%  AUCUN chiffre n'est saisi à la main : tables/ et numbers.tex sont générés
+%  par gen_tables.py depuis les JSON de résultats.
+% =============================================================================
+\documentclass[10pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric,fit}
+\usepackage{xcolor}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,
+            urlcolor=blue!50!black,pdftitle={Simulateur ATC augmenté par IA},
+            pdfauthor={Nicolas Marano}]{hyperref}
+
+\input{numbers}                        % macros numériques GÉNÉRÉES
+
+\newcommand{\syst}[1]{\texttt{#1}}
+\newcommand{\ic}[2]{[#1 ; #2]}
+% inclusion robuste : cadre placeholder si la figure n'est pas encore generee
+\newcommand{\figpng}[2]{\IfFileExists{figures/#1.png}%
+  {\includegraphics[width=#2\linewidth]{figures/#1}}%
+  {\fbox{\parbox[c][3cm][c]{.8\linewidth}{\centering\small figure \texttt{#1}\\(bench non exécuté)}}}}
+
+\title{\bfseries Simulateur d'entraînement au contrôle aérien augmenté par IA :\\
+validation systématique et étude comparative multi-modèles\\
+de la chaîne vocale STT\,$\rightarrow$\,LLM\,$\rightarrow$\,TTS}
+\author{Nicolas Marano\\
+\small Université de Reims Champagne-Ardenne, Centre de calcul ROMEO (NVIDIA GH200)\\
+\small \texttt{maranoniko@gmail.com}}
+\date{Juillet 2026}
+
+\begin{document}
+\maketitle
+
+% =============================================================================
+\begin{abstract}
+\noindent
+Nous présentons un simulateur d'entraînement au contrôle aérien dont la boucle
+radio est entièrement pilotée par la voix : l'élève contrôleur parle sur un
+canal VHF simulé, la parole est transcrite (Whisper adapté au domaine par
+LoRA), interprétée en ordres structurés par un grand modèle de langage
+contraint par une base de connaissances OACI, validée par des gardes
+déterministes (bornes physiques, graphe secteur), exécutée dans le simulateur
+de trafic BlueSky, puis collationnée par une voix de synthèse dégradée canal
+radio. Toutes les briques d'inférence respectent le contrat d'API
+OpenAI-compatible : le même système fonctionne indifféremment sur
+supercalculateur (ROMEO, GH200), sur GPU grand public local (RTX 4070) ou sur
+API cloud, par simple changement de configuration.
+
+Nous validons chaque étage par des mesures contrôlées et reproductibles :
+(i)~géométrie de conflit : \nCPAGeoms{} géométries Monte-Carlo sur 5 graines,
+\nCPADesaccords{} désaccord de décision avec une vérité numérique
+indépendante, et confrontation à BlueSky sur 200 rencontres
+($F_1=1{,}0$) ; (ii)~reconnaissance vocale : WER sur corpus VHF réels
+(ATCO2, UWB-ATCC), l'adaptation LoRA réduisant le WER ATCO2 de
+\nWERVanillaAtcoVhf{} à \nWERLoraAtcoVhf{} ; (iii)~interprétation : comparaison appariée (McNemar exact, correction de Holm, rapports de cotes) de
+cinq LLM locaux quantifiés et d'un parseur à règles sur 116 clairances
+annotées, dont des strates hors grammaire et adversariales ; le meilleur
+modèle local (\nLLMBestName) atteint \nLLMBestAcc{} d'exactitude TrafScript
+exacte, contre \nParserInGrammar{} pour le parseur à règles sur la
+phraséologie standard mais \nParserHorsGram{} hors grammaire ;
+(iv)~synthèse : coût temps réel et intelligibilité aller-retour ;
+(v)~boucle complète : \nEEVoix{} de clairances parlées correctement
+exécutées (témoin texte : \nEETexte), latence vocale totale moyenne de
+\nEELatMoy{}. Deux campagnes de généralisation complètent l'étude : la même
+batterie rejouée \emph{à protocole identique} contre la façade
+supercalculateur (GH200, modèles pleine précision, tunnel SSH de
+production), isolant l'effet de la quantification 4~bits et établissant la
+parité STT entre points de déploiement ; et une validation avec locuteur
+humain réel (\nHumMicro{} de réussite au micro brut contre \nEEVoix{} en
+voix synthétique), dont l'analyse des échecs fonde une taxonomie
+actionnable. La campagne historique de validation se ré-exécute à
+l'identique (mêmes métriques champ à champ). L'ensemble du banc de mesure,
+des corpus annotés et des scripts d'analyse est versionné avec le projet.
+\end{abstract}
+
+% =============================================================================
+\section{Introduction}
+
+La formation initiale des contrôleurs aériens repose sur des simulateurs dont
+le coût d'exploitation est dominé par un facteur humain : chaque session
+requiert des \emph{pseudo-pilotes}, opérateurs qui prononcent les
+collationnements et exécutent les instructions dans le simulateur. Automatiser ce rôle (comprendre une clairance parlée, l'exécuter fidèlement, la collationner d'une voix réaliste) est un cas d'usage exigeant pour les
+modèles de fondation : la phraséologie OACI est un langage contraint, le canal
+VHF (300--3\,400~Hz) dégrade fortement le signal, et toute erreur
+d'interprétation exécutée dans le simulateur fausse l'exercice pédagogique.
+
+Ce travail décrit un système complet et son évaluation : une application web
+d'entraînement (radar, strips, poste instructeur, exercices notés) adossée au
+simulateur de trafic open source BlueSky~\cite{bluesky}, dont la boucle radio
+est assurée par trois services d'inférence interchangeables au contrat
+OpenAI-compatible. Nos contributions :
+
+\begin{enumerate}
+  \item une \textbf{architecture de sûreté en couches} : aucune sortie de LLM
+        n'atteint le simulateur sans passer par une validation déterministe
+        (bornes physiques, actions autorisées, waypoints du secteur), et toute
+        panne de fournisseur est remontée visiblement (jamais de repli
+        silencieux) ;
+  \item un \textbf{banc de mesure de bout en bout}, versionné et seedé,
+        couvrant les cinq étages (géométrie/simulateur, STT, LLM, TTS, boucle
+        vocale complète) avec intervalles de confiance bootstrap, IC de Wilson
+        et tests appariés de McNemar ;
+  \item une \textbf{étude comparative multi-modèles reproductible sur GPU
+        grand public} : cinq LLM open-weights quantifiés (1~à 7~milliards de
+        paramètres) évalués \emph{à travers le code de production}, comparés
+        à un parseur à règles de référence, sur un corpus annoté stratifié
+        (phraséologie standard, paraphrases hors grammaire, bruit STT,
+        français, cas mixtes valide$+$invalide, négatifs de sécurité) ;
+  \item la \textbf{quantification de l'adaptation au domaine} : gain du LoRA
+        ATC sur Whisper-small mesuré sur enregistrements VHF réels, effet du
+        filtre passe-bande d'inférence, et coût (RTF) des points de
+        déploiement local, cluster et cloud ;
+  \item une \textbf{comparaison cluster/local à protocole strictement
+        identique} (mêmes corpus, mêmes graines, même chaîne cliente) entre la
+        façade GH200 (modèles pleine précision) et un GPU portable grand
+        public (modèles quantifiés), ainsi qu'une \textbf{validation avec
+        locuteur humain réel} de la boucle vocale complète.
+\end{enumerate}
+
+\paragraph{Questions de recherche.} L'évaluation est organisée autour de
+cinq questions falsifiables :
+\begin{description}
+  \item[RQ1] Le prédicteur de conflit embarqué est-il \emph{exact} au sens
+    d'une vérité numérique indépendante, et la garantie « conflit par
+    construction » des exercices tient-elle statistiquement ?
+  \item[RQ2] Quel gain de reconnaissance vocale l'adaptation LoRA
+    apporte-t-elle sur des enregistrements VHF \emph{réels}, et le filtre
+    passe-bande d'inférence du système est-il justifié ?
+  \item[RQ3] Un LLM local remplace-t-il avantageusement un parseur à règles
+    pour l'extraction d'ordres --- globalement, et hors de la grammaire du
+    parseur ? Les différences entre modèles survivent-elles à une correction
+    de comparaisons multiples ?
+  \item[RQ4] Les gardes déterministes suffisent-elles à empêcher toute
+    exécution d'ordre dangereux, même avec des modèles faibles ?
+  \item[RQ5] La boucle vocale complète est-elle exploitable en conditions
+    réalistes (canal radio dégradé, locuteur humain, fournisseur distant),
+    à quelle latence, et où échoue-t-elle ?
+\end{description}
+
+% =============================================================================
+\section{Système}
+\label{sec:systeme}
+
+\subsection{Architecture}
+
+La figure~\ref{fig:archi} présente l'architecture. Le navigateur (React,
+canvas radar 60~fps, push-to-talk) communique avec un serveur FastAPI par REST
+et WebSocket ($\sim$8~Hz). Le simulateur BlueSky, non thread-safe, vit dans un
+thread unique alimenté par une file de commandes. Les trois briques
+d'inférence sont des services REST au contrat OpenAI standard
+(\syst{/v1/audio/transcriptions}, \syst{/v1/chat/completions},
+\syst{/v1/audio/speech}), configurés par variables d'environnement : changer de fournisseur, qu'il s'agisse de la façade auto-hébergée sur ROMEO, de la façade locale llama.cpp / faster-whisper / Kokoro (fournie avec le banc de mesure) ou d'une API cloud, ne modifie ni le code ni le comportement de validation.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  font=\scriptsize,
+  box/.style={draw, rounded corners=2pt, align=center, inner sep=4pt,
+              minimum height=7mm, fill=blue!6},
+  ai/.style={box, fill=orange!12},
+  guard/.style={box, fill=green!12},
+  sim/.style={box, fill=purple!8},
+  fleche/.style={-{Stealth[length=2mm]}, thick},
+  node distance=4mm and 7mm]
+
+\node[box] (ui) {Navigateur\\radar canvas · strips · PTT (V)};
+\node[box, right=13mm of ui] (app) {FastAPI \syst{atc\_app}\\REST + WebSocket 8 Hz};
+\node[ai, above right=5mm and 11mm of app] (stt) {STT\\\syst{/v1/audio/transcriptions}};
+\node[ai, right=11mm of app] (llm) {LLM + KB OACI\\\syst{/v1/chat/completions}};
+\node[ai, below right=5mm and 11mm of app] (tts) {TTS + VHF client\\\syst{/v1/audio/speech}};
+\node[guard, below=6mm of app] (guard) {Validation déterministe\\bornes HDG/ALT/SPD · graphe secteur\\cohérence climb/descend};
+\node[sim, below=6mm of guard] (sim) {BlueSky (thread unique)\\conflits CD natif + repli CPA\\vent · turbulence · zones};
+\node[box, right=10mm of sim] (ex) {Exercices notés\\conflits garantis · score /100};
+
+\draw[fleche] (ui) -- node[above]{audio WAV 16 kHz} (app);
+\draw[fleche] (app) -- (stt);
+\draw[fleche] (app) -- (llm);
+\draw[fleche] (app) -- (tts);
+\draw[fleche] (app) -- node[right]{ordres JSON}(guard);
+\draw[fleche] (guard) -- node[right]{TrafScript} (sim);
+\draw[fleche] (sim) -| (ex);
+\draw[fleche] (app.170) -- node[above]{état + événements WS} (ui.10);
+
+\node[draw, dashed, rounded corners, fit=(stt)(llm)(tts),
+      label={[font=\scriptsize]90:{fournisseurs interchangeables (.env) : ROMEO GH200 · local RTX 4070 · cloud}}] {};
+\end{tikzpicture}
+\caption{Architecture. Les briques IA (orange) sont des services
+OpenAI-compatibles interchangeables ; aucune sortie LLM n'atteint le
+simulateur sans la couche de validation déterministe (vert).}
+\label{fig:archi}
+\end{figure}
+
+\subsection{Sûreté en couches}
+\label{sec:surete}
+
+Le contrat d'interprétation impose un tableau JSON d'ordres
+$\{$\syst{callsign}, \syst{action}$\in\{$HDG, ALT, SPD, ADDWPT$\}$,
+\syst{value}$\}$. En aval du modèle, une bibliothèque pure et testée
+(\syst{03\_bluesky\_connector}) applique : coercition stricte de type (rejet
+des booléens, NaN, infinis), bornes physiques (HDG $[0;360]^\circ$, ALT
+$[0;45\,000]$~ft, SPD $[0;350]$~kt), et validation des waypoints contre le
+graphe secteur. L'application ajoute deux gardes : un indicatif absent du
+radar produit un silence radio (réalisme assumé), et une incohérence
+sémantique montée/descente (« climb » vers un niveau inférieur au niveau
+courant) est rejetée avec message. Enfin, aucune panne de fournisseur n'est
+rattrapée silencieusement : erreur typée $\rightarrow$ HTTP~502 $\rightarrow$
+événement visible dans le journal de bord de l'interface.
+
+\subsection{Adaptation au domaine}
+
+La brique STT est \syst{openai/whisper-small} affiné par LoRA ($r=32$,
+$\alpha=64$, cibles $q/v$-proj) sur les corpus radiotéléphoniques réels
+UWB-ATCC et ATCOSIM~\cite{uwbatcc,atcosim}, avec un front-end reproduisant le
+canal : passe-bande Butterworth d'ordre~6, 300--3\,400~Hz, et bruit additif
+(SNR 5--20~dB) à l'entraînement. Le prompt LLM inline une base de connaissances OACI originale de 9 fiches ($\sim$2,5~Ko), couvrant les actions, les contextes informatifs à ignorer (QNH, transferts de fréquence) et la règle « en cas de doute, ne rien produire », ainsi que des indices NER (indicatif détecté).
+Le collationnement TTS applique la phraséologie OACI (chiffres parlés,
+alphabet radio, indicatifs en téléphonie) avec une voix stable par aéronef
+(hachage CRC32 de l'indicatif dans un pool configurable) et la dégradation
+VHF appliquée \emph{côté client}, donc identique quel que soit le fournisseur.
+
+% =============================================================================
+\section{Méthodologie}
+\label{sec:methodo}
+
+\paragraph{Principe.} Chaque étage est mesuré \emph{à travers le code de
+production} (mêmes prompts, mêmes clients HTTP, même post-traitement), jamais
+par une reconstitution. Tous les protocoles sont seedés et versionnés
+(\syst{bench/}) ; chaque script écrit un JSON auto-porteur (protocole +
+résultats) et les figures et tableaux de cet article en sont générés
+automatiquement.
+
+\paragraph{Statistiques.} Moyennes : IC à 95\,\% par bootstrap percentile
+($B=10^4$, graine fixée)~\cite{efron}. Proportions : IC de
+Wilson~\cite{wilson}. Comparaisons de systèmes sur corpus apparié : test
+exact de McNemar~\cite{mcnemar} (binomial, bilatéral) pour les issues
+binaires, avec correction de Holm-Bonferroni~\cite{holm} sur la famille
+complète des paires et rapport de cotes $n_{01}/n_{10}$ comme taille
+d'effet ; bootstrap apparié pour les différences de WER. Percentiles de
+latence par interpolation linéaire. Aucune valeur de l'article n'est saisie
+à la main : tableaux et macros numériques sont générés depuis les JSON de
+mesure (\syst{docs/article/gen\_tables.py}), et l'environnement logiciel
+exact est capturé au moment des campagnes (tableau~\ref{tab:versions}).
+
+\input{tables/tab_versions}
+
+\paragraph{Corpus d'interprétation.} 116 clairances annotées en TrafScript
+attendu \emph{après} validation : 68 cas historiques dans la grammaire du
+parseur de référence (10 catégories dont 10 négatifs) et 48 cas étendus couvrant paraphrases hors grammaire, bruit type STT (hésitations, répétitions),
+français parlé, nombres composés, immatriculations épelées, multi-ordres à
+connecteurs, cas \emph{mixtes} (ordre valide $+$ ordre invalide dans la même
+phrase, l'invalide devant être filtré et le valide conservé) et 14 négatifs
+de sécurité supplémentaires (hors bornes, hors schéma, instructions
+relatives, information pure). Un cas est réussi si le multi-ensemble
+TrafScript produit est exactement celui attendu.
+
+\paragraph{Corpus audio.} STT : 150 extraits par corpus, tirés au sort
+(graine 42, durées 0,4--30~s) de deux corpus VHF \emph{réels}, ATCO2-1h
+(871 extraits disponibles, domaine cible jamais vu à l'entraînement du LoRA)
+et UWB-ATCC test (2\,822 extraits, domaine d'entraînement) ; les IC
+bootstrap par extrait reflètent cette taille d'échantillon. Normalisation texte et WER
+identiques au protocole historique du projet (comparabilité avec les chiffres
+publiés). Boucle E2E : énoncés contrôleur synthétisés (voix Windows SAPI,
+jamais utilisée ailleurs dans le banc), passés dans le canal radio simulé
+(bruit SNR 12~dB puis passe-bande VHF).
+
+\paragraph{Matériel et points de déploiement.} Étude locale : portable
+Windows~11, RTX~4070 Laptop 8~Go, i9-13900H, 32~Go (versions logicielles
+exactes au tableau~\ref{tab:versions}). LLM locaux : llama.cpp (CUDA),
+GGUF Q4\_K\_M, température 0, graine 42 --- Llama-3.2-1B-Instruct,
+Qwen2.5-1.5B-Instruct, Qwen2.5-3B-Instruct (deux conversions GGUF
+indépendantes pour contre-vérification) et Mistral-7B-Instruct-v0.3.
+Campagne cluster (août 2026) : la façade de production sur nœud GH200
+(Whisper-small$+$LoRA, Mistral-7B-Instruct-v0.3 \emph{bf16}, XTTS voix
+clonées), atteinte par le tunnel SSH de production, soumise aux mêmes
+protocoles seedés --- Mistral-7B étant évalué des deux côtés, la paire
+bf16/Q4\_K\_M isole l'effet de quantification à modèle constant. Les
+mesures historiques de \syst{validation/results\_perf.json} (2026-07)
+restent citées comme référence de première campagne.
+
+% =============================================================================
+\section{Résultats}
+\label{sec:resultats}
+
+\subsection{Géométrie de conflit et simulateur}
+\label{sec:res-geo}
+
+\paragraph{Prédiction CPA vs vérité numérique.} Sur \nCPAGeoms{} géométries
+aléatoires (5 graines $\times$ 200\,000 ; positions $\pm$80~NM, caps
+uniformes, vitesses sol 150--550~kt), la décision du prédicteur de conflit
+embarqué (extrapolation linéaire, horizon 120~s, seuil 5~NM) coïncide avec
+une recherche numérique indépendante sur grille fine ($\Delta t=0{,}05$~s,
+horizon 300~s) dans \emph{tous} les cas : \nCPADesaccords{} désaccord sur
+$10^6$ décisions. L'écart maximal sur la distance au point de rapprochement
+est de \nCPAErrMax~NM, borné par la quantification d'affichage du champ
+(arrondi au dixième de NM) ; la campagne historique, qui comparait les valeurs non arrondies, mesurait un écart maximal de
+$5{,}52\times10^{-4}$~NM (figure~\ref{fig:cpa}).
+
+\paragraph{Confrontation à BlueSky.} La campagne historique (200 rencontres
+stabilisées, 55\,\% biaisées conflit, seuils 5~NM/120~s) donne précision,
+rappel et $F_1$ de $1{,}0$ (113 conflits), MAE de $0{,}067$~NM sur $d_{CPA}$
+et $0{,}71$~s sur $t_{CPA}$. Nous l'avons ré-exécutée intégralement : toutes
+les métriques sont identiques champ à champ à celles versionnées (seules les
+durées d'exécution diffèrent), ce qui établit la reproductibilité du
+protocole.
+
+\paragraph{Garantie de conflit des exercices.} Le générateur d'exercices
+construit des paires d'aéronefs convergeant vers un point commun avec temps
+d'arrivée égaux. Sur 2\,000 tirages, la garantie est vérifiée à
+\nConflitGarantie{} : $d_{CPA}$ analytique maximal de \nConflitDcpaMax~NM
+(moyenne \nConflitDcpaMoy~NM, très inférieure à la norme de séparation de
+5~NM) et écart maximal entre l'instant de croisement annoncé et le CPA
+calculé de \nConflitTerrMax~s (figure~\ref{fig:conflit}).
+
+\paragraph{Montée en charge.} BlueSky headless avance 10~s de simulation avec
+un facteur temps réel moyen de $\times$\nScalingCinq{} à 5 aéronefs et encore
+$\times$\nScalingDeuxCents{} à 200 aéronefs (5 répétitions par point,
+figure~\ref{fig:scaling}) : la simulation n'est jamais le facteur limitant de
+la boucle vocale.
+
+\begin{figure}[t]
+\centering
+\figpng{fig_cpa_multiseed}{.72}
+\caption{Erreur de $d_{CPA}$ du prédicteur embarqué vs grille numérique fine,
+par graine (200\,000 géométries chacune). L'erreur est bornée par l'arrondi
+d'affichage (0,05~NM) ; la décision de prédiction est exacte
+(0 désaccord / $10^6$).}
+\label{fig:cpa}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\figpng{fig_conflit_garanti}{.62}
+\caption{Garantie « conflit par construction » du générateur d'exercices :
+distribution du $d_{CPA}$ analytique sur 2\,000 tirages seedés.}
+\label{fig:conflit}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\figpng{fig_sim_scaling}{.7}
+\caption{Montée en charge BlueSky headless (5 répétitions par point, IC
+bootstrap à 95\,\%).}
+\label{fig:scaling}
+\end{figure}
+
+\subsection{Reconnaissance vocale (STT)}
+\label{sec:res-stt}
+
+Le tableau~\ref{tab:stt} et la figure~\ref{fig:stt} comparent cinq systèmes
+sur les deux corpus VHF réels, avec et sans passe-bande VHF d'inférence
+(protocole de production : \emph{avec}). Trois enseignements :
+
+\begin{enumerate}
+\item \textbf{L'adaptation LoRA est le facteur dominant.} Sur ATCO2 (domaine
+      jamais vu à l'entraînement), le LoRA réduit le WER de
+      \nWERVanillaAtcoVhf{} (vanilla) à \nWERLoraAtcoVhf{}, gain relatif
+      d'environ \nWERGainRel{} confirmé par bootstrap apparié (différence
+      significative, l'IC de la différence excluant zéro). Sur UWB-ATCC
+      (domaine d'entraînement), le WER tombe à \nWERLoraUwbVhf{}.
+\item \textbf{Le passe-bande d'inférence est cohérent avec l'entraînement.}
+      Il améliore ou laisse inchangé le modèle adapté (entraîné dans ce
+      domaine), tandis que son effet sur les modèles génériques est faible :
+      le choix de production (\syst{bandpass=True}) est validé.
+\item \textbf{Le déploiement local est réaliste.} En greedy sur RTX 4070,
+      tous les systèmes tournent bien en deçà du temps réel
+      (figure~\ref{fig:sttrtf}) ; faster-whisper offre le meilleur débit
+      brut, la voie transformers+LoRA offrant elle la meilleure exactitude.
+\end{enumerate}
+
+\input{tables/tab_stt}
+
+\begin{figure}[t]
+\centering
+\figpng{fig_stt_wer}{1}
+\caption{WER par système sur corpus VHF réels (IC bootstrap 95\,\% du WER
+moyen par extrait ; losanges : WER corpus). Protocole de normalisation
+identique aux mesures historiques du projet.}
+\label{fig:stt}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\figpng{fig_stt_rtf}{.75}
+\caption{Facteur temps réel STT (log) : tous les systèmes sont largement
+sous le temps réel sur GPU grand public.}
+\label{fig:sttrtf}
+\end{figure}
+
+\subsection{Interprétation des clairances (LLM)}
+\label{sec:res-llm}
+
+Le tableau~\ref{tab:llm} et les figures~\ref{fig:llmacc}--\ref{fig:llmlat}
+présentent l'étude comparative sur les 116 clairances. Lecture :
+
+\begin{enumerate}
+\item \textbf{Le parseur à règles est parfait dans sa grammaire, nul en
+      dehors.} \nParserInGrammar{} sur la phraséologie standard,
+      \nParserHorsGram{} sur les strates hors grammaire : c'est précisément
+      l'écart que le LLM doit combler.
+\item \textbf{L'échelle compte, mais pas de façon monotone.} L'exactitude
+      globale croît de \nLLMWorstAcc{} (\nLLMWorstName) à \nLLMBestAcc{}
+      (\nLLMBestName) ; les différences entre modèles sont testées par
+      McNemar apparié (tableau~\ref{tab:mcnemar}). Une anomalie notable :
+      Qwen2.5-3B s'effondre ($\approx$24\,\%) là où son cadet 1.5B excelle : il honore le message système (vérifié) mais viole le schéma
+      (champ \syst{callsign} omis, clés JSON non citées). Nous avons exclu
+      un artefact de conversion en ré-évaluant un second GGUF indépendant
+      (bartowski) : résultat identique (23,3\,\%). Autre artefact
+      \emph{réellement} rencontré puis corrigé : le gabarit de conversation
+      Mistral-v0.3 de llama.cpp \emph{perd le message système} (vérifié par
+      test dédié), faisant chuter Mistral-7B à 21\,\% ; la fusion
+      système$\rightarrow$utilisateur du gabarit officiel restaure
+      \nLLMBestAcc{}. Ces deux cas illustrent pourquoi l'évaluation doit se
+      faire \emph{à travers la pile de déploiement réelle}.
+\item \textbf{La sécurité tient d'abord aux gardes déterministes.} Les taux
+      de rejet des négatifs par système (tableau~\ref{tab:llm}) montrent que
+      même les petits modèles, qui hallucinent des ordres, sont largement
+      rattrapés par la validation de bornes et de waypoints, illustration chiffrée de l'architecture en couches (\S\ref{sec:surete}).
+\item \textbf{Latence exploitable en local.} Le meilleur compromis
+      qualité/latence locale est \nLLMSweetName{} (\nLLMSweetAcc,
+      \nLLMSweetLat{} par clairance en moyenne) ; Mistral-7B, identique au
+      modèle ROMEO, sert de point de comparaison cluster/local.
+\end{enumerate}
+
+\input{tables/tab_llm}
+\input{tables/tab_mcnemar}
+
+\begin{figure}[t]
+\centering
+\figpng{fig_llm_exactitude}{1}
+\caption{Exactitude TrafScript exacte par système (IC Wilson 95\,\%),
+globale et par strate. La chaîne évaluée est celle de production
+(prompt + KB OACI + validation déterministe).}
+\label{fig:llmacc}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\figpng{fig_llm_categories}{1}
+\caption{Exactitude par catégorie de clairance et par système.}
+\label{fig:llmcat}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\figpng{fig_llm_latence}{1}
+\caption{Latence d'interprétation et débit de génération des modèles locaux
+(RTX 4070, llama.cpp Q4\_K\_M, température 0).}
+\label{fig:llmlat}
+\end{figure}
+
+\paragraph{Génération de situations.} Sur les 20 descriptions instructeur de
+la validation historique (116 contraintes vérifiables : effectifs, niveaux,
+caps, azimuts, espacements, types), le générateur à règles atteint
+\nScenParser{} et le meilleur LLM local \nScenBest{}
+(figure~\ref{fig:llmscen}) : la tâche, plus ouverte (géométrie du secteur,
+espacement en traînée), reste sensiblement plus difficile que l'extraction
+d'ordres pour les petits modèles.
+
+\begin{figure}[t]
+\centering
+\figpng{fig_llm_scenarios}{.8}
+\caption{Conformité aux contraintes du générateur de situations
+(IC Wilson 95\,\%).}
+\label{fig:llmscen}
+\end{figure}
+
+\subsection{Synthèse vocale (TTS)}
+\label{sec:res-tts}
+
+Le tableau~\ref{tab:tts} et la figure~\ref{fig:tts} évaluent Kokoro-82M
+(4 voix), Windows SAPI et les voix de pilotes clonées XTTS de la façade
+cluster sur les collationnements produits par le générateur de phraséologie
+du projet. Kokoro synthétise à RTF \nTTSKokoroRTF{} et son intelligibilité
+aller-retour (WER d'un juge STT fixe) reste à \nTTSKokoroWERVHF{}
+\emph{après} dégradation VHF : la coloration radio coûte peu
+d'intelligibilité, conformément à l'objectif (réalisme sans perte
+pédagogique). Les voix clonées XTTS (timbre « pilote » volontairement
+réaliste, débit rapide) synthétisent à RTF $\approx$0,78 mais leur WER
+aller-retour est plusieurs fois supérieur (tableau~\ref{tab:tts}) : le
+réalisme du timbre se paie en intelligibilité mesurée --- compromis
+immersion/clarté assumé et \emph{réglable}, le choix du fournisseur TTS
+étant une ligne de configuration. La métrique étant relative (biais du juge
+partagé), seuls les écarts entre moteurs sont interprétables.
+
+\input{tables/tab_tts}
+
+\begin{figure}[t]
+\centering
+\figpng{fig_tts}{1}
+\caption{TTS : coût de synthèse et intelligibilité objective aller-retour,
+avant/après canal VHF.}
+\label{fig:tts}
+\end{figure}
+
+\subsection{Boucle vocale complète (E2E)}
+\label{sec:res-e2e}
+
+La figure~\ref{fig:e2e} et le tableau~\ref{tab:e2e} mesurent la boucle
+complète de production sur \nEEn{} clairances parlées (canal radio SNR
+12~dB) ; le tableau~\ref{tab:e2ecmp} compare ensuite cette condition de
+référence aux conditions cluster (\S\ref{sec:res-romeo}) et locuteur humain
+(\S\ref{sec:res-humain}) sur les mêmes énoncés. En local :
+\nEEVoix{} d'exécutions exactes en condition voix, contre
+\nEETexte{} en condition témoin texte (mêmes clairances, sans STT) ; l'écart chiffre le coût résiduel de l'étage STT, et l'attribution des échecs
+(transcription déviée vs interprétation) est donnée dans le
+tableau~\ref{tab:e2e}. La latence vocale totale (STT $+$ LLM $+$ TTS,
+dégradation VHF cliente comprise) est de \nEELatMoy{} en moyenne
+(p95 \nEELatPceQuinze), compatible avec le rythme d'un exercice
+d'entraînement, l'étage LLM dominant le budget.
+
+\input{tables/tab_e2e}
+\input{tables/tab_e2e_compare}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_e2e}
+\caption{Boucle vocale complète : taux de réussite (voix vs témoin texte,
+IC Wilson) et décomposition de la latence.}
+\label{fig:e2e}
+\end{figure}
+
+\subsection{Comparaison cluster/local à protocole identique (ROMEO)}
+\label{sec:res-romeo}
+
+À la réouverture du supercalculateur (août 2026), la façade GH200
+(Whisper-LoRA, Mistral-7B \emph{bf16 non quantifié}, XTTS voix clonées) a
+été soumise, à travers le tunnel SSH de production, aux \emph{mêmes}
+protocoles seedés que la pile locale : mêmes 116 clairances, mêmes
+échantillons ATCO2/UWB, mêmes 25 énoncés E2E, même chaîne cliente. Les
+lignes « ROMEO » des tableaux~\ref{tab:stt}, \ref{tab:llm}, \ref{tab:tts}
+et~\ref{tab:e2ecmp} en donnent les résultats ; trois lectures :
+
+\begin{enumerate}
+  \item \textbf{Effet de la quantification isolé (RQ3).} Mistral-7B bf16
+    (ROMEO) atteint \nLLMRomeoAcc{} contre \nLLMBestAcc{} pour le même
+    modèle en Q4\_K\_M local ; le test de McNemar apparié sur la paire
+    (\nMcnQuantDetail{}, tableau~\ref{tab:mcnemar}) ne détecte \emph{pas}
+    d'écart significatif à cette taille d'échantillon : sur cette tâche, la
+    quantification 4~bits est au plus un effet de l'ordre du point de
+    pourcentage --- le facteur de confusion « précision numérique » de la
+    campagne locale est ainsi levé, dans les limites de puissance
+    discutées en \S\ref{sec:validite}.
+  \item \textbf{Parité STT.} Le même adaptateur LoRA servi par la façade
+    GH200 produit, sur les mêmes extraits, des WER cohérents avec
+    l'exécution locale (tableau~\ref{tab:stt}, ligne \syst{romeo-lora}) :
+    le point de déploiement ne change pas la qualité de transcription,
+    seulement la latence (tunnel compris).
+  \item \textbf{Boucle complète.} En bout en bout, la pile ROMEO exécute
+    \nEERomeoVoix{} des clairances parlées (témoin texte \nEERomeoTexte)
+    pour une latence vocale moyenne de \nEERomeoLatMoy, à comparer à
+    \nEEVoix{} / \nEELatMoy{} pour la pile locale
+    (tableau~\ref{tab:e2ecmp}). Les latences ROMEO incluent l'aller-retour
+    du tunnel SSH : c'est la réalité opérationnelle du poste de travail.
+\end{enumerate}
+
+Fait opérationnel documenté : pendant la campagne locale (juillet 2026), le
+cluster était \emph{entièrement indisponible} (maintenance de sécurité,
+correctifs RedHat) ; l'application est restée fonctionnelle par simple
+bascule du \syst{.env} vers la façade locale, puis a rebasculé vers la
+façade GH200 pour la présente campagne --- validation en conditions
+réelles, dans les deux sens, de l'argument de continuité de service du
+contrat OpenAI-compatible.
+
+\subsection{Validation avec locuteur humain}
+\label{sec:res-humain}
+
+Les énoncés synthétiques (SAPI) contrôlent parfaitement le protocole mais ne
+représentent ni l'accent ni la prosodie d'un utilisateur réel. Un locuteur
+humain (francophone, non contrôleur) a donc enregistré les 25 clairances du
+protocole E2E via le micro de l'application, rejouées dans la chaîne exacte
+du banc en deux conditions : \emph{micro brut} (ce que l'application entend
+au push-to-talk) et \emph{canal radio simulé} (bruit SNR 12~dB +
+passe-bande, graine commune avec les autres conditions). Résultats au
+tableau~\ref{tab:e2ecmp} : \nHumMicro{} de réussite au micro brut
+(IC \nHumMicroIC) et \nHumRadio{} après canal radio, contre \nEEVoix{} pour
+la voix synthétique --- la boucle tient face à une voix réelle non native,
+au prix d'échecs supplémentaires attribués à l'étage STT. L'analyse
+qualitative des échecs (\S\ref{sec:discussion}) est plus instructive que
+les taux : accent sur certains indicatifs (« ryanair »), confusion
+phonétique \emph{two}/\emph{to} transformant « two five zero » en
+« to five zero » (soit SPD~50, \emph{dans les bornes} donc non filtré), et
+un défaut indépendant du locuteur --- l'indicatif épelé « csa one delta
+zulu » parfois réassemblé fautivement par le LLM (\syst{CSAD12Z} au lieu de
+\syst{CSA1DZ}) malgré une transcription parfaite, défaut également observé
+en condition synthétique.
+
+% =============================================================================
+\section{Discussion}
+\label{sec:discussion}
+
+\paragraph{Choix du point de déploiement.} Les trois points de déploiement
+mesurés dessinent une matrice simple. \emph{Cluster (GH200, bf16)} :
+meilleure qualité d'interprétation (\nLLMRomeoAcc) et voix clonées, mais
+dépendance à une infrastructure mutualisée dont l'indisponibilité de
+juillet 2026 a rappelé le coût, et latences tributaires du tunnel.
+\emph{Local (RTX 4070, Q4\_K\_M)} : qualité proche (\nLLMBestAcc{} pour le
+même Mistral-7B), latence vocale moyenne de \nEELatMoy, aucune dépendance
+réseau, coût matériel unique de l'ordre d'un poste de travail --- le point
+recommandé pour un produit d'entraînement autonome. \emph{Cloud} : couvert
+par le contrat mais volontairement non évalué (biais commercial,
+variabilité temporelle) ; le banc est prêt à l'y soumettre. Dans tous les
+cas, les gardes déterministes restent identiques : la qualité du modèle ne
+conditionne que le taux d'ordres \emph{corrects}, jamais la sûreté des
+ordres \emph{exécutés} (RQ4 : zéro ordre hors bornes exécuté sur l'ensemble
+des campagnes, tous modèles confondus).
+
+\paragraph{Taxonomie des échecs résiduels.} Les échecs observés en boucle
+complète se rangent en quatre classes. (i)~\emph{Acoustiques} : accents et
+indicatifs peu fréquents (« ryanair » humain) --- traitables par
+élargissement du corpus d'adaptation LoRA. (ii)~\emph{Phonétiquement
+ambigus mais dans les bornes} : « two five zero » entendu « to five zero »
+produit SPD~50, valide pour le validateur (bornes 0--350~kt) mais
+opérationnellement invraisemblable en croisière --- un plancher de
+plausibilité par phase de vol (borne basse dynamique) fermerait cette
+classe sans toucher au contrat. (iii)~\emph{Réassemblage d'indicatifs
+épelés par le LLM} : \syst{CSAD12Z} au lieu de \syst{CSA1DZ} malgré une
+transcription parfaite, observé avec voix humaine \emph{et} synthétique ---
+défaut du modèle, pas du locuteur ; une normalisation déterministe des
+indicatifs épelés \emph{en amont} du LLM (le module \syst{atc\_callsign}
+existe déjà côté post-traitement) le neutraliserait. (iv)~\emph{Style de
+sortie du modèle} : l'anomalie Qwen2.5-3B (schéma violé) et la perte du
+message système par un gabarit de conversation (Mistral/llama.cpp),
+détectées uniquement parce que l'évaluation traverse la pile réelle ---
+argument méthodologique central de ce travail.
+
+\paragraph{Portée pour la formation.} Le facteur temps réel du simulateur
+($\times$\nScalingDeuxCents{} à 200 aéronefs), la latence vocale
+(\nEELatMoy{} locale) et le collationnement dégradé canal radio placent le
+système dans l'enveloppe d'un poste d'entraînement individuel réaliste ; le
+barème d'exercice, adossé à des conflits garantis par construction
+(\nConflitGarantie), fournit une note reproductible et contestable ---
+c'est-à-dire auditable, chaque événement étant tracé dans le rapport JSON
+de débrief.
+
+% =============================================================================
+\section{Menaces à la validité}
+\label{sec:validite}
+
+\textbf{Interne.} Les énoncés E2E synthétiques contrôlent le protocole mais
+sous-estiment la variabilité de la parole spontanée ; la condition locuteur
+humain (\S\ref{sec:res-humain}) borne ce risque, mais avec $n=1$ locuteur
+et $n=25$ énoncés --- les IC de Wilson, larges, en rendent compte, et le
+recrutement de locuteurs supplémentaires est la première extension prévue.
+L'intelligibilité TTS partage le biais du juge STT entre moteurs (métrique
+relative). L'erreur CPA mesurée est bornée par l'arrondi d'affichage du
+champ comparé. Les latences ROMEO incluent le tunnel SSH (réalité du poste,
+mais non séparée de l'inférence). \textbf{Externe.} La comparaison
+bf16/Q4\_K\_M isole désormais l'effet de quantification
+(\S\ref{sec:res-romeo}) ; les fournisseurs cloud restent non évalués (le
+contrat les rend interchangeables, pas équivalents). Le secteur simulé est
+unique (CTR Reims, 7 fixes) ; la généralisation à d'autres espaces exige de
+régénérer graphe et exercices. \textbf{Construction.} Le corpus
+d'interprétation (116 cas) et sa vérité terrain ont été rédigés par un
+unique annotateur ; deux garde-fous l'encadrent --- la moitié
+« phraséologie standard » est vérifiée mécaniquement par le parseur à
+règles (100\,\% d'accord), et l'intégralité du corpus annoté est publiée
+avec le code pour contre-expertise. La vérité terrain des cas mixtes
+suppose la politique « filtrer l'invalide, garder le valide », qui est
+celle du système ; un système plus conservateur serait pénalisé par cette
+métrique --- le taux de rejet des négatifs est donné séparément pour cette
+raison. \textbf{Puissance.} Avec 116 cas appariés et des effectifs
+discordants faibles (typiquement 10--30 paires), le test de McNemar ne
+détecte que des écarts de plusieurs points de pourcentage : les paires non
+significatives du tableau~\ref{tab:mcnemar} (parseur vs Mistral,
+bf16 vs Q4\_K\_M) se lisent « écart au plus modeste », et non
+« équivalence démontrée » --- une démonstration d'équivalence exigerait un
+protocole dédié (TOST) sur corpus élargi.
+
+% =============================================================================
+\section{Travaux liés}
+
+Les corpus ATCOSIM, UWB-ATCC et le challenge ATCO2~\cite{atcosim,uwbatcc,
+atco2} ont établi la reconnaissance vocale ATC comme domaine propre, avec
+des WER de systèmes génériques dégradés de plusieurs dizaines de points par
+le canal VHF ; le retour d'expérience à grande échelle
+d'ATCO2~\cite{atco2lessons} confirme le rôle décisif de l'adaptation au
+domaine, aujourd'hui dominée par l'affinage paramétriquement efficace
+(LoRA~\cite{lora}) de modèles de fondation comme Whisper~\cite{whisper}.
+BlueSky~\cite{bluesky} est le simulateur ouvert de référence pour la
+recherche ATM. L'utilisation de LLM contraints pour l'interprétation de
+clairances rejoint les travaux sur l'extraction structurée fiable ; notre
+apport est triple : l'évaluation \emph{système} (à travers la chaîne de
+production complète, gardes comprises, jusqu'aux gabarits de conversation
+des moteurs d'inférence) plutôt que l'évaluation isolée du modèle ; la
+comparaison appariée à un parseur à règles sur corpus stratifié avec
+contrôle des comparaisons multiples ; et la triangulation entre points de
+déploiement (bf16 cluster / Q4 local) et types de locuteurs (synthétique /
+humain) à protocole constant. Les moteurs d'inférence locaux utilisés sont
+llama.cpp, CTranslate2/faster-whisper et Kokoro-82M (ONNX), cités ici comme
+logiciels\footnote{\syst{github.com/ggml-org/llama.cpp},
+\syst{github.com/SYSTRAN/faster-whisper},
+\syst{huggingface.co/hexgrad/Kokoro-82M}.}.
+
+% =============================================================================
+\section{Conclusion}
+
+Nous avons présenté un simulateur d'entraînement ATC dont chaque étage
+(géométrie de conflit, reconnaissance vocale, interprétation, synthèse,
+boucle complète) est validé par des mesures contrôlées, seedées et
+versionnées avec le code, et dont les réponses aux cinq questions de
+recherche sont chiffrées. RQ1 : base géométrique exacte ($10^6$ décisions
+sans désaccord, $F_1=1{,}0$ face à BlueSky, conflits d'exercice garantis à
+\nConflitGarantie). RQ2 : gain STT majeur et significatif de l'adaptation
+au domaine sur VHF réel (\nWERVanillaAtcoVhf{} $\rightarrow$
+\nWERLoraAtcoVhf{} sur ATCO2), passe-bande d'inférence validé. RQ3 :
+hiérarchie nette des LLM locaux, Mistral-7B Q4 statistiquement
+indiscernable du parseur à règles globalement et supérieur hors grammaire ;
+la paire bf16/Q4 à modèle constant (\nLLMRomeoAcc{} vs \nLLMBestAcc) borne
+le coût de la quantification. RQ4 : zéro ordre hors bornes exécuté sur
+l'ensemble des campagnes, quel que soit le modèle. RQ5 : boucle vocale à
+\nEEVoix{} de réussite (\nEELatMoy{} de latence moyenne) en local,
+\nEERomeoVoix{} via la façade cluster, et \nHumMicro{} avec locuteur humain
+réel --- avec une taxonomie d'échecs actionnable. L'architecture au contrat
+OpenAI-compatible rend ces points de déploiement interchangeables sans
+toucher au code ni aux gardes de sûreté, qui restent déterministes et
+testées ; la bascule cluster$\leftrightarrow$local a été exercée dans les
+deux sens en conditions réelles.
+
+\paragraph{Reproductibilité.} Code, corpus annotés, scripts de benchmark,
+résultats JSON (locaux \emph{et} ROMEO : \syst{bench/results/*\_romeo.json},
+locuteur humain : \syst{human\_e2e.json}), environnement logiciel capturé
+(tableau~\ref{tab:versions}) et génération automatique des figures et
+tableaux de cet article : répertoires \syst{bench/}, \syst{validation/} et
+\syst{docs/article/} du dépôt. La campagne historique ré-exécutée produit
+des métriques identiques champ à champ.
+
+% =============================================================================
+\begin{thebibliography}{9}\small
+\bibitem{bluesky} J.~M. Hoekstra et J.~Ellerbroek,
+« BlueSky ATC Simulator Project: an Open Data and Open Source Approach »,
+\emph{ICRAT}, 2016.
+\bibitem{whisper} A.~Radford \emph{et al.},
+« Robust Speech Recognition via Large-Scale Weak Supervision »,
+\emph{ICML}, 2023.
+\bibitem{lora} E.~Hu \emph{et al.}, « LoRA: Low-Rank Adaptation of Large
+Language Models », \emph{ICLR}, 2022.
+\bibitem{atco2} J.~Zuluaga-Gomez \emph{et al.}, « ATCO2 corpus: A Large-Scale
+Dataset for Research on Automatic Speech Recognition and Natural Language
+Understanding of Air Traffic Control Communications », 2022.
+\bibitem{uwbatcc} L.~Šmídl \emph{et al.}, « Air Traffic Control Communication
+(UWB-ATCC) Corpus », Université de Bohême de l'Ouest, 2019.
+\bibitem{atcosim} K.~Hofbauer, S.~Petrik et H.~Hering, « The ATCOSIM Corpus of
+Non-Prompted Clean Air Traffic Control Speech », \emph{LREC}, 2008.
+\bibitem{mistral} A.~Q. Jiang \emph{et al.}, « Mistral 7B », 2023.
+\bibitem{qwen} Équipe Qwen, « Qwen2.5 Technical Report », 2024.
+\bibitem{atco2lessons} J.~Zuluaga-Gomez \emph{et al.}, « Lessons Learned in
+Transcribing 5000~h of Air Traffic Control Communications for Robust
+Automatic Speech Understanding », \emph{Aerospace}, 10(10):898, 2023.
+\bibitem{mcnemar} Q.~McNemar, « Note on the sampling error of the difference
+between correlated proportions or percentages », \emph{Psychometrika},
+12(2):153--157, 1947.
+\bibitem{holm} S.~Holm, « A simple sequentially rejective multiple test
+procedure », \emph{Scandinavian Journal of Statistics}, 6(2):65--70, 1979.
+\bibitem{wilson} E.~B. Wilson, « Probable inference, the law of succession,
+and statistical inference », \emph{Journal of the American Statistical
+Association}, 22(158):209--212, 1927.
+\bibitem{efron} B.~Efron, « Bootstrap methods: another look at the
+jackknife », \emph{The Annals of Statistics}, 7(1):1--26, 1979.
+\bibitem{icao4444} OACI, \emph{Doc 4444 : Gestion du trafic aérien (PANS-ATM)},
+16\textsuperscript{e} éd. (phraséologie de référence ; la base de
+connaissances du projet est un contenu original, sans extrait verbatim).
+\end{thebibliography}
+
+\end{document}

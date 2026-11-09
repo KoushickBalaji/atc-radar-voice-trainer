@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VOJV",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Jindal Vijayanagar CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 65
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Jindal Vijayanagar/AD 2.1VOJV.pdf",
+        "page": 25,
+        "section": "AD 2.17",
+        "effective_date": "2026-01-22",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Circular area centered on 151000N 0763800E within a 15NM radius. | Vertical: FL 65 | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        15.166666666666666,
+        76.63333333333334
+      ],
+      "radius_nm": 15.0
+    }
+  ]
+}

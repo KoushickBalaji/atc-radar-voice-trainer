@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VAJL",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Jalgaon CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 65
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Jalgaon/AD 2.1VAJL.pdf",
+        "page": 12,
+        "section": "AD 2.17",
+        "effective_date": "2026-08-06",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Area bounded by lines joining points 210403N 0755811E; 210403N 0755356E; 210003N 0755356E; 210003N 0755906E then along the clockwise arc of a circle of 20NM radius centred on 205751N 0753801E to 203848N 0754326E; 204003N 0753856E; 203808N 0753646E then along the clockwise arc of a circle of 20NM radius centred on 205751N 0753801E to point of origin. | Vertical: FL 65 | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        20.964166666666667,
+        75.63361111111112
+      ],
+      "radius_nm": 20.0
+    }
+  ]
+}

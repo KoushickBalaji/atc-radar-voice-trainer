@@ -1,0 +1,95 @@
+{
+  "icao": "VELR",
+  "name": "Lilabari",
+  "country_code": "IN",
+  "center": [
+    27.291111111111114,
+    94.0936111111111
+  ],
+  "elevation_ft": 331.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "04/22",
+    "length_m": 2281.0,
+    "width_m": 45.0,
+    "ends": [
+      {
+        "name": "04",
+        "lat": 27.288758333333334,
+        "lon": 94.09010555555555,
+        "elevation_ft": 331.0,
+        "bearing_true": 42.67
+      },
+      {
+        "name": "22",
+        "lat": 27.303133333333335,
+        "lon": 94.10493888888888,
+        "elevation_ft": 330.0,
+        "bearing_true": 222.67
+      }
+    ]
+  },
+  "approach": null,
+  "navaids": [
+    {
+      "name": "DVOR/DME LBR 116.500 MHz CH112X As ATS",
+      "lat": 27.29361111111111,
+      "lon": 94.09791666666666,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 4000,
+    "command_alt_min_ft": 1400,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5000,
+      "spd_kt": 220,
+      "hdg": 58
+    },
+    "suggested_heading": 73
+  },
+  "sources": [
+    "Airport Layouts/Lilabari/AD 2.1VELR.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": -0.5,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Lilabari/AD 2.1VELR.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Lilabari/AD 2.1VELR.pdf",
+        "page": 10,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Lilabari/AD 2.1VELR.pdf",
+        "page": 14,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [
+      "RWY 04/22: threshold separation 2167 m vs published length 2281 m; displacement needs review"
+    ]
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. No ILS is identified in the supplied documents; no automatic approach capture. Minimum-altitude warnings unavailable for this airport.",
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VOVI",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Bhogapuram CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "AMSL",
+        "value": 5500.0
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Bhogapuram/AD 2.1VOVI.pdf",
+        "page": 9,
+        "section": "AD 2.17",
+        "effective_date": "2026-07-09",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Area bounded by lines joining points 175501N 0830604E; 174909N 0833937E; 175647N 0840145E then along the counter clockwise arc of a circle of 30NM radius centred on 175826N 0833020E to 180529N 0825944E to point of origin. | Vertical: 5500 FT AMSL | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        17.973888888888887,
+        83.50555555555556
+      ],
+      "radius_nm": 30.0
+    }
+  ]
+}

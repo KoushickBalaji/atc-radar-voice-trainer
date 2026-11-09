@@ -1,0 +1,93 @@
+{
+  "icao": "VEBU",
+  "name": "Bilaspur",
+  "country_code": "IN",
+  "center": [
+    21.99416666666667,
+    82.11527777777778
+  ],
+  "elevation_ft": 906.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "17/35",
+    "length_m": 1439.0,
+    "width_m": 30.0,
+    "ends": [
+      {
+        "name": "17",
+        "lat": 21.995005555555558,
+        "lon": 82.10985,
+        "elevation_ft": 906.0,
+        "bearing_true": 167.81
+      },
+      {
+        "name": "35",
+        "lat": 21.9823,
+        "lon": 82.11279166666667,
+        "elevation_ft": 884.0,
+        "bearing_true": 347.81
+      }
+    ]
+  },
+  "approach": null,
+  "navaids": [
+    {
+      "name": "DVOR/DME BLS 114.900 MHz CH96X HO",
+      "lat": 21.986833333333333,
+      "lon": 82.10930555555555,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 4000,
+    "command_alt_min_ft": 2000,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5000,
+      "spd_kt": 220,
+      "hdg": 183
+    },
+    "suggested_heading": 198
+  },
+  "sources": [
+    "Airport Layouts/Bilaspur/AD 2.1VEBU.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": -0.5,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Bilaspur/AD 2.1VEBU.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Bilaspur/AD 2.1VEBU.pdf",
+        "page": 6,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Bilaspur/AD 2.1VEBU.pdf",
+        "page": 9,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": []
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. No ILS is identified in the supplied documents; no automatic approach capture. Minimum-altitude warnings unavailable for this airport.",
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

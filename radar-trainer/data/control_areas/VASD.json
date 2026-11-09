@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "icao": "VASD",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Shirdi CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 95
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Shirdi/AD 2.1VASD.pdf",
+        "page": 6,
+        "section": "AD 2.17",
+        "effective_date": "2026-07-09",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Circular area centered on 194127N 0742218E within a 11NM radius. | Vertical: FL 95 | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        19.690833333333334,
+        74.37166666666666
+      ],
+      "radius_nm": 11.0
+    },
+    {
+      "id": "cta-a",
+      "name": "Shirdi CTA",
+      "kind": "CTA",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "AMSL",
+        "value": 3000.0
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 95
+      },
+      "excludes": [
+        "ctr"
+      ],
+      "source": {
+        "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+        "section": "ENR 2.1",
+        "edition": "July 2026",
+        "evidence": "Shirdi Control Area- Area bounded by lines joining points 195118N 0735755E; 200353N 0743411E; then along the clockwise arc of a circle of 25NM radius centered on 194127N 0742218E to 191721N 0742934E; 191622N 0742136E; then along the clockwise arc of a circle of 25NM radius centered on 194127N 0742218E to 195118N 0735755E. \u2022 FL095/3000 ft. AMSL excluding the airspace contained within Shirdi CTR. \u2022 Airspace is classified as Class D. FL 095 / 3000FT AMSL D",
+        "snapshot": "scratch/enr-2.1.html"
+      },
+      "shape": "polygon",
+      "edges": [
+        {
+          "point": [
+            19.855,
+            73.96527777777779
+          ]
+        },
+        {
+          "point": [
+            20.064722222222223,
+            74.56972222222223
+          ]
+        },
+        {
+          "point": [
+            19.289166666666667,
+            74.49277777777777
+          ],
+          "center": [
+            19.690833333333334,
+            74.37166666666666
+          ],
+          "radius_nm": 25.0,
+          "clockwise": true
+        },
+        {
+          "point": [
+            19.272777777777776,
+            74.36
+          ]
+        },
+        {
+          "point": [
+            19.855,
+            73.96527777777779
+          ],
+          "center": [
+            19.690833333333334,
+            74.37166666666666
+          ],
+          "radius_nm": 25.0,
+          "clockwise": true
+        }
+      ]
+    }
+  ]
+}

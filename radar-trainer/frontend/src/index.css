@@ -1,0 +1,168 @@
+@import "tailwindcss";
+@import "flowbite-react/plugin/tailwindcss";
+@source "../.flowbite-react/class-list.json";
+
+/* Console claire et radar sombre : contraste adapté à la lecture des données. */
+@theme {
+  --color-bg: #e9ede9;
+  --color-panel: #f6f8f4;
+  --color-panel2: #ffffff;
+  --color-edge: #d5ddd6;
+  --color-ink: #1b2a23;
+  --color-mut: #59685f;
+  --color-acc: #285e49;
+  --color-rdr: #256e4f;
+  --color-warn: #95600e;
+  --color-dang: #ac363b;
+  --color-mag: #805476;
+  --color-wpt: #325a7e;
+
+  --font-sans: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "Cascadia Mono", "JetBrains Mono", Consolas, monospace;
+}
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  overflow: auto;
+}
+
+button, summary, select { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+:focus-visible { outline: 2px solid var(--color-acc); outline-offset: 3px; }
+.workspace { display: grid; grid-template-columns: minmax(0, 1fr) 410px; min-height: 0; flex: 1; }
+.radar-stage { position: relative; min-width: 0; min-height: 360px; overflow: hidden; background: #101b18; }
+.console { display: flex; min-height: 0; flex-direction: column; background: var(--color-panel); border-left: 1px solid var(--color-edge); }
+.radar-controls { color: #c9d5cc; background: #14251fee; border: 1px solid #3b5145; }
+.radar-controls :focus-visible { outline-color: #b1cdbb; }
+.radar-controls input { accent-color: #a4c6b0; }
+.radar-controls button:hover { background: #30483c; }
+@media (min-width: 1100px) { body { overflow: hidden; } }
+@media (max-width: 1099px) {
+  .workspace { grid-template-columns: 1fr; flex: none; }
+  .radar-stage { height: min(58vh, 640px); }
+  .console { border-left: 0; min-height: 540px; }
+  #root { min-height: 100dvh; height: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .animate-alert { animation: none !important; } }
+
+/* Curseurs / scrollbars discrets */
+* { scrollbar-width: thin; scrollbar-color: var(--color-edge) transparent; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--color-edge); border-radius: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+input[type="range"] { accent-color: var(--color-acc); }
+
+/* HUD palette and layout are confined to the right console. */
+.hud {
+  --color-panel: #101a24;
+  --color-panel2: #14212d;
+  --color-edge: #263443;
+  --color-ink: #e2eaf2;
+  --color-mut: #99aabd;
+  --color-acc: #67d6e8;
+  --color-dang: #fca5a5;
+  --color-rdr: #86efac;
+  color: var(--color-ink);
+  min-width: 0;
+  overflow: hidden;
+  font-size: 12px;
+}
+.hud button:focus-visible, .hud summary:focus-visible, .hud [tabindex]:focus-visible {
+  outline: 2px solid #67d6e8;
+  outline-offset: -2px;
+}
+.hud-aircraft { flex: 0 1 auto; min-height: 0; max-height: 55%; overflow-y: auto; }
+.hud-filters { display: flex; gap: 4px; padding: 7px 10px; background: #14212d; border-bottom: 1px solid var(--color-edge); }
+.hud-filter { display: flex; align-items: center; justify-content: center; gap: 7px; flex: 1; min-height: 32px; border: 1px solid transparent; border-radius: 5px; font: 600 11px var(--font-mono); color: #99aabd; }
+.hud-filter span { opacity: .75; }
+.hud-filter:hover { background: #1e2e3e; color: #e2eaf2; }
+.hud-filter[aria-pressed="true"] { background: #263747; border-color: #405367; color: #f1f5f9; }
+.hud-alert-filter { color: #fca5a5; }
+.hud-alert-filter[aria-pressed="true"] { color: #fecaca; background: #46242e; border-color: #8a404b; }
+.hud-columns, .hud-strip { display: grid; grid-template-columns: 9px minmax(65px, 1fr) 80px 35px 43px 49px; column-gap: 5px; align-items: center; padding: 0 10px; font-family: var(--font-mono); }
+.hud-columns { min-height: 27px; color: #99aabd; font-size: 9px; letter-spacing: .04em; text-transform: uppercase; border-bottom: 1px solid var(--color-edge); }
+.hud-strips { max-height: 170px; overflow-y: auto; }
+.hud-strip { width: 100%; min-height: 40px; border-bottom: 1px solid var(--color-edge); border-left: 2px solid transparent; text-align: left; font-size: 11px; }
+.hud-strip strong { overflow-wrap: anywhere; color: #67e8f9; font-size: 12px; }
+.hud-strip:hover { background: #1a2b3a; }
+.hud-strip[aria-pressed="true"] { background: #1c3040; border-left-color: #67e8f9; }
+.hud-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #67e8f9; flex-shrink: 0; }
+.hud-strip-alt > span { display: flex; align-items: center; gap: 2px; }
+.hud-strip-alt { display: flex; align-items: center; gap: 5px; }
+.hud-strip-alt small { font-size: 10px; color: #99aabd; }
+.hud-badge { border: 1px solid #36586a; background: #163444; border-radius: 3px; padding: 2px 4px; color: #a5e6ed; font-size: 9px; text-align: center; }
+.hud-strip-alert, .hud-strip-alert[aria-pressed="true"] { border-left-color: #f87171; background: #38212b; }
+.hud-strip-alert strong { color: #fca5a5; }
+.hud-strip-alert .hud-dot { background: #f87171; }
+.hud-strip-alert .hud-badge { color: #fecaca; border-color: #8a404b; background: #522b34; }
+.hud-detail { border-top: 1px solid var(--color-edge); }
+.hud-detail-header { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #14212d; }
+.hud-detail-header h2 { color: #67e8f9; font: 700 14px var(--font-mono); }
+.hud-detail-header p { font-size: 10px; color: #99aabd; margin-top: 2px; }
+.hud-runway { margin-left: auto; font: 10px var(--font-mono); color: #99aabd; }
+.hud-data { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--color-edge); border-top: 1px solid var(--color-edge); }
+.hud-data > div { background: #14212d; padding: 7px 12px; }
+.hud-data dt { font: 9px var(--font-mono); letter-spacing: .05em; text-transform: uppercase; color: #99aabd; margin-bottom: 3px; }
+.hud-data dd { font: 600 13px var(--font-mono); }
+.hud-messages { display: flex; flex-direction: column; flex: 1 1 0; min-height: 100px; overflow: hidden; }
+.hud-section-title { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid var(--color-edge); background: #14212d; gap: 8px; }
+.hud-section-title h2 { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; }
+.hud-section-title > span { font: 8px var(--font-mono); color: #99aabd; letter-spacing: .04em; }
+.hud-message-scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 8px 10px; overflow-wrap: anywhere; }
+.hud-message { padding: 8px 9px; margin-bottom: 6px; border: 1px solid #2c3c4c; border-left: 2px solid #526a80; border-radius: 4px; background: #14212d; }
+.hud-message > div { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.hud-message strong { font-size: 10px; font-weight: 600; }
+.hud-message time { color: #99aabd; font: 9px var(--font-mono); flex-shrink: 0; }
+.hud-message p { margin-top: 3px; font-size: 11px; line-height: 1.5; white-space: pre-wrap; }
+.hud-warning, .hud-message-rej, .hud-message-warn { border-color: #66333f; border-left-color: #f87171; background: #2e202a; color: #fecaca; }
+.hud-message-tx { border-left-color: #67e8f9; }
+.hud-message-pilot { border-left-color: #fbbf24; }
+.hud-message-cmd, .hud-message-ok { border-left-color: #86efac; }
+.hud-objective { border-left-color: #67d6e8; }
+.hud-objective strong { text-transform: uppercase; }
+.hud-empty { padding: 14px 12px; font-size: 11px; line-height: 1.6; color: #99aabd; }
+.hud-replay { padding: 6px 2px 10px; font-size: 10px; color: #99aabd; }
+.hud-replay audio { width: 100%; height: 30px; margin-top: 6px; color-scheme: dark; }
+.hud-services { display: flex; align-items: center; gap: 10px; padding: 7px 12px; border-top: 1px solid var(--color-edge); background: #14212d; flex-shrink: 0; font: 9px var(--font-mono); }
+.hud-services button { display: flex; align-items: center; gap: 4px; padding-block: 3px; }
+.hud-services > span { margin-left: auto; color: #99aabd; }
+.hud-service-ok { color: #86efac; }
+.hud-service-off { color: #fca5a5; }
+.hud-services .hud-dot { background: currentColor; width: 5px; height: 5px; }
+.hud-radio { flex-shrink: 0; padding: 10px 12px; background: #14212d; border-top: 1px solid var(--color-edge); }
+.hud-radio .hud-ptt { min-height: 48px; color: #f1d0d3; border-color: #8a404b; background: #33232e; gap: 9px; }
+.hud-radio .hud-ptt:hover:enabled { background: #462a36; }
+.hud-radio .hud-ptt.bg-dang { background: #923341; color: white; }
+.hud-radio > p { color: #99aabd; font-size: 9px; line-height: 1.5; }
+@media (max-width: 1099px) {
+  .hud { height: 760px; }
+}
+@media (max-width: 380px) {
+  .hud-columns, .hud-strip { grid-template-columns: 6px minmax(55px, 1fr) 64px 26px 34px 40px; column-gap: 3px; padding-inline: 7px; font-size: 10px; }
+  .hud-strip strong { font-size: 10px; }
+  .hud-section-title > span { font-size: 7px; }
+}
+
+@keyframes pulse-dang { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+.animate-alert { animation: pulse-dang 1.1s ease-in-out infinite; }
+
+.airport-info-trigger { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 20px; height: 20px; vertical-align: middle; border-radius: 50%; color: var(--color-mut); }
+.airport-info-trigger:hover { background: var(--color-edge); color: var(--color-ink); }
+.airport-info-modal { margin: auto; padding: 0; border: 1px solid var(--color-edge); border-radius: 12px; width: min(700px, calc(100vw - 32px)); max-height: min(85dvh, 850px); color: var(--color-ink); background: var(--color-panel); box-shadow: 0 24px 80px #0005; }
+.airport-info-modal::backdrop { background: #07130fcc; }
+.airport-info-shell { display: flex; flex-direction: column; max-height: min(85dvh, 850px); }
+.airport-info-shell > header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px; border-bottom: 1px solid var(--color-edge); flex-shrink: 0; }
+.airport-info-shell > header h2 { font-size: 16px; font-weight: 600; }
+.airport-info-shell > header button { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 6px; }
+.airport-info-shell > header button:hover { background: var(--color-edge); }
+.airport-info-content { padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+
+.hud-exchange section { margin-top: 8px; padding-top: 6px; border-top: 1px solid #ffffff12; }
+.hud-exchange h3 { font-size: 9px; font-weight: 600; color: #99aabd; }
+.hud-exchange-rejection { color: #fecaca; }
+.hud-exchange audio { width: 100%; height: 30px; margin-top: 8px; color-scheme: dark; }

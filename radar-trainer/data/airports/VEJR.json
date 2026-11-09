@@ -1,0 +1,86 @@
+{
+  "icao": "VEJR",
+  "name": "Jagdalpur",
+  "country_code": "IN",
+  "center": [
+    19.073888888888888,
+    82.03694444444444
+  ],
+  "elevation_ft": 1842.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "06/24",
+    "length_m": 1704.0,
+    "width_m": 30.0,
+    "ends": [
+      {
+        "name": "06",
+        "lat": 19.070822222222223,
+        "lon": 82.02942222222222,
+        "elevation_ft": 1842.0,
+        "bearing_true": 62.0
+      },
+      {
+        "name": "24",
+        "lat": 19.077966666666665,
+        "lon": 82.04375833333333,
+        "elevation_ft": 1797.0,
+        "bearing_true": 242.0
+      }
+    ]
+  },
+  "approach": null,
+  "navaids": [],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 5000,
+    "command_alt_min_ft": 2900,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 6000,
+      "spd_kt": 220,
+      "hdg": 77
+    },
+    "suggested_heading": 92
+  },
+  "sources": [
+    "Airport Layouts/Jagdalpur/AD 2.1VEJR.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": -0.75,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Jagdalpur/AD 2.1VEJR.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Jagdalpur/AD 2.1VEJR.pdf",
+        "page": 13,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Jagdalpur/AD 2.1VEJR.pdf",
+        "page": 16,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": []
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. No ILS is identified in the supplied documents; no automatic approach capture. Minimum-altitude warnings unavailable for this airport.",
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

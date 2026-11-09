@@ -1,0 +1,158 @@
+{
+  "icao": "VOGO",
+  "name": "Goa",
+  "country_code": "IN",
+  "center": [
+    15.380833333333333,
+    73.82694444444444
+  ],
+  "elevation_ft": 188.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "08/26",
+    "length_m": 3426.0,
+    "width_m": 45.0,
+    "ends": [
+      {
+        "name": "08",
+        "lat": 15.378080555555556,
+        "lon": 73.81847499999999,
+        "elevation_ft": 119.0,
+        "bearing_true": 78.71,
+        "bearing_magnetic_chart": 80
+      },
+      {
+        "name": "26",
+        "lat": 15.383877777777776,
+        "lon": 73.8484,
+        "elevation_ft": 188.0,
+        "bearing_true": 258.71
+      }
+    ]
+  },
+  "approach": {
+    "runway": "08",
+    "threshold_index": 0,
+    "course_true": 78.71,
+    "course_magnetic": 80,
+    "glide_deg": 3,
+    "rdh_ft": 56.9,
+    "intercept_alt_ft": 2000,
+    "line_length_nm": 16,
+    "reference_fixes": []
+  },
+  "navaids": [
+    {
+      "name": "LOC 26 CAT I IDAB 110.300 MHz H24",
+      "lat": 15.377500000000001,
+      "lon": 73.8155,
+      "type": "loc"
+    },
+    {
+      "name": "LOC 08 CAT II IHNS 108.300 MHz H24",
+      "lat": 15.384222222222222,
+      "lon": 73.85022222222221,
+      "type": "loc"
+    },
+    {
+      "name": "GP 26 335.000 MHz H24",
+      "lat": 15.38436111111111,
+      "lon": 73.84502777777777,
+      "type": "gs"
+    },
+    {
+      "name": "GP 08 334.100 MHz H24",
+      "lat": 15.379666666666667,
+      "lon": 73.82097222222222,
+      "type": "gs"
+    },
+    {
+      "name": "DME ILS 26 IDAB CH40X H24",
+      "lat": 15.38438888888889,
+      "lon": 73.84502777777777,
+      "type": "dme"
+    },
+    {
+      "name": "DME ILS 08 IHNS CH20X H24",
+      "lat": 15.379666666666667,
+      "lon": 73.82097222222222,
+      "type": "dme"
+    },
+    {
+      "name": "DVOR/DME GGO 113.600 MHz CH83X H24",
+      "lat": 15.378083333333334,
+      "lon": 73.81033333333333,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 4000,
+    "command_alt_min_ft": 1800,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5000,
+      "spd_kt": 220,
+      "hdg": 94
+    },
+    "suggested_heading": 109,
+    "pre_capture_floor_ft": 1800
+  },
+  "sources": [
+    "Airport Layouts/Goa/AD 2.1VOGO.pdf",
+    "Airport Layouts/Goa/VOGO-ILS-CAT-I-II-RWY-08.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": -1.5,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Goa/AD 2.1VOGO.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Goa/AD 2.1VOGO.pdf",
+        "page": 15,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Goa/AD 2.1VOGO.pdf",
+        "page": 20,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [
+      "RWY 08/26: threshold separation 3270 m vs published length 3426 m; displacement documented"
+    ],
+    "ils": {
+      "source_file": "Airport Layouts/Goa/VOGO-ILS-CAT-I-II-RWY-08.pdf",
+      "source_page": 1,
+      "level_basis": "Published horizontal final segment visually checked; only vector-to-final segment modeled",
+      "visually_reviewed": true,
+      "warnings": [
+        "Cat C/D restricted to 210 KIAS Max"
+      ]
+    },
+    "training": "Spawn, speed envelope, localizer capture window, and tolerances are exercise settings, not published procedure minima. Final segment only; omitted chart fixes are not synthesized."
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. Minimum-altitude warnings unavailable for this airport.",
+  "training_overrides": {
+    "localizer_min_nm": 7,
+    "localizer_max_nm": 12
+  },
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

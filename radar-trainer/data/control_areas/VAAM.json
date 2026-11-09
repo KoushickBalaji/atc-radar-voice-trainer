@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VAAM",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Amravati CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 75
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Amravati/AD 2.1VAAM.pdf",
+        "page": 7,
+        "section": "AD 2.17",
+        "effective_date": "2026-01-22",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Circular area centered on 204853N 0774304E within a 15NM radius. | Vertical: FL 75 | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        20.814722222222223,
+        77.71777777777778
+      ],
+      "radius_nm": 15.0
+    }
+  ]
+}

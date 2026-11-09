@@ -1,0 +1,138 @@
+{
+  "icao": "VAAH",
+  "name": "Ahmedabad",
+  "country_code": "IN",
+  "center": [
+    23.07111111111111,
+    72.62638888888888
+  ],
+  "elevation_ft": 189.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "05/23",
+    "length_m": 3505.0,
+    "width_m": 45.0,
+    "ends": [
+      {
+        "name": "05",
+        "lat": 23.065958333333334,
+        "lon": 72.62240555555555,
+        "elevation_ft": 180.0,
+        "bearing_true": 44.67
+      },
+      {
+        "name": "23",
+        "lat": 23.088466666666665,
+        "lon": 72.64645833333334,
+        "elevation_ft": 189.0,
+        "bearing_true": 224.67,
+        "bearing_magnetic_chart": 225
+      }
+    ]
+  },
+  "approach": {
+    "runway": "23",
+    "threshold_index": 1,
+    "course_true": 224.67,
+    "course_magnetic": 225,
+    "glide_deg": 3,
+    "rdh_ft": 55.5,
+    "intercept_alt_ft": 2000,
+    "line_length_nm": 16,
+    "reference_fixes": []
+  },
+  "navaids": [
+    {
+      "name": "LOC 23 CAT I IAHD 110.300 MHz H24",
+      "lat": 23.063694444444444,
+      "lon": 72.61999999999999,
+      "type": "loc"
+    },
+    {
+      "name": "GP 23 335.000 MHz H24",
+      "lat": 23.085388888888886,
+      "lon": 72.64486111111111,
+      "type": "gs"
+    },
+    {
+      "name": "DME ILS 23 IAHD CH40X H24",
+      "lat": 23.08536111111111,
+      "lon": 72.64491666666667,
+      "type": "dme"
+    },
+    {
+      "name": "DVOR/DME AAE 113.100 MHz CH78X H24",
+      "lat": 23.068694444444443,
+      "lon": 72.62875,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 1,
+    "practice_alt_ft": 4000,
+    "command_alt_min_ft": 1800,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5000,
+      "spd_kt": 220,
+      "hdg": 240
+    },
+    "suggested_heading": 255,
+    "pre_capture_floor_ft": 1800
+  },
+  "sources": [
+    "Airport Layouts/Ahmedabad/AD 2.1VAAH.pdf",
+    "Airport Layouts/Ahmedabad/VAAH-ILS-OR LOC-Z-RWY-23.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": -0.25,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Ahmedabad/AD 2.1VAAH.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Ahmedabad/AD 2.1VAAH.pdf",
+        "page": 22,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Ahmedabad/AD 2.1VAAH.pdf",
+        "page": 26,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [],
+    "ils": {
+      "source_file": "Airport Layouts/Ahmedabad/VAAH-ILS-OR LOC-Z-RWY-23.pdf",
+      "source_page": 1,
+      "level_basis": "Visually checked published final-segment altitude in profile; training vector-to-final level, not complete procedural clearance",
+      "visually_reviewed": true,
+      "warnings": [
+        "for Cat C/D restricted to 210 KIAS MAX."
+      ]
+    },
+    "training": "Spawn, speed envelope, localizer capture window, and tolerances are exercise settings, not published procedure minima. Final segment only; omitted chart fixes are not synthesized."
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. Minimum-altitude warnings unavailable for this airport.",
+  "training_overrides": {
+    "localizer_min_nm": 7,
+    "localizer_max_nm": 12
+  },
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

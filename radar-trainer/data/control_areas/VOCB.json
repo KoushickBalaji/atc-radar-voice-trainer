@@ -1,0 +1,249 @@
+{
+  "schema_version": 1,
+  "icao": "VOCB",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "ENR geometry checked against locally cached July 2026 edition; online revalidation unavailable.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "name": "Coimbatore CTR",
+      "source": {
+        "file": "Airport Layouts/Coimbatore/AD 2.1VOCB.pdf",
+        "page": 14,
+        "section": "AD 2.17",
+        "effective_date": "2026-01-22",
+        "evidence": "AD 2.17: CTR two clockwise arcs, 13 NM and 10 NM; vertical limit 7500 FT AMSL; Class D; H24. SFC lower limit follows CTR designation."
+      },
+      "shape": "polygon",
+      "edges": [
+        {
+          "point": [
+            10.845555555555556,
+            77.16333333333334
+          ]
+        },
+        {
+          "point": [
+            11.17611111111111,
+            77.20222222222222
+          ],
+          "center": [
+            11.026944444444446,
+            77.04166666666667
+          ],
+          "clockwise": true,
+          "radius_nm": 13
+        },
+        {
+          "point": [
+            10.845555555555556,
+            77.16333333333334
+          ],
+          "center": [
+            11.013055555555555,
+            77.16250000000001
+          ],
+          "clockwise": true,
+          "radius_nm": 10
+        }
+      ],
+      "id": "ctr",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "H24",
+      "excludes": [],
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "AMSL",
+        "value": 7500
+      }
+    },
+    {
+      "name": "Coimbatore CTA A",
+      "source": {
+        "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+        "section": "ENR 2.1",
+        "edition": "July 2026",
+        "evidence": "Coimbatore Control Area- A Area bounded by 111403N 0764025E; then along the clockwise arc of a circle of 25 NM radius centered at 110137N 0770230E to 105416N 0763812E; 105500N 0762900E; 111500N 0763100E to point of origin, excluding the airspace contained within Coimbatore CTR. \u2022 5500 FT AMSL / 2000 FT AMSL. Airspace classified as Class \u2018D\u2019. 5500 FT AMSL/ 2000FT AMSL D Coimbatore APP Coimbatore Approach English H24 120.05 MHZ 126.55 MHZ 1. Aircraft below 2000 FT AMSL between 13 NM and 25 NM from ARP of Coimbatore Aerodrome may contact Coimbatore APP/Sulur TWR for traffic information.",
+        "snapshot": "scratch/enr-2.1.html"
+      },
+      "shape": "polygon",
+      "edges": [
+        {
+          "point": [
+            11.234166666666665,
+            76.67361111111111
+          ]
+        },
+        {
+          "point": [
+            10.904444444444445,
+            76.63666666666667
+          ],
+          "center": [
+            11.026944444444446,
+            77.04166666666667
+          ],
+          "clockwise": true,
+          "radius_nm": 25
+        },
+        {
+          "point": [
+            10.916666666666666,
+            76.48333333333333
+          ]
+        },
+        {
+          "point": [
+            11.25,
+            76.51666666666667
+          ]
+        }
+      ],
+      "id": "cta-a",
+      "kind": "CTA",
+      "classification": "D",
+      "hours": "H24",
+      "excludes": [
+        "ctr"
+      ],
+      "lower": {
+        "reference": "AMSL",
+        "value": 2000
+      },
+      "upper": {
+        "reference": "AMSL",
+        "value": 5500
+      }
+    },
+    {
+      "name": "Coimbatore CTA B",
+      "source": {
+        "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+        "section": "ENR 2.1",
+        "edition": "July 2026",
+        "evidence": "Coimbatore Control Area- B Area bounded by 111403N 0764025E; then along the clockwise arc of a circle of 25 NM radius centered at 110137N 0770230E to 112640N 0770048E; 120400N 0771300E; 115800N 0773100E; 111806N 0772456E; 110900N 0772700E; 105700N 0772700E; 103600N 0774600E; 101800N 0772700E; 101500N 0772500E; 103639N 0770519E then along the clockwise arc of a circle of 25 NM radius centered at 110137N 0770230E to 105416N 0763812E; 105500N 0762900E; 111500N 0763100E; to point of origin, excluding the airspace contained within Coimbatore CTR. \u2022 FL 145 / 5500 FT AMSL. Airspace classified as Class \u2018D\u2019. FL 145 / 5500FT AMSL D Coimbatore APP Coimbatore Approach English H24 120.05 MHZ 126.55 MHZ 1. Aircraft below 2000 FT AMSL between 13 NM and 25 NM from ARP of Coimbatore Aerodrome may contact Coimbatore APP/Sulur TWR for traffic information.",
+        "snapshot": "scratch/enr-2.1.html"
+      },
+      "shape": "polygon",
+      "edges": [
+        {
+          "point": [
+            11.234166666666665,
+            76.67361111111111
+          ]
+        },
+        {
+          "point": [
+            11.444444444444445,
+            77.01333333333334
+          ],
+          "center": [
+            11.026944444444446,
+            77.04166666666667
+          ],
+          "clockwise": true,
+          "radius_nm": 25
+        },
+        {
+          "point": [
+            12.066666666666666,
+            77.21666666666667
+          ]
+        },
+        {
+          "point": [
+            11.966666666666667,
+            77.51666666666667
+          ]
+        },
+        {
+          "point": [
+            11.301666666666668,
+            77.41555555555556
+          ]
+        },
+        {
+          "point": [
+            11.15,
+            77.45
+          ]
+        },
+        {
+          "point": [
+            10.95,
+            77.45
+          ]
+        },
+        {
+          "point": [
+            10.6,
+            77.76666666666667
+          ]
+        },
+        {
+          "point": [
+            10.3,
+            77.45
+          ]
+        },
+        {
+          "point": [
+            10.25,
+            77.41666666666667
+          ]
+        },
+        {
+          "point": [
+            10.610833333333334,
+            77.0886111111111
+          ]
+        },
+        {
+          "point": [
+            10.904444444444445,
+            76.63666666666667
+          ],
+          "center": [
+            11.026944444444446,
+            77.04166666666667
+          ],
+          "clockwise": true,
+          "radius_nm": 25
+        },
+        {
+          "point": [
+            10.916666666666666,
+            76.48333333333333
+          ]
+        },
+        {
+          "point": [
+            11.25,
+            76.51666666666667
+          ]
+        }
+      ],
+      "id": "cta-b",
+      "kind": "CTA",
+      "classification": "D",
+      "hours": "H24",
+      "excludes": [
+        "ctr"
+      ],
+      "lower": {
+        "reference": "AMSL",
+        "value": 5500
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 145
+      }
+    }
+  ]
+}

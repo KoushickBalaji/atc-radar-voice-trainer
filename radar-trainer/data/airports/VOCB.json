@@ -1,0 +1,294 @@
+{
+  "icao": "VOCB",
+  "name": "Coimbatore",
+  "center": [
+    11.026911111111112,
+    77.04180277777778
+  ],
+  "elevation_ft": 1330,
+  "range_nm": 25,
+  "runway": {
+    "name": "05/23",
+    "length_m": 2990,
+    "width_m": 45,
+    "ends": [
+      {
+        "name": "05",
+        "lat": 11.022330555555556,
+        "lon": 77.03484444444445,
+        "elevation_ft": 1330,
+        "bearing_true": 45.72,
+        "bearing_magnetic_chart": 48
+      },
+      {
+        "name": "23",
+        "lat": 11.0412,
+        "lon": 77.05443333333334,
+        "elevation_ft": 1277,
+        "bearing_true": 225.72,
+        "bearing_magnetic_chart": 228
+      }
+    ]
+  },
+  "approach": {
+    "procedure_id": "ILS-Z",
+    "runway": "23",
+    "course_true": 225.72,
+    "course_magnetic": 228,
+    "glide_deg": 3,
+    "rdh_ft": 56.7,
+    "intercept_alt_ft": 3200,
+    "threshold_index": 1,
+    "line_length_nm": 15,
+    "reference_fixes": [
+      {
+        "name": "IF 11.6D ICMB",
+        "distance_nm": 11.6,
+        "reference": 3
+      },
+      {
+        "name": "LOC-only FAF 6.1D",
+        "distance_nm": 6.1,
+        "reference": 3
+      }
+    ]
+  },
+  "navaids": [
+    {
+      "name": "CCB VOR/DME 112.9",
+      "lat": 11.033077777777779,
+      "lon": 77.04863611111111,
+      "type": "vor"
+    },
+    {
+      "name": "CB NDB 354 kHz",
+      "lat": 11.025758333333334,
+      "lon": 77.04444722222222,
+      "type": "ndb"
+    },
+    {
+      "name": "ICMB LOC 109.1",
+      "lat": 11.02038888888889,
+      "lon": 77.03283333333333,
+      "type": "loc"
+    },
+    {
+      "name": "ICMB GP/DME",
+      "lat": 11.038166666666667,
+      "lon": 77.05291666666666,
+      "type": "gs"
+    }
+  ],
+  "exercise": {
+    "tower_handover": {
+      "request_nm": 6,
+      "go_around_nm": 2
+    },
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5000,
+      "spd_kt": 220,
+      "hdg": 240
+    },
+    "suggested_heading": 255,
+    "command_alt_min_ft": 3000,
+    "pre_capture_floor_ft": 3000
+  },
+  "sources": [
+    "VOCB-ADC.pdf: 09 JUL 2026, precise ARP",
+    "AD 2.1VOCB.pdf: AD 2.12 and AD 2.19",
+    "VOCB-ILS-LOC-Z-RWY 23.pdf: 17 APR 2025",
+    "VOCB-ILS-LOC-Y-RWY 23.pdf: NDB coordinates"
+  ],
+  "msaw": {
+    "source": {
+      "file": "Airport Layouts/Coimbatore/VOCB-ATC-SMAC.pdf",
+      "chart": "AD 2 VOCB 3-301",
+      "effective_date": "2025-04-17",
+      "altitude_datum": "ft AMSL",
+      "note": "For cross-checking assigned altitudes under vectoring control."
+    },
+    "suspend_on_tracked_ils": true,
+    "suspend_on_tracked_localizer": true,
+    "points": {
+      "N": [
+        11.529085722222224,
+        77.02993877777777
+      ],
+      "W": [
+        11.495584388888888,
+        76.85859269444444
+      ],
+      "S": [
+        11.339248750000001,
+        76.9429073888889
+      ],
+      "F": [
+        11.476813777777778,
+        77.209168
+      ],
+      "E": [
+        11.4098965,
+        77.43796794444445
+      ],
+      "D": [
+        11.132241861111112,
+        77.71126108333334
+      ],
+      "H": [
+        10.709415194444444,
+        77.63821802777778
+      ],
+      "C": [
+        10.553460083333334,
+        77.47598025
+      ],
+      "L": [
+        10.636827027777777,
+        76.88645322222223
+      ],
+      "A": [
+        10.72499775,
+        76.87206402777777
+      ],
+      "B": [
+        10.76054463888889,
+        76.71501083333334
+      ],
+      "L1": [
+        10.820068277777777,
+        76.77663138888889
+      ],
+      "J1": [
+        10.962222166666667,
+        76.8237418611111
+      ],
+      "Y": [
+        11.098021166666667,
+        76.74648158333333
+      ],
+      "P": [
+        11.050732361111113,
+        76.53378686111111
+      ],
+      "G": [
+        11.315412027777779,
+        77.04130419444444
+      ],
+      "L2": [
+        11.045479138888888,
+        77.01032308333333
+      ],
+      "K": [
+        10.99289536111111,
+        77.0042946111111
+      ],
+      "R": [
+        10.920972166666665,
+        77.07526924999999
+      ]
+    },
+    "regions": [
+      {
+        "id": "east",
+        "minimum_ft": 3200,
+        "label": [
+          11.02,
+          77.27
+        ],
+        "boundary": [
+          "F",
+          "E",
+          "D",
+          "H",
+          "C",
+          "L",
+          "A",
+          "R",
+          "K",
+          "L2",
+          "G"
+        ]
+      },
+      {
+        "id": "southwest-inner",
+        "minimum_ft": 5800,
+        "label": [
+          10.9,
+          76.97
+        ],
+        "boundary": [
+          "B",
+          "L1",
+          "L2",
+          "K",
+          "R",
+          "A",
+          "L"
+        ]
+      },
+      {
+        "id": "west-inner",
+        "minimum_ft": 7400,
+        "label": [
+          11.16,
+          76.88
+        ],
+        "boundary": [
+          "Y",
+          "G",
+          "L2",
+          "L1",
+          "J1"
+        ]
+      },
+      {
+        "id": "northwest-middle",
+        "minimum_ft": 9500,
+        "label": [
+          11.43,
+          76.98
+        ],
+        "boundary": [
+          "P",
+          "S",
+          "W",
+          "N",
+          "F",
+          "G",
+          "Y",
+          "J1",
+          "L1",
+          "B"
+        ]
+      },
+      {
+        "id": "northwest-outer",
+        "minimum_ft": 11000,
+        "label": [
+          11.17,
+          76.63
+        ],
+        "boundary": [
+          "P",
+          {
+            "to": "W",
+            "center": [
+              11.026911111111112,
+              77.04180277777778
+            ]
+          },
+          "S"
+        ]
+      }
+    ],
+    "schema_version": 1,
+    "coordinate_reference": "WGS84",
+    "altitude_unit": "ft",
+    "altitude_reference": "AMSL"
+  },
+  "country_code": "IN"
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VIGG",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Kangra CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "As per NOTAM",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "AMSL",
+        "value": 10500.0
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Kangra/AD 2.1VIGG.pdf",
+        "page": 9,
+        "section": "AD 2.17",
+        "effective_date": "2026-01-22",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Circular area centred at 320953N 0761544E within a 12 NM radius excluding the TSA701(B) and VIR 141(B) | Vertical: 10500 FT AMSL | Class: D | Hours: As per NOTAM"
+      },
+      "shape": "circle",
+      "center": [
+        32.164722222222224,
+        76.26222222222222
+      ],
+      "radius_nm": 12.0
+    }
+  ]
+}

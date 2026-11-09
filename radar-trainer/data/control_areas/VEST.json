@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VEST",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Satna CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 65
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Satna/AD 2.1VEST.pdf",
+        "page": 6,
+        "section": "AD 2.17",
+        "effective_date": "2026-07-09",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: 1) When Rewa CTA is NOT active: CTR \u2013 Circular area centred on 243343.49N 0805106.60E within a 10NM radius. 2) When Rewa CTA is Active: CTR \u2013 Area bounded by 244011.11N 0805930.11E along a counterclockwise arc of a 10 NM radius centred at 243343.49N 0805106.60E to 242408.84N 0805421.36E to the point of origin. | Vertical: FL 65 | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        24.562080555555557,
+        80.85183333333333
+      ],
+      "radius_nm": 10.0
+    }
+  ]
+}

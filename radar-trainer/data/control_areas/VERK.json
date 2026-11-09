@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VERK",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Rourkela CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "AS ATS",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 85
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Rourkela/AD 2.1VERK.pdf",
+        "page": 6,
+        "section": "AD 2.17",
+        "effective_date": "2026-07-09",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Area bounded by lines joining points 220246N 0843505E then along the clockwise arc of a circle of 18NM radius centred on 221522N 0844853E to 221415N 0850822E to point of origin. | Vertical: FL 85 | Class: D | Hours: AS ATS"
+      },
+      "shape": "circle",
+      "center": [
+        22.25611111111111,
+        84.81472222222222
+      ],
+      "radius_nm": 18.0
+    }
+  ]
+}

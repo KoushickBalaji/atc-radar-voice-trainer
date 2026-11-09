@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VIMB",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Moradabad CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 55
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Moradabad/AD 2.1VIMB.pdf",
+        "page": 8,
+        "section": "AD 2.17",
+        "effective_date": "2026-07-09",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Area bounded by lines joining points 290000N 0790720E; 290000N 0790355E; 283700N 0790155E; 283453N 0790049E then along the clockwise arc of a circle of 15NM radius centred on 284910N 0785528E to point of origin. | Vertical: FL 55 | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        28.819444444444443,
+        78.92444444444445
+      ],
+      "radius_nm": 15.0
+    }
+  ]
+}

@@ -1,0 +1,1921 @@
+{
+  "VAAH": {
+    "name": "Ahmedabad Tower",
+    "frequency_mhz": "118.100",
+    "source_file": "Airport Layouts/Ahmedabad/AD 2.1VAAH.pdf",
+    "source_page": 25,
+    "source_row": "TWR Ahmedabad Tower 118.100 MHZ",
+    "alternatives": [
+      {
+        "name": "Ahmedabad Tower",
+        "frequency_mhz": "119.600",
+        "source_file": "Airport Layouts/Ahmedabad/AD 2.1VAAH.pdf",
+        "source_page": 25,
+        "source_row": "TWR Ahmedabad Tower 119.600 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VAAM": {
+    "name": "AMRA V ATI TWR",
+    "frequency_mhz": "118.650",
+    "source_file": "Airport Layouts/Amravati/AD 2.1VAAM.pdf",
+    "source_page": 7,
+    "source_row": "TWR AMRA V ATI TWR 118.650 MHZ",
+    "alternatives": [
+      {
+        "name": "AMRA V ATI TWR",
+        "frequency_mhz": "124.475",
+        "source_file": "Airport Layouts/Amravati/AD 2.1VAAM.pdf",
+        "source_page": 7,
+        "source_row": "TWR AMRA V ATI TWR 124.475 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VAAU": {
+    "name": "Aurangabad TWR",
+    "frequency_mhz": "118.350",
+    "source_file": "Airport Layouts/Aurangabad/AD 2.1VAAU.pdf",
+    "source_page": 17,
+    "source_row": "TWR Aurangabad TWR 118.350 MHZ",
+    "alternatives": [
+      {
+        "name": "Aurangabad TWR",
+        "frequency_mhz": "122.300",
+        "source_file": "Airport Layouts/Aurangabad/AD 2.1VAAU.pdf",
+        "source_page": 17,
+        "source_row": "TWR Aurangabad TWR 122.300 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VABO": {
+    "name": "Vadodara Tower",
+    "frequency_mhz": "118.325",
+    "source_file": "Airport Layouts/Vadodara/AD 2.1VABO.pdf",
+    "source_page": 19,
+    "source_row": "TWR Vadodara Tower 118.325 MHZ",
+    "alternatives": [
+      {
+        "name": "Vadodara Tower",
+        "frequency_mhz": "122.350",
+        "source_file": "Airport Layouts/Vadodara/AD 2.1VABO.pdf",
+        "source_page": 19,
+        "source_row": "TWR Vadodara Tower 122.350 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VABP": {
+    "name": "Bhopal Tower",
+    "frequency_mhz": "118.050",
+    "source_file": "Airport Layouts/Bhopal/AD 2.1VABP.pdf",
+    "source_page": 13,
+    "source_row": "TWR Bhopal Tower 118.050 MHZ",
+    "alternatives": [
+      {
+        "name": "Bhopal Tower",
+        "frequency_mhz": "118.550",
+        "source_file": "Airport Layouts/Bhopal/AD 2.1VABP.pdf",
+        "source_page": 13,
+        "source_row": "TWR Bhopal Tower 118.550 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VABV": {
+    "name": "Bhavnagar Tower",
+    "frequency_mhz": "118.150",
+    "source_file": "Airport Layouts/Bhavnagar/AD 2.1VABV.pdf",
+    "source_page": 23,
+    "source_row": "TWR Bhavnagar Tower 118.150 MHZ",
+    "alternatives": [
+      {
+        "name": "Bhavnagar Tower",
+        "frequency_mhz": "120.800",
+        "source_file": "Airport Layouts/Bhavnagar/AD 2.1VABV.pdf",
+        "source_page": 23,
+        "source_row": "TWR Bhavnagar Tower 120.800 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VADN": {
+    "name": "DAMAN TOWER",
+    "frequency_mhz": "118.700",
+    "source_file": "Airport Layouts/Daman/AD 2.1VADN.pdf",
+    "source_page": 11,
+    "source_row": "TWR DAMAN TOWER 118.700 MHZ",
+    "alternatives": [
+      {
+        "name": "DAMAN TOWER",
+        "frequency_mhz": "119.700",
+        "source_file": "Airport Layouts/Daman/AD 2.1VADN.pdf",
+        "source_page": 11,
+        "source_row": "TWR DAMAN TOWER 119.700 MHZ"
+      },
+      {
+        "name": "DAMAN TOWER",
+        "frequency_mhz": "120.700",
+        "source_file": "Airport Layouts/Daman/AD 2.1VADN.pdf",
+        "source_page": 11,
+        "source_row": "TWR DAMAN TOWER 120.700 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VAGD": {
+    "name": "Gondia Tower",
+    "frequency_mhz": "118.350",
+    "source_file": "Airport Layouts/Gondia/AD 2.1VAGD.pdf",
+    "source_page": 10,
+    "source_row": "TWR Gondia Tower 118.350 MHZ",
+    "alternatives": [
+      {
+        "name": "Gondia Tower",
+        "frequency_mhz": "118.700",
+        "source_file": "Airport Layouts/Gondia/AD 2.1VAGD.pdf",
+        "source_page": 10,
+        "source_row": "TWR Gondia Tower 118.700 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VAHS": {
+    "name": "Rajkot Tower",
+    "frequency_mhz": "120.025",
+    "source_file": "Airport Layouts/Rajkot INTL/AD 2.1VAHS.pdf",
+    "source_page": 7,
+    "source_row": "TWR Rajkot Tower 120.025 MHZ",
+    "alternatives": [
+      {
+        "name": "Rajkot Tower",
+        "frequency_mhz": "120.275",
+        "source_file": "Airport Layouts/Rajkot INTL/AD 2.1VAHS.pdf",
+        "source_page": 7,
+        "source_row": "TWR Rajkot Tower 120.275 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VAID": {
+    "name": "Indore Tower",
+    "frequency_mhz": "118.500",
+    "source_file": "Airport Layouts/Indore/AD 2.1VAID.pdf",
+    "source_page": 13,
+    "source_row": "TWR Indore Tower 118.500 MHZ",
+    "alternatives": [
+      {
+        "name": "Indore Tower",
+        "frequency_mhz": "122.800",
+        "source_file": "Airport Layouts/Indore/AD 2.1VAID.pdf",
+        "source_page": 13,
+        "source_row": "TWR Indore Tower 122.800 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VAJB": {
+    "name": "Jabalpur Tower",
+    "frequency_mhz": "118.850",
+    "source_file": "Airport Layouts/Jabalpur/AD 2.1VAJB.pdf",
+    "source_page": 11,
+    "source_row": "TWR Jabalpur Tower 118.850 MHZ",
+    "alternatives": [
+      {
+        "name": "Jabalpur Tower",
+        "frequency_mhz": "122.300",
+        "source_file": "Airport Layouts/Jabalpur/AD 2.1VAJB.pdf",
+        "source_page": 11,
+        "source_row": "TWR Jabalpur Tower 122.300 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VAJJ": {
+    "name": "Juhu Tower",
+    "frequency_mhz": "118.750",
+    "source_file": "Airport Layouts/Juhu/AD 2.1VAJJ.pdf",
+    "source_page": 20,
+    "source_row": "TWR Juhu Tower 118.750 MHZ",
+    "alternatives": [
+      {
+        "name": "Juhu Tower",
+        "frequency_mhz": "124.350",
+        "source_file": "Airport Layouts/Juhu/AD 2.1VAJJ.pdf",
+        "source_page": 20,
+        "source_row": "TWR Juhu Tower 124.350 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VAJL": {
+    "name": "Jalgaon Tower",
+    "frequency_mhz": "118.625",
+    "source_file": "Airport Layouts/Jalgaon/AD 2.1VAJL.pdf",
+    "source_page": 13,
+    "source_row": "TWR Jalgaon Tower 118.625 MHZ",
+    "alternatives": [
+      {
+        "name": "Jalgaon Tower",
+        "frequency_mhz": "124.300",
+        "source_file": "Airport Layouts/Jalgaon/AD 2.1VAJL.pdf",
+        "source_page": 13,
+        "source_row": "TWR Jalgaon Tower 124.300 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VAKE": {
+    "name": "Kandla Tower",
+    "frequency_mhz": "118.600",
+    "source_file": "Airport Layouts/Kandla/AD 2.1VAKE.pdf",
+    "source_page": 8,
+    "source_row": "TWR Kandla Tower 118.600 MHZ",
+    "alternatives": [
+      {
+        "name": "Kandla Tower",
+        "frequency_mhz": "124.350",
+        "source_file": "Airport Layouts/Kandla/AD 2.1VAKE.pdf",
+        "source_page": 8,
+        "source_row": "TWR Kandla Tower 124.350 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VAKP": {
+    "name": "KOLHAPUR TOWER",
+    "frequency_mhz": "118.550",
+    "source_file": "Airport Layouts/Kolhapur/AD 2.1VAKP.pdf",
+    "source_page": 11,
+    "source_row": "TWR KOLHAPUR TOWER 118.550 MHZ",
+    "alternatives": [
+      {
+        "name": "KOLHAPUR TOWER",
+        "frequency_mhz": "124.300",
+        "source_file": "Airport Layouts/Kolhapur/AD 2.1VAKP.pdf",
+        "source_page": 11,
+        "source_row": "TWR KOLHAPUR TOWER 124.300 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VAKS": {
+    "name": "Keshod Tower",
+    "frequency_mhz": "118.300",
+    "source_file": "Airport Layouts/Keshod/AD 2.1VAKS.pdf",
+    "source_page": 9,
+    "source_row": "TWR Keshod Tower 118.300 MHZ",
+    "alternatives": [
+      {
+        "name": "Keshod Tower",
+        "frequency_mhz": "122.300",
+        "source_file": "Airport Layouts/Keshod/AD 2.1VAKS.pdf",
+        "source_page": 9,
+        "source_row": "TWR Keshod Tower 122.300 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VAMA": {
+    "name": "MUNDRA TOWER",
+    "frequency_mhz": "122.450",
+    "source_file": "Airport Layouts/Mundra/AD 2.1VAMA.pdf",
+    "source_page": 7,
+    "source_row": "TWR MUNDRA TOWER 122.450 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VANM": {
+    "name": "Navi Tower",
+    "frequency_mhz": "118.275",
+    "source_file": "Airport Layouts/Navi Mumbai/AD 2.1VANM.pdf",
+    "source_page": 22,
+    "source_row": "TWR Navi Tower 118.275 MHZ",
+    "alternatives": [
+      {
+        "name": "Navi Tower",
+        "frequency_mhz": "119.000",
+        "source_file": "Airport Layouts/Navi Mumbai/AD 2.1VANM.pdf",
+        "source_page": 22,
+        "source_row": "TWR Navi Tower 119.000 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VANP": {
+    "name": "Nagpur Tower",
+    "frequency_mhz": "118.100",
+    "source_file": "Airport Layouts/Nagpur/AD 2.1VANP.pdf",
+    "source_page": 24,
+    "source_row": "TWR Nagpur Tower 118.100 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VAOZ": {
+    "name": "Ozar Tower",
+    "frequency_mhz": "122.700",
+    "source_file": "Airport Layouts/Ozar/AD 2.1VAOZ.pdf",
+    "source_page": 9,
+    "source_row": "TWR Ozar Tower 122.700 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VAPO": {
+    "name": "Pune Tower",
+    "frequency_mhz": "123.500",
+    "source_file": "Airport Layouts/Pune/AD 2.1VAPO.pdf",
+    "source_page": 13,
+    "source_row": "TWR Pune Tower 123.500 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VAPR": {
+    "name": "Porbandar Tower",
+    "frequency_mhz": "118.700",
+    "source_file": "Airport Layouts/Porbandar/AD 2.1VAPR.pdf",
+    "source_page": 12,
+    "source_row": "TWR Porbandar Tower 118.700 MHZ",
+    "alternatives": [
+      {
+        "name": "Porbandar Tower",
+        "frequency_mhz": "118.850",
+        "source_file": "Airport Layouts/Porbandar/AD 2.1VAPR.pdf",
+        "source_page": 12,
+        "source_row": "TWR Porbandar Tower 118.850 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VASD": {
+    "name": "SHIRDI TOWER",
+    "frequency_mhz": "118.875",
+    "source_file": "Airport Layouts/Shirdi/AD 2.1VASD.pdf",
+    "source_page": 7,
+    "source_row": "TWR SHIRDI TOWER 118.875 MHZ",
+    "alternatives": [
+      {
+        "name": "SHIRDI TOWER",
+        "frequency_mhz": "121.225",
+        "source_file": "Airport Layouts/Shirdi/AD 2.1VASD.pdf",
+        "source_page": 7,
+        "source_row": "TWR SHIRDI TOWER 121.225 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VASL": {
+    "name": "Solapur TWR",
+    "frequency_mhz": "118.600",
+    "source_file": "Airport Layouts/Solapur/AD 2.1VASL.pdf",
+    "source_page": 6,
+    "source_row": "TWR Solapur TWR 118.600 MHZ",
+    "alternatives": [
+      {
+        "name": "Solapur TWR",
+        "frequency_mhz": "124.300",
+        "source_file": "Airport Layouts/Solapur/AD 2.1VASL.pdf",
+        "source_page": 6,
+        "source_row": "TWR Solapur TWR 124.300 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VASU": {
+    "name": "Surat Tower",
+    "frequency_mhz": "118.050",
+    "source_file": "Airport Layouts/Surat/AD 2.1VASU.pdf",
+    "source_page": 15,
+    "source_row": "TWR Surat Tower 118.050 MHZ",
+    "alternatives": [
+      {
+        "name": "Surat Tower",
+        "frequency_mhz": "118.550",
+        "source_file": "Airport Layouts/Surat/AD 2.1VASU.pdf",
+        "source_page": 15,
+        "source_row": "TWR Surat Tower 118.550 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VAUD": {
+    "name": "Udaipur Tower",
+    "frequency_mhz": "118.650",
+    "source_file": "Airport Layouts/Udaipur/AD 2.1VAUD.pdf",
+    "source_page": 18,
+    "source_row": "TWR Udaipur Tower 118.650 MHZ",
+    "alternatives": [
+      {
+        "name": "Udaipur Tower",
+        "frequency_mhz": "124.075",
+        "source_file": "Airport Layouts/Udaipur/AD 2.1VAUD.pdf",
+        "source_page": 18,
+        "source_row": "TWR Udaipur Tower 124.075 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEAH": {
+    "name": "Azamgarh Tower",
+    "frequency_mhz": "118.550",
+    "source_file": "Airport Layouts/Azamgarh/AD 2.1VEAH.pdf",
+    "source_page": 8,
+    "source_row": "TWR Azamgarh Tower 118.550 MHZ",
+    "alternatives": [
+      {
+        "name": "Azamgarh Tower",
+        "frequency_mhz": "122.050",
+        "source_file": "Airport Layouts/Azamgarh/AD 2.1VEAH.pdf",
+        "source_page": 8,
+        "source_row": "TWR Azamgarh Tower 122.050 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEAP": {
+    "name": "AMBIKAPUR TOWER",
+    "frequency_mhz": "118.200",
+    "source_file": "Airport Layouts/Ambikapur/AD 2.1VEAP.pdf",
+    "source_page": 10,
+    "source_row": "TWR AMBIKAPUR TOWER 118.200 MHZ",
+    "alternatives": [
+      {
+        "name": "AMBIKAPUR TOWER",
+        "frequency_mhz": "118.325",
+        "source_file": "Airport Layouts/Ambikapur/AD 2.1VEAP.pdf",
+        "source_page": 10,
+        "source_row": "TWR AMBIKAPUR TOWER 118.325 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEAT": {
+    "name": "Agartala TWR",
+    "frequency_mhz": "118.050",
+    "source_file": "Airport Layouts/Agartala/AD 2.1VEAT.pdf",
+    "source_page": 18,
+    "source_row": "TWR Agartala TWR 118.050 MHZ",
+    "alternatives": [
+      {
+        "name": "Agartala TWR",
+        "frequency_mhz": "119.050",
+        "source_file": "Airport Layouts/Agartala/AD 2.1VEAT.pdf",
+        "source_page": 18,
+        "source_row": "TWR Agartala TWR 119.050 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEAY": {
+    "name": "Ayodhya Tower",
+    "frequency_mhz": "119.200",
+    "source_file": "Airport Layouts/Ayodhya/AD 2.1VEAY.pdf",
+    "source_page": 9,
+    "source_row": "TWR Ayodhya Tower 119.200 MHZ",
+    "alternatives": [
+      {
+        "name": "Ayodhya Tower",
+        "frequency_mhz": "124.075",
+        "source_file": "Airport Layouts/Ayodhya/AD 2.1VEAY.pdf",
+        "source_page": 9,
+        "source_row": "TWR Ayodhya Tower 124.075 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEBD": {
+    "name": "Bagdogra Tower",
+    "frequency_mhz": "122.300",
+    "source_file": "Airport Layouts/Bagdogra/AD 2.1VEBD.pdf",
+    "source_page": 7,
+    "source_row": "TWR Bagdogra Tower 122.300 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEBI": {
+    "name": "Barapani Tower",
+    "frequency_mhz": "119.150",
+    "source_file": "Airport Layouts/Barapani/AD 2.1VEBI.pdf",
+    "source_page": 15,
+    "source_row": "TWR Barapani Tower 119.150 MHZ",
+    "alternatives": [
+      {
+        "name": "Barapani Tower",
+        "frequency_mhz": "122.425",
+        "source_file": "Airport Layouts/Barapani/AD 2.1VEBI.pdf",
+        "source_page": 15,
+        "source_row": "TWR Barapani Tower 122.425 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEBN": {
+    "name": "Varanasi Tower",
+    "frequency_mhz": "118.100",
+    "source_file": "Airport Layouts/Varanasi/AD 2.1VEBN.pdf",
+    "source_page": 13,
+    "source_row": "TWR Varanasi Tower 118.100 MHZ",
+    "alternatives": [
+      {
+        "name": "Varanasi Tower",
+        "frequency_mhz": "119.000",
+        "source_file": "Airport Layouts/Varanasi/AD 2.1VEBN.pdf",
+        "source_page": 13,
+        "source_row": "TWR Varanasi Tower 119.000 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEBS": {
+    "name": "Bhubaneswar Tower",
+    "frequency_mhz": "118.150",
+    "source_file": "Airport Layouts/Bhubaneswar/AD 2.1VEBS.pdf",
+    "source_page": 11,
+    "source_row": "TWR Bhubaneswar Tower 118.150 MHZ",
+    "alternatives": [
+      {
+        "name": "Bhubaneswar Tower",
+        "frequency_mhz": "125.150",
+        "source_file": "Airport Layouts/Bhubaneswar/AD 2.1VEBS.pdf",
+        "source_page": 11,
+        "source_row": "TWR Bhubaneswar Tower 125.150 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEBU": {
+    "name": "Bilaspur Tower",
+    "frequency_mhz": "118.075",
+    "source_file": "Airport Layouts/Bilaspur/AD 2.1VEBU.pdf",
+    "source_page": 9,
+    "source_row": "TWR Bilaspur Tower 118.075 MHZ",
+    "alternatives": [
+      {
+        "name": "Bilaspur Tower",
+        "frequency_mhz": "118.625",
+        "source_file": "Airport Layouts/Bilaspur/AD 2.1VEBU.pdf",
+        "source_page": 9,
+        "source_row": "TWR Bilaspur Tower 118.625 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VECC": {
+    "name": "Kolkata Tower",
+    "frequency_mhz": "118.025",
+    "source_file": "Airport Layouts/Kolkata/AD 2.1VECC.pdf",
+    "source_page": 34,
+    "source_row": "TWR Kolkata Tower 118.025 MHZ",
+    "alternatives": [
+      {
+        "name": "Kolkata Tower",
+        "frequency_mhz": "118.100",
+        "source_file": "Airport Layouts/Kolkata/AD 2.1VECC.pdf",
+        "source_page": 34,
+        "source_row": "TWR Kolkata Tower 118.100 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VECO": {
+    "name": "Cooch Behar Tower",
+    "frequency_mhz": "118.150",
+    "source_file": "Airport Layouts/Cooch-Behar/AD 2.1VECO.pdf",
+    "source_page": 11,
+    "source_row": "TWR Cooch Behar Tower 118.150 MHZ",
+    "alternatives": [
+      {
+        "name": "Cooch Behar Tower",
+        "frequency_mhz": "124.325",
+        "source_file": "Airport Layouts/Cooch-Behar/AD 2.1VECO.pdf",
+        "source_page": 11,
+        "source_row": "TWR Cooch Behar Tower 124.325 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VECT": {
+    "name": "Chitrakoot TWR",
+    "frequency_mhz": "118.500",
+    "source_file": "Airport Layouts/Chitrakoot/AD 2.1VECT.pdf",
+    "source_page": 7,
+    "source_row": "TWR Chitrakoot TWR 118.500 MHZ",
+    "alternatives": [
+      {
+        "name": "Chitrakoot TWR",
+        "frequency_mhz": "122.250",
+        "source_file": "Airport Layouts/Chitrakoot/AD 2.1VECT.pdf",
+        "source_page": 7,
+        "source_row": "TWR Chitrakoot TWR 122.250 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEDG": {
+    "name": "Durgapur Tower",
+    "frequency_mhz": "118.550",
+    "source_file": "Airport Layouts/Durgapur/AD 2.1VEDG.pdf",
+    "source_page": 15,
+    "source_row": "TWR Durgapur Tower 118.550 MHZ",
+    "alternatives": [
+      {
+        "name": "Durgapur Tower",
+        "frequency_mhz": "119.450",
+        "source_file": "Airport Layouts/Durgapur/AD 2.1VEDG.pdf",
+        "source_page": 15,
+        "source_row": "TWR Durgapur Tower 119.450 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEDO": {
+    "name": "Deoghar Tower",
+    "frequency_mhz": "119.350",
+    "source_file": "Airport Layouts/Deoghar/AD 2.1VEDO.pdf",
+    "source_page": 9,
+    "source_row": "TWR Deoghar Tower 119.350 MHZ",
+    "alternatives": [
+      {
+        "name": "Deoghar Tower",
+        "frequency_mhz": "120.825",
+        "source_file": "Airport Layouts/Deoghar/AD 2.1VEDO.pdf",
+        "source_page": 9,
+        "source_row": "TWR Deoghar Tower 120.825 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEGK": {
+    "name": "Gorakhpur Tower",
+    "frequency_mhz": "128.200",
+    "source_file": "Airport Layouts/Gorakhpur/AD 2.1VEGK.pdf",
+    "source_page": 8,
+    "source_row": "TWR Gorakhpur Tower 128.200 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEGT": {
+    "name": "Guwahati Tower",
+    "frequency_mhz": "118.750",
+    "source_file": "Airport Layouts/Guwahati/AD 2.1VEGT.pdf",
+    "source_page": 24,
+    "source_row": "TWR Guwahati Tower 118.750 MHZ",
+    "alternatives": [
+      {
+        "name": "Guwahati Tower/Guwahati Ground",
+        "frequency_mhz": "122.050",
+        "source_file": "Airport Layouts/Guwahati/AD 2.1VEGT.pdf",
+        "source_page": 24,
+        "source_row": "TWR Guwahati Tower/Guwahati Ground 122.050 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEGY": {
+    "name": "Gaya TWR",
+    "frequency_mhz": "118.250",
+    "source_file": "Airport Layouts/Gaya/AD 2.1VEGY.pdf",
+    "source_page": 14,
+    "source_row": "TWR Gaya TWR 118.250 MHZ",
+    "alternatives": [
+      {
+        "name": "Gaya TWR",
+        "frequency_mhz": "118.450",
+        "source_file": "Airport Layouts/Gaya/AD 2.1VEGY.pdf",
+        "source_page": 14,
+        "source_row": "TWR Gaya TWR 118.450 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEHO": {
+    "name": "Hollongi Tower",
+    "frequency_mhz": "118.850",
+    "source_file": "Airport Layouts/Hollongi/AD 2.1VEHO.pdf",
+    "source_page": 12,
+    "source_row": "TWR Hollongi Tower 118.850 MHZ",
+    "alternatives": [
+      {
+        "name": "Hollongi Tower",
+        "frequency_mhz": "122.150",
+        "source_file": "Airport Layouts/Hollongi/AD 2.1VEHO.pdf",
+        "source_page": 12,
+        "source_row": "TWR Hollongi Tower 122.150 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEIM": {
+    "name": "Imphal Tower",
+    "frequency_mhz": "118.550",
+    "source_file": "Airport Layouts/Imphal/AD 2.1VEIM.pdf",
+    "source_page": 10,
+    "source_row": "TWR Imphal Tower 118.550 MHZ",
+    "alternatives": [
+      {
+        "name": "Imphal Tower",
+        "frequency_mhz": "124.350",
+        "source_file": "Airport Layouts/Imphal/AD 2.1VEIM.pdf",
+        "source_page": 10,
+        "source_row": "TWR Imphal Tower 124.350 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEJH": {
+    "name": "Jharsuguda Tower",
+    "frequency_mhz": "118.350",
+    "source_file": "Airport Layouts/Jharsuguda/AD 2.1VEJH.pdf",
+    "source_page": 9,
+    "source_row": "TWR Jharsuguda Tower 118.350 MHZ",
+    "alternatives": [
+      {
+        "name": "Jharsuguda Tower",
+        "frequency_mhz": "124.350",
+        "source_file": "Airport Layouts/Jharsuguda/AD 2.1VEJH.pdf",
+        "source_page": 9,
+        "source_row": "TWR Jharsuguda Tower 124.350 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEJR": {
+    "name": "Jagdalpur Tower",
+    "frequency_mhz": "118.025",
+    "source_file": "Airport Layouts/Jagdalpur/AD 2.1VEJR.pdf",
+    "source_page": 16,
+    "source_row": "TWR Jagdalpur Tower 118.025 MHZ",
+    "alternatives": [
+      {
+        "name": "Jagdalpur Tower",
+        "frequency_mhz": "118.150",
+        "source_file": "Airport Layouts/Jagdalpur/AD 2.1VEJR.pdf",
+        "source_page": 16,
+        "source_row": "TWR Jagdalpur Tower 118.150 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEJS": {
+    "name": "Jamshedpur Tower",
+    "frequency_mhz": "119.225",
+    "source_file": "Airport Layouts/Jamshedpur/AD 2.1VEJS.pdf",
+    "source_page": 14,
+    "source_row": "TWR Jamshedpur Tower 119.225 MHZ",
+    "alternatives": [
+      {
+        "name": "Jamshedpur Tower",
+        "frequency_mhz": "122.100",
+        "source_file": "Airport Layouts/Jamshedpur/AD 2.1VEJS.pdf",
+        "source_page": 14,
+        "source_row": "TWR Jamshedpur Tower 122.100 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEJT": {
+    "name": "Jorhat Tower",
+    "frequency_mhz": "127.300",
+    "source_file": "Airport Layouts/Jorhat/AD 2.1VEJT.pdf",
+    "source_page": 9,
+    "source_row": "TWR Jorhat Tower 127.300 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEKI": {
+    "name": "Kushinagar Tower",
+    "frequency_mhz": "118.025",
+    "source_file": "Airport Layouts/Kushinagar/AD 2.1VEKI.pdf",
+    "source_page": 12,
+    "source_row": "TWR Kushinagar Tower 118.025 MHZ",
+    "alternatives": [
+      {
+        "name": "Kushinagar Tower",
+        "frequency_mhz": "118.675",
+        "source_file": "Airport Layouts/Kushinagar/AD 2.1VEKI.pdf",
+        "source_page": 12,
+        "source_row": "TWR Kushinagar Tower 118.675 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEKO": {
+    "name": "Khajuraho Tower",
+    "frequency_mhz": "118.150",
+    "source_file": "Airport Layouts/Khajuraho/AD 2.1VEKO.pdf",
+    "source_page": 12,
+    "source_row": "TWR Khajuraho Tower 118.150 MHZ",
+    "alternatives": [
+      {
+        "name": "Khajuraho Tower",
+        "frequency_mhz": "124.350",
+        "source_file": "Airport Layouts/Khajuraho/AD 2.1VEKO.pdf",
+        "source_page": 12,
+        "source_row": "TWR Khajuraho Tower 124.350 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEKU": {
+    "name": "Kumbhirgram Tower",
+    "frequency_mhz": "122.700",
+    "source_file": "Airport Layouts/Kumbhigram/AD 2.1VEKU.pdf",
+    "source_page": 9,
+    "source_row": "TWR Kumbhirgram Tower 122.700 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VELP": {
+    "name": "Lengpui TWR",
+    "frequency_mhz": "118.150",
+    "source_file": "Airport Layouts/Lengpui/AD 2.1VELP.pdf",
+    "source_page": 11,
+    "source_row": "TWR Lengpui TWR 118.150 MHZ",
+    "alternatives": [
+      {
+        "name": "Lengpui TWR",
+        "frequency_mhz": "122.250",
+        "source_file": "Airport Layouts/Lengpui/AD 2.1VELP.pdf",
+        "source_page": 11,
+        "source_row": "TWR Lengpui TWR 122.250 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VELR": {
+    "name": "Lilabari TWR",
+    "frequency_mhz": "118.650",
+    "source_file": "Airport Layouts/Lilabari/AD 2.1VELR.pdf",
+    "source_page": 14,
+    "source_row": "TWR Lilabari TWR 118.650 MHZ",
+    "alternatives": [
+      {
+        "name": "Lilabari TWR",
+        "frequency_mhz": "124.300",
+        "source_file": "Airport Layouts/Lilabari/AD 2.1VELR.pdf",
+        "source_page": 14,
+        "source_row": "TWR Lilabari TWR 124.300 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEMR": {
+    "name": "DIMAPUR TOWER",
+    "frequency_mhz": "118.450",
+    "source_file": "Airport Layouts/Dimapur/AD 2.1VEMR.pdf",
+    "source_page": 17,
+    "source_row": "TWR DIMAPUR TOWER 118.450 MHZ",
+    "alternatives": [
+      {
+        "name": "DIMAPUR TOWER",
+        "frequency_mhz": "118.600",
+        "source_file": "Airport Layouts/Dimapur/AD 2.1VEMR.pdf",
+        "source_page": 17,
+        "source_row": "TWR DIMAPUR TOWER 118.600 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEPT": {
+    "name": "Patna Tower",
+    "frequency_mhz": "118.300",
+    "source_file": "Airport Layouts/Patna/AD 2.1VEPT.pdf",
+    "source_page": 32,
+    "source_row": "TWR Patna Tower 118.300 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEPY": {
+    "name": "Pakyong Tower",
+    "frequency_mhz": "118.250",
+    "source_file": "Airport Layouts/Pakyong/AD 2.1VEPY.pdf",
+    "source_page": 11,
+    "source_row": "TWR Pakyong Tower 118.250 MHZ",
+    "alternatives": [
+      {
+        "name": "Pakyong Tower",
+        "frequency_mhz": "118.625",
+        "source_file": "Airport Layouts/Pakyong/AD 2.1VEPY.pdf",
+        "source_page": 11,
+        "source_row": "TWR Pakyong Tower 118.625 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VERC": {
+    "name": "Ranchi Tower",
+    "frequency_mhz": "118.050",
+    "source_file": "Airport Layouts/Ranchi/AD 2.1VERC.pdf",
+    "source_page": 19,
+    "source_row": "TWR Ranchi Tower 118.050 MHZ",
+    "alternatives": [
+      {
+        "name": "Ranchi Tower",
+        "frequency_mhz": "124.300",
+        "source_file": "Airport Layouts/Ranchi/AD 2.1VERC.pdf",
+        "source_page": 19,
+        "source_row": "TWR Ranchi Tower 124.300 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VERK": {
+    "name": "Rourkela Tower",
+    "frequency_mhz": "118.750",
+    "source_file": "Airport Layouts/Rourkela/AD 2.1VERK.pdf",
+    "source_page": 7,
+    "source_row": "TWR Rourkela Tower 118.750 MHZ",
+    "alternatives": [
+      {
+        "name": "Rourkela Tower",
+        "frequency_mhz": "118.875",
+        "source_file": "Airport Layouts/Rourkela/AD 2.1VERK.pdf",
+        "source_page": 7,
+        "source_row": "TWR Rourkela Tower 118.875 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VERP": {
+    "name": "Raipur Tower",
+    "frequency_mhz": "124.300",
+    "source_file": "Airport Layouts/Raipur/AD 2.1VERP.pdf",
+    "source_page": 10,
+    "source_row": "TWR Raipur Tower 124.300 MHZ",
+    "alternatives": [
+      {
+        "name": "Raipur Tower",
+        "frequency_mhz": "124.750",
+        "source_file": "Airport Layouts/Raipur/AD 2.1VERP.pdf",
+        "source_page": 10,
+        "source_row": "TWR Raipur Tower 124.750 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VERU": {
+    "name": "RUPSI TOWER",
+    "frequency_mhz": "118.500",
+    "source_file": "Airport Layouts/Rupsi/AD 2.1VERU.pdf",
+    "source_page": 10,
+    "source_row": "TWR RUPSI TOWER 118.500 MHZ",
+    "alternatives": [
+      {
+        "name": "RUPSI TOWER",
+        "frequency_mhz": "118.575",
+        "source_file": "Airport Layouts/Rupsi/AD 2.1VERU.pdf",
+        "source_page": 10,
+        "source_row": "TWR RUPSI TOWER 118.575 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VERW": {
+    "name": "Rewa Tower",
+    "frequency_mhz": "119.775",
+    "source_file": "Airport Layouts/Rewa/AD 2.1VERW.pdf",
+    "source_page": 9,
+    "source_row": "TWR Rewa Tower 119.775 MHZ",
+    "alternatives": [
+      {
+        "name": "Rewa Tower",
+        "frequency_mhz": "120.800",
+        "source_file": "Airport Layouts/Rewa/AD 2.1VERW.pdf",
+        "source_page": 9,
+        "source_row": "TWR Rewa Tower 120.800 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VEST": {
+    "name": "Satna Tower",
+    "frequency_mhz": "119.475",
+    "source_file": "Airport Layouts/Satna/AD 2.1VEST.pdf",
+    "source_page": 7,
+    "source_row": "TWR Satna Tower 119.475 MHZ",
+    "alternatives": [
+      {
+        "name": "Satna Tower",
+        "frequency_mhz": "121.150",
+        "source_file": "Airport Layouts/Satna/AD 2.1VEST.pdf",
+        "source_page": 7,
+        "source_row": "TWR Satna Tower 121.150 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VETJ": {
+    "name": "Tezu Tower",
+    "frequency_mhz": "118.750",
+    "source_file": "Airport Layouts/Tezu/AD 2.1VETJ.pdf",
+    "source_page": 10,
+    "source_row": "TWR Tezu Tower 118.750 MHZ",
+    "alternatives": [
+      {
+        "name": "Tezu Tower",
+        "frequency_mhz": "124.350",
+        "source_file": "Airport Layouts/Tezu/AD 2.1VETJ.pdf",
+        "source_page": 10,
+        "source_row": "TWR Tezu Tower 124.350 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIAG": {
+    "name": "Agra Tower",
+    "frequency_mhz": "125.000",
+    "source_file": "Airport Layouts/Agra/AD 2.1VIAG.pdf",
+    "source_page": 8,
+    "source_row": "TWR Agra Tower 125.000 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIAH": {
+    "name": "ALIGARH TOWER",
+    "frequency_mhz": "123.050",
+    "source_file": "Airport Layouts/Aligarh/AD 2.1VIAH.pdf",
+    "source_page": 7,
+    "source_row": "TWR ALIGARH TOWER 123.050 MHZ",
+    "alternatives": [
+      {
+        "name": "ALIGARH TOWER",
+        "frequency_mhz": "123.200",
+        "source_file": "Airport Layouts/Aligarh/AD 2.1VIAH.pdf",
+        "source_page": 7,
+        "source_row": "TWR ALIGARH TOWER 123.200 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIAR": {
+    "name": "Amritsar Tower",
+    "frequency_mhz": "118.150",
+    "source_file": "Airport Layouts/Amritsar/AD 2.1VIAR.pdf",
+    "source_page": 11,
+    "source_row": "TWR Amritsar Tower 118.150 MHZ",
+    "alternatives": [
+      {
+        "name": "Amritsar Tower",
+        "frequency_mhz": "124.350",
+        "source_file": "Airport Layouts/Amritsar/AD 2.1VIAR.pdf",
+        "source_page": 11,
+        "source_row": "TWR Amritsar Tower 124.350 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIBR": {
+    "name": "Kullu Manali Tower",
+    "frequency_mhz": "118.450",
+    "source_file": "Airport Layouts/Kullu Manali/AD 2.1VIBR.pdf",
+    "source_page": 17,
+    "source_row": "TWR Kullu Manali Tower 118.450 MHZ",
+    "alternatives": [
+      {
+        "name": "Kullu Manali Tower",
+        "frequency_mhz": "122.300",
+        "source_file": "Airport Layouts/Kullu Manali/AD 2.1VIBR.pdf",
+        "source_page": 17,
+        "source_row": "TWR Kullu Manali Tower 122.300 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIBY": {
+    "name": "Bareilly Tower",
+    "frequency_mhz": "125.525",
+    "source_file": "Airport Layouts/Bareilly/AD 2.1VIBY.pdf",
+    "source_page": 7,
+    "source_row": "TWR Bareilly Tower 125.525 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VICG": {
+    "name": "Chandigarh Tower",
+    "frequency_mhz": "118.300",
+    "source_file": "Airport Layouts/Chandigarh/AD 2.1VICG.pdf",
+    "source_page": 12,
+    "source_row": "TWR Chandigarh Tower 118.300 MHZ",
+    "alternatives": [
+      {
+        "name": "Chandigarh Tower",
+        "frequency_mhz": "118.925",
+        "source_file": "Airport Layouts/Chandigarh/AD 2.1VICG.pdf",
+        "source_page": 12,
+        "source_row": "TWR Chandigarh Tower 118.925 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIDD": {
+    "name": "Safdarjung Tower",
+    "frequency_mhz": "118.875",
+    "source_file": "Airport Layouts/Safdarjung/AD 2.1VIDD.pdf",
+    "source_page": 11,
+    "source_row": "TWR Safdarjung Tower 118.875 MHZ",
+    "alternatives": [
+      {
+        "name": "Safdarjung Tower",
+        "frequency_mhz": "122.300",
+        "source_file": "Airport Layouts/Safdarjung/AD 2.1VIDD.pdf",
+        "source_page": 11,
+        "source_row": "TWR Safdarjung Tower 122.300 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIDN": {
+    "name": "Dehradun Tower",
+    "frequency_mhz": "125.475",
+    "source_file": "Airport Layouts/Dehradun/AD 2.1VIDN.pdf",
+    "source_page": 27,
+    "source_row": "TWR Dehradun Tower 125.475 MHZ",
+    "alternatives": [
+      {
+        "name": "Dehradun Tower",
+        "frequency_mhz": "126.575",
+        "source_file": "Airport Layouts/Dehradun/AD 2.1VIDN.pdf",
+        "source_page": 27,
+        "source_row": "TWR Dehradun Tower 126.575 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIDP": {
+    "name": "Delhi Tower",
+    "frequency_mhz": "118.100",
+    "source_file": "Airport Layouts/Delhi/AD 2.1VIDP.pdf",
+    "source_page": 66,
+    "source_row": "TWR Delhi Tower 118.100 MHZ",
+    "alternatives": [
+      {
+        "name": "Delhi Tower",
+        "frequency_mhz": "118.250",
+        "source_file": "Airport Layouts/Delhi/AD 2.1VIDP.pdf",
+        "source_page": 66,
+        "source_row": "TWR Delhi Tower 118.250 MHZ"
+      },
+      {
+        "name": "Delhi Tower",
+        "frequency_mhz": "118.750",
+        "source_file": "Airport Layouts/Delhi/AD 2.1VIDP.pdf",
+        "source_page": 66,
+        "source_row": "TWR Delhi Tower 118.750 MHZ"
+      },
+      {
+        "name": "Delhi Tower",
+        "frequency_mhz": "123.825",
+        "source_file": "Airport Layouts/Delhi/AD 2.1VIDP.pdf",
+        "source_page": 66,
+        "source_row": "TWR Delhi Tower 123.825 MHZ"
+      },
+      {
+        "name": "Delhi Tower",
+        "frequency_mhz": "124.375",
+        "source_file": "Airport Layouts/Delhi/AD 2.1VIDP.pdf",
+        "source_page": 66,
+        "source_row": "TWR Delhi Tower 124.375 MHZ"
+      },
+      {
+        "name": "Delhi Tower",
+        "frequency_mhz": "125.850",
+        "source_file": "Airport Layouts/Delhi/AD 2.1VIDP.pdf",
+        "source_page": 66,
+        "source_row": "TWR Delhi Tower 125.850 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIDT": {
+    "name": "Datia Tower",
+    "frequency_mhz": "119.225",
+    "source_file": "Airport Layouts/Datia/AD 2.1VIDT.pdf",
+    "source_page": 6,
+    "source_row": "TWR Datia Tower 119.225 MHZ",
+    "alternatives": [
+      {
+        "name": "Datia Tower",
+        "frequency_mhz": "119.950",
+        "source_file": "Airport Layouts/Datia/AD 2.1VIDT.pdf",
+        "source_page": 6,
+        "source_row": "TWR Datia Tower 119.950 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIDX": {
+    "name": "Hindan Tower",
+    "frequency_mhz": "130.100",
+    "source_file": "Airport Layouts/Hindan/AD 2.1VIDX.pdf",
+    "source_page": 7,
+    "source_row": "TWR Hindan Tower 130.100 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIGG": {
+    "name": "KANGRA Tower",
+    "frequency_mhz": "118.050",
+    "source_file": "Airport Layouts/Kangra/AD 2.1VIGG.pdf",
+    "source_page": 9,
+    "source_row": "TWR KANGRA Tower 118.050 MHZ",
+    "alternatives": [
+      {
+        "name": "KANGRA Tower",
+        "frequency_mhz": "120.100",
+        "source_file": "Airport Layouts/Kangra/AD 2.1VIGG.pdf",
+        "source_page": 9,
+        "source_row": "TWR KANGRA Tower 120.100 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIGR": {
+    "name": "Gwalior Tower",
+    "frequency_mhz": "122.700",
+    "source_file": "Airport Layouts/Gwalior/AD 2.1VIGR.pdf",
+    "source_page": 10,
+    "source_row": "TWR Gwalior Tower 122.700 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIHX": {
+    "name": "Halwara Tower",
+    "frequency_mhz": "130.100",
+    "source_file": "Airport Layouts/Halwara/AD 2.1VIHX.pdf",
+    "source_page": 9,
+    "source_row": "TWR Halwara Tower 130.100 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIJO": {
+    "name": "Jodhpur Tower",
+    "frequency_mhz": "122.400",
+    "source_file": "Airport Layouts/Jodhpur/AD 2.1VIJO.pdf",
+    "source_page": 9,
+    "source_row": "TWR Jodhpur Tower 122.400 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIJP": {
+    "name": "Jaipur Tower",
+    "frequency_mhz": "124.300",
+    "source_file": "Airport Layouts/Jaipur/AD 2.1VIJP.pdf",
+    "source_page": 21,
+    "source_row": "TWR Jaipur Tower 124.300 MHZ",
+    "alternatives": [
+      {
+        "name": "Jaipur Tower",
+        "frequency_mhz": "125.250",
+        "source_file": "Airport Layouts/Jaipur/AD 2.1VIJP.pdf",
+        "source_page": 21,
+        "source_row": "TWR Jaipur Tower 125.250 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIJU": {
+    "name": "Jammu Tower",
+    "frequency_mhz": "122.850",
+    "source_file": "Airport Layouts/Jammu/AD 2.1VIJU.pdf",
+    "source_page": 8,
+    "source_row": "TWR Jammu Tower 122.850 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIKG": {
+    "name": "Kishangarh Tower",
+    "frequency_mhz": "118.200",
+    "source_file": "Airport Layouts/Kishangarh/AD 2.1VIKG.pdf",
+    "source_page": 9,
+    "source_row": "TWR Kishangarh Tower 118.200 MHZ",
+    "alternatives": [
+      {
+        "name": "Kishangarh Tower",
+        "frequency_mhz": "118.450",
+        "source_file": "Airport Layouts/Kishangarh/AD 2.1VIKG.pdf",
+        "source_page": 9,
+        "source_row": "TWR Kishangarh Tower 118.450 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VILD": {
+    "name": "Ludhiana TWR",
+    "frequency_mhz": "119.450",
+    "source_file": "Airport Layouts/Ludhiana/AD 2.1VILD.pdf",
+    "source_page": 9,
+    "source_row": "TWR Ludhiana TWR 119.450 MHZ",
+    "alternatives": [
+      {
+        "name": "Ludhiana TWR",
+        "frequency_mhz": "124.300",
+        "source_file": "Airport Layouts/Ludhiana/AD 2.1VILD.pdf",
+        "source_page": 9,
+        "source_row": "TWR Ludhiana TWR 124.300 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VILH": {
+    "name": "Leh Tower",
+    "frequency_mhz": "120.400",
+    "source_file": "Airport Layouts/Leh/AD 2.1VILH.pdf",
+    "source_page": 7,
+    "source_row": "TWR Leh Tower 120.400 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VILK": {
+    "name": "Lucknow Tower",
+    "frequency_mhz": "118.600",
+    "source_file": "Airport Layouts/Lucknow/AD 2.1VILK.pdf",
+    "source_page": 13,
+    "source_row": "TWR Lucknow Tower 118.600 MHZ",
+    "alternatives": [
+      {
+        "name": "Lucknow Tower",
+        "frequency_mhz": "122.500",
+        "source_file": "Airport Layouts/Lucknow/AD 2.1VILK.pdf",
+        "source_page": 13,
+        "source_row": "TWR Lucknow Tower 122.500 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIMB": {
+    "name": "Moradabad Tower",
+    "frequency_mhz": "118.025",
+    "source_file": "Airport Layouts/Moradabad/AD 2.1VIMB.pdf",
+    "source_page": 9,
+    "source_row": "TWR Moradabad Tower 118.025 MHZ",
+    "alternatives": [
+      {
+        "name": "Moradabad Tower",
+        "frequency_mhz": "118.625",
+        "source_file": "Airport Layouts/Moradabad/AD 2.1VIMB.pdf",
+        "source_page": 9,
+        "source_row": "TWR Moradabad Tower 118.625 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIND": {
+    "name": "Jewar Tower",
+    "frequency_mhz": "118.675",
+    "source_file": "Airport Layouts/Jewar/AD 2.1VIND.pdf",
+    "source_page": 11,
+    "source_row": "TWR Jewar Tower 118.675 MHZ",
+    "alternatives": [
+      {
+        "name": "Jewar Tower",
+        "frequency_mhz": "119.125",
+        "source_file": "Airport Layouts/Jewar/AD 2.1VIND.pdf",
+        "source_page": 11,
+        "source_row": "TWR Jewar Tower 119.125 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIPG": {
+    "name": "Pithoragarh Tower",
+    "frequency_mhz": "122.100",
+    "source_file": "Airport Layouts/Pithoragarh/AD 2.1VIPG.pdf",
+    "source_page": 13,
+    "source_row": "TWR Pithoragarh Tower 122.100 MHZ",
+    "alternatives": [
+      {
+        "name": "Pithoragarh Tower",
+        "frequency_mhz": "122.550",
+        "source_file": "Airport Layouts/Pithoragarh/AD 2.1VIPG.pdf",
+        "source_page": 13,
+        "source_row": "TWR Pithoragarh Tower 122.550 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIPT": {
+    "name": "Pantnagar Tower",
+    "frequency_mhz": "118.450",
+    "source_file": "Airport Layouts/Pantnagar/AD 2.1VIPT.pdf",
+    "source_page": 13,
+    "source_row": "TWR Pantnagar Tower 118.450 MHZ",
+    "alternatives": [
+      {
+        "name": "Pantnagar Tower",
+        "frequency_mhz": "119.150",
+        "source_file": "Airport Layouts/Pantnagar/AD 2.1VIPT.pdf",
+        "source_page": 13,
+        "source_row": "TWR Pantnagar Tower 119.150 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VISM": {
+    "name": "SHIMLA Tower",
+    "frequency_mhz": "118.350",
+    "source_file": "Airport Layouts/Shimla/AD 2.1VISM.pdf",
+    "source_page": 9,
+    "source_row": "TWR SHIMLA Tower 118.350 MHZ",
+    "alternatives": [
+      {
+        "name": "SHIMLA Tower",
+        "frequency_mhz": "118.650",
+        "source_file": "Airport Layouts/Shimla/AD 2.1VISM.pdf",
+        "source_page": 9,
+        "source_row": "TWR SHIMLA Tower 118.650 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VISP": {
+    "name": "Sarsawa Tower",
+    "frequency_mhz": "120.200",
+    "source_file": "Airport Layouts/Sarsawaa/AD 2.1VISP.pdf",
+    "source_page": 11,
+    "source_row": "TWR Sarsawa Tower 120.200 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VISR": {
+    "name": "Srinagar Tower/Srinagar Approach",
+    "frequency_mhz": "130.500",
+    "source_file": "Airport Layouts/Srinagar/AD 2.1VISR.pdf",
+    "source_page": 9,
+    "source_row": "TWR Srinagar Tower/Srinagar Approach 130.500 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VIUT": {
+    "name": "Uttarlai Tower",
+    "frequency_mhz": "123.200",
+    "source_file": "Airport Layouts/Uttarlai/AD 2.1VIUT.pdf",
+    "source_page": 9,
+    "source_row": "TWR Uttarlai Tower 123.200 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOAT": {
+    "name": "Agatti Tower",
+    "frequency_mhz": "118.700",
+    "source_file": "Airport Layouts/Agatti/AD 2.1VOAT.pdf",
+    "source_page": 10,
+    "source_row": "TWR Agatti Tower 118.700 MHZ",
+    "alternatives": [
+      {
+        "name": "Agatti Tower",
+        "frequency_mhz": "122.300",
+        "source_file": "Airport Layouts/Agatti/AD 2.1VOAT.pdf",
+        "source_page": 10,
+        "source_row": "TWR Agatti Tower 122.300 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOBG": {
+    "name": "HAL TOWER",
+    "frequency_mhz": "123.500",
+    "source_file": "Airport Layouts/Bengaluru (HAL)/AD 2.1VOBG.pdf",
+    "source_page": 20,
+    "source_row": "TWR HAL TOWER 123.500 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOBM": {
+    "name": "Belagavi Tower",
+    "frequency_mhz": "118.050",
+    "source_file": "Airport Layouts/Belagavi/AD 2.1VOBM.pdf",
+    "source_page": 9,
+    "source_row": "TWR Belagavi Tower 118.050 MHZ",
+    "alternatives": [
+      {
+        "name": "Belagavi Tower",
+        "frequency_mhz": "119.200",
+        "source_file": "Airport Layouts/Belagavi/AD 2.1VOBM.pdf",
+        "source_page": 9,
+        "source_row": "TWR Belagavi Tower 119.200 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOBR": {
+    "name": "BIDAR TOWER",
+    "frequency_mhz": "121.450",
+    "source_file": "Airport Layouts/Bidar/AD 2.1VOBR.pdf",
+    "source_page": 7,
+    "source_row": "TWR BIDAR TOWER 121.450 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOCB": {
+    "name": "Coimbatore Tower",
+    "frequency_mhz": "118.150",
+    "source_file": "Airport Layouts/Coimbatore/AD 2.1VOCB.pdf",
+    "source_page": 14,
+    "source_row": "TWR Coimbatore Tower 118.150 MHZ",
+    "alternatives": [
+      {
+        "name": "Coimbatore Tower",
+        "frequency_mhz": "126.550",
+        "source_file": "Airport Layouts/Coimbatore/AD 2.1VOCB.pdf",
+        "source_page": 14,
+        "source_row": "TWR Coimbatore Tower 126.550 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOCI": {
+    "name": "Cochin Tower",
+    "frequency_mhz": "118.800",
+    "source_file": "Airport Layouts/Cochin/AD 2.1VOCI.pdf",
+    "source_page": 10,
+    "source_row": "TWR Cochin Tower 118.800 MHZ",
+    "alternatives": [
+      {
+        "name": "Cochin Tower",
+        "frequency_mhz": "119.400",
+        "source_file": "Airport Layouts/Cochin/AD 2.1VOCI.pdf",
+        "source_page": 10,
+        "source_row": "TWR Cochin Tower 119.400 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOCL": {
+    "name": "Calicut Tower",
+    "frequency_mhz": "119.150",
+    "source_file": "Airport Layouts/Calicut/AD 2.1VOCL.pdf",
+    "source_page": 12,
+    "source_row": "TWR Calicut Tower 119.150 MHZ",
+    "alternatives": [
+      {
+        "name": "Calicut Tower",
+        "frequency_mhz": "123.350",
+        "source_file": "Airport Layouts/Calicut/AD 2.1VOCL.pdf",
+        "source_page": 12,
+        "source_row": "TWR Calicut Tower 123.350 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOCP": {
+    "name": "KADAPA TOWER",
+    "frequency_mhz": "118.350",
+    "source_file": "Airport Layouts/Kadapa/AD 2.1VOCP.pdf",
+    "source_page": 8,
+    "source_row": "TWR KADAPA TOWER 118.350 MHZ",
+    "alternatives": [
+      {
+        "name": "KADAPA TOWER",
+        "frequency_mhz": "120.475",
+        "source_file": "Airport Layouts/Kadapa/AD 2.1VOCP.pdf",
+        "source_page": 8,
+        "source_row": "TWR KADAPA TOWER 120.475 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOGA": {
+    "name": "Mopa Tower",
+    "frequency_mhz": "118.725",
+    "source_file": "Airport Layouts/Mopa/AD 2.1VOGA.pdf",
+    "source_page": 8,
+    "source_row": "TWR Mopa Tower 118.725 MHZ",
+    "alternatives": [
+      {
+        "name": "Mopa Tower",
+        "frequency_mhz": "119.400",
+        "source_file": "Airport Layouts/Mopa/AD 2.1VOGA.pdf",
+        "source_page": 8,
+        "source_row": "TWR Mopa Tower 119.400 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOGB": {
+    "name": "KALABURAGI TOWER",
+    "frequency_mhz": "122.025",
+    "source_file": "Airport Layouts/Kalaburagi/AD 2.1VOGB.pdf",
+    "source_page": 11,
+    "source_row": "TWR KALABURAGI TOWER 122.025 MHZ",
+    "alternatives": [
+      {
+        "name": "KALABURAGI TOWER",
+        "frequency_mhz": "122.425",
+        "source_file": "Airport Layouts/Kalaburagi/AD 2.1VOGB.pdf",
+        "source_page": 11,
+        "source_row": "TWR KALABURAGI TOWER 122.425 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOGO": {
+    "name": "Dabolim Tower",
+    "frequency_mhz": "118.100",
+    "source_file": "Airport Layouts/Goa/AD 2.1VOGO.pdf",
+    "source_page": 20,
+    "source_row": "TWR Dabolim Tower 118.100 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOHB": {
+    "name": "Hubballi Tower",
+    "frequency_mhz": "118.850",
+    "source_file": "Airport Layouts/Hubballi/AD 2.1VOHB.pdf",
+    "source_page": 9,
+    "source_row": "TWR Hubballi Tower 118.850 MHZ",
+    "alternatives": [
+      {
+        "name": "Hubballi Tower",
+        "frequency_mhz": "122.200",
+        "source_file": "Airport Layouts/Hubballi/AD 2.1VOHB.pdf",
+        "source_page": 9,
+        "source_row": "TWR Hubballi Tower 122.200 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOHS": {
+    "name": "Shamshabad TWR",
+    "frequency_mhz": "118.200",
+    "source_file": "Airport Layouts/Shamshabad (RGI)/AD 2.1VOHS.pdf",
+    "source_page": 11,
+    "source_row": "TWR Shamshabad TWR 118.200 MHZ",
+    "alternatives": [
+      {
+        "name": "Shamshabad TWR",
+        "frequency_mhz": "118.450",
+        "source_file": "Airport Layouts/Shamshabad (RGI)/AD 2.1VOHS.pdf",
+        "source_page": 11,
+        "source_row": "TWR Shamshabad TWR 118.450 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOHY": {
+    "name": "Hyderabad Tower",
+    "frequency_mhz": "122.250",
+    "source_file": "Airport Layouts/Begumpet/AD 2.1VOHY.pdf",
+    "source_page": 41,
+    "source_row": "TWR Hyderabad Tower 122.250 MHZ",
+    "alternatives": [
+      {
+        "name": "Hyderabad Tower",
+        "frequency_mhz": "132.400",
+        "source_file": "Airport Layouts/Begumpet/AD 2.1VOHY.pdf",
+        "source_page": 41,
+        "source_row": "TWR Hyderabad Tower 132.400 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOJV": {
+    "name": "JINDAL VIJAYANAGAR TOWER",
+    "frequency_mhz": "129.225",
+    "source_file": "Airport Layouts/Jindal Vijayanagar/AD 2.1VOJV.pdf",
+    "source_page": 25,
+    "source_row": "TWR JINDAL VIJAYANAGAR TOWER 129.225 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOKN": {
+    "name": "Kannur Tower",
+    "frequency_mhz": "118.050",
+    "source_file": "Airport Layouts/Kannur/AD 2.1VOKN.pdf",
+    "source_page": 8,
+    "source_row": "TWR Kannur Tower 118.050 MHZ",
+    "alternatives": [
+      {
+        "name": "Kannur Tower",
+        "frequency_mhz": "121.975",
+        "source_file": "Airport Layouts/Kannur/AD 2.1VOKN.pdf",
+        "source_page": 8,
+        "source_row": "TWR Kannur Tower 121.975 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOKU": {
+    "name": "Kurnool Tower",
+    "frequency_mhz": "119.425",
+    "source_file": "Airport Layouts/Kurnool/AD 2.1VOKU.pdf",
+    "source_page": 10,
+    "source_row": "TWR Kurnool Tower 119.425 MHZ",
+    "alternatives": [
+      {
+        "name": "Kurnool Tower",
+        "frequency_mhz": "122.975",
+        "source_file": "Airport Layouts/Kurnool/AD 2.1VOKU.pdf",
+        "source_page": 10,
+        "source_row": "TWR Kurnool Tower 122.975 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOML": {
+    "name": "Mangaluru Tower",
+    "frequency_mhz": "118.750",
+    "source_file": "Airport Layouts/Mangaluru/AD 2.1VOML.pdf",
+    "source_page": 19,
+    "source_row": "TWR Mangaluru Tower 118.750 MHZ",
+    "alternatives": [
+      {
+        "name": "Mangaluru Tower",
+        "frequency_mhz": "122.100",
+        "source_file": "Airport Layouts/Mangaluru/AD 2.1VOML.pdf",
+        "source_page": 19,
+        "source_row": "TWR Mangaluru Tower 122.100 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOMY": {
+    "name": "Mysuru Tower",
+    "frequency_mhz": "118.250",
+    "source_file": "Airport Layouts/Mysuru/AD 2.1VOMY.pdf",
+    "source_page": 9,
+    "source_row": "TWR Mysuru Tower 118.250 MHZ",
+    "alternatives": [
+      {
+        "name": "Mysuru Tower",
+        "frequency_mhz": "124.325",
+        "source_file": "Airport Layouts/Mysuru/AD 2.1VOMY.pdf",
+        "source_page": 9,
+        "source_row": "TWR Mysuru Tower 124.325 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOND": {
+    "name": "Nanded Tower",
+    "frequency_mhz": "118.750",
+    "source_file": "Airport Layouts/Nanded/AD 2.1VOND.pdf",
+    "source_page": 18,
+    "source_row": "TWR Nanded Tower 118.750 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOPB": {
+    "name": "Sri Vijaya Puram Tower",
+    "frequency_mhz": "118.100",
+    "source_file": "Airport Layouts/Portblair/AD 2.1VOPB.pdf",
+    "source_page": 23,
+    "source_row": "TWR Sri Vijaya Puram Tower 118.100 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOPC": {
+    "name": "Puducherry Tower",
+    "frequency_mhz": "118.750",
+    "source_file": "Airport Layouts/Puducherry/AD 2.1VOPC.pdf",
+    "source_page": 9,
+    "source_row": "TWR Puducherry Tower 118.750 MHZ",
+    "alternatives": [
+      {
+        "name": "Puducherry Tower",
+        "frequency_mhz": "122.900",
+        "source_file": "Airport Layouts/Puducherry/AD 2.1VOPC.pdf",
+        "source_page": 9,
+        "source_row": "TWR Puducherry Tower 122.900 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOPN": {
+    "name": "Sri Sathya Sai Tower",
+    "frequency_mhz": "118.400",
+    "source_file": "Airport Layouts/Puttaparthi/AD 2.1VOPN.pdf",
+    "source_page": 7,
+    "source_row": "TWR Sri Sathya Sai Tower 118.400 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VORY": {
+    "name": "Rajahmundry Tower",
+    "frequency_mhz": "122.300",
+    "source_file": "Airport Layouts/Rajahmundry/AD 2.1VORY.pdf",
+    "source_page": 9,
+    "source_row": "TWR Rajahmundry Tower 122.300 MHZ",
+    "alternatives": [
+      {
+        "name": "Rajahmundry Tower",
+        "frequency_mhz": "124.325",
+        "source_file": "Airport Layouts/Rajahmundry/AD 2.1VORY.pdf",
+        "source_page": 9,
+        "source_row": "TWR Rajahmundry Tower 124.325 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOSH": {
+    "name": "SHIV AMOGGA TOWER",
+    "frequency_mhz": "120.825",
+    "source_file": "Airport Layouts/Shivamogga/AD 2.1VOSH.pdf",
+    "source_page": 6,
+    "source_row": "TWR SHIV AMOGGA TOWER 120.825 MHZ",
+    "alternatives": [
+      {
+        "name": "SHIV AMOGGA TOWER",
+        "frequency_mhz": "124.075",
+        "source_file": "Airport Layouts/Shivamogga/AD 2.1VOSH.pdf",
+        "source_page": 6,
+        "source_row": "TWR SHIV AMOGGA TOWER 124.075 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOSM": {
+    "name": "Salem Tower ( Aerodrome Control)",
+    "frequency_mhz": "118.850",
+    "source_file": "Airport Layouts/Salem/AD 2.1VOSM.pdf",
+    "source_page": 15,
+    "source_row": "TWR Salem Tower ( Aerodrome Control) 118.850 MHZ",
+    "alternatives": [
+      {
+        "name": "Salem Tower ( Aerodrome Control)",
+        "frequency_mhz": "122.400",
+        "source_file": "Airport Layouts/Salem/AD 2.1VOSM.pdf",
+        "source_page": 15,
+        "source_row": "TWR Salem Tower ( Aerodrome Control) 122.400 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOSR": {
+    "name": "Sindhudurg Tower",
+    "frequency_mhz": "118.650",
+    "source_file": "Airport Layouts/Sindhudurg/AD 2.1VOSR.pdf",
+    "source_page": 14,
+    "source_row": "TWR Sindhudurg Tower 118.650 MHZ",
+    "alternatives": [
+      {
+        "name": "Sindhudurg Tower",
+        "frequency_mhz": "122.450",
+        "source_file": "Airport Layouts/Sindhudurg/AD 2.1VOSR.pdf",
+        "source_page": 14,
+        "source_row": "TWR Sindhudurg Tower 122.450 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOTK": {
+    "name": "Tuticorin Tower",
+    "frequency_mhz": "118.350",
+    "source_file": "Airport Layouts/Tuticorin/AD 2.1VOTK.pdf",
+    "source_page": 10,
+    "source_row": "TWR Tuticorin Tower 118.350 MHZ",
+    "alternatives": [
+      {
+        "name": "Tuticorin Tower",
+        "frequency_mhz": "120.375",
+        "source_file": "Airport Layouts/Tuticorin/AD 2.1VOTK.pdf",
+        "source_page": 10,
+        "source_row": "TWR Tuticorin Tower 120.375 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOTR": {
+    "name": "Tiruchirappalli Tower",
+    "frequency_mhz": "118.300",
+    "source_file": "Airport Layouts/Tiruchirappalli/AD 2.1VOTR.pdf",
+    "source_page": 18,
+    "source_row": "TWR Tiruchirappalli Tower 118.300 MHZ",
+    "alternatives": [
+      {
+        "name": "Tiruchirappalli Tower",
+        "frequency_mhz": "120.425",
+        "source_file": "Airport Layouts/Tiruchirappalli/AD 2.1VOTR.pdf",
+        "source_page": 18,
+        "source_row": "TWR Tiruchirappalli Tower 120.425 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOVI": {
+    "name": "Bhogapuram TWR",
+    "frequency_mhz": "118.325",
+    "source_file": "Airport Layouts/Bhogapuram/AD 2.1VOVI.pdf",
+    "source_page": 10,
+    "source_row": "TWR Bhogapuram TWR 118.325 MHZ",
+    "alternatives": [
+      {
+        "name": "Bhogapuram TWR",
+        "frequency_mhz": "119.025",
+        "source_file": "Airport Layouts/Bhogapuram/AD 2.1VOVI.pdf",
+        "source_page": 10,
+        "source_row": "TWR Bhogapuram TWR 119.025 MHZ"
+      }
+    ],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  },
+  "VOVZ": {
+    "name": "Visakhapatnam Tower",
+    "frequency_mhz": "123.500",
+    "source_file": "Airport Layouts/Visakhapatnam/AD 2.1VOVZ.pdf",
+    "source_page": 12,
+    "source_row": "TWR Visakhapatnam Tower 123.500 MHZ",
+    "alternatives": [],
+    "policy": "First listed TWR channel selected for training; published hours/activation are not simulated."
+  }
+}

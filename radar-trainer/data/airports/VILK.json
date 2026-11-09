@@ -1,0 +1,192 @@
+{
+  "icao": "VILK",
+  "name": "Lucknow",
+  "country_code": "IN",
+  "center": [
+    26.761944444444445,
+    80.88333333333334
+  ],
+  "elevation_ft": 406.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "09/27",
+    "length_m": 2744.0,
+    "width_m": 45.0,
+    "ends": [
+      {
+        "name": "09",
+        "lat": 26.760377777777776,
+        "lon": 80.87670277777777,
+        "elevation_ft": 405.0,
+        "bearing_true": 89.14
+      },
+      {
+        "name": "27",
+        "lat": 26.760727777777777,
+        "lon": 80.90270833333334,
+        "elevation_ft": 400.0,
+        "bearing_true": 269.14,
+        "bearing_magnetic_chart": 269
+      }
+    ]
+  },
+  "approach": {
+    "runway": "27",
+    "threshold_index": 1,
+    "course_true": 269.14,
+    "course_magnetic": 269,
+    "glide_deg": 3,
+    "rdh_ft": 50,
+    "intercept_alt_ft": 2500,
+    "line_length_nm": 16,
+    "reference_fixes": []
+  },
+  "navaids": [
+    {
+      "name": "LOC 27 CAT IIIB ILUC 109.900 MHz H24",
+      "lat": 26.76033333333333,
+      "lon": 80.87255555555555,
+      "type": "loc"
+    },
+    {
+      "name": "GP 27 ILUC 333.800 MHz H24",
+      "lat": 26.76188888888889,
+      "lon": 80.89980555555556,
+      "type": "gs"
+    },
+    {
+      "name": "DME ILS 27 ILUC CH36X H24",
+      "lat": 26.76188888888889,
+      "lon": 80.89980555555556,
+      "type": "dme"
+    },
+    {
+      "name": "DVOR/DME LKN 117.400 MHz CH121X H24",
+      "lat": 26.75861111111111,
+      "lon": 80.89444444444445,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 1,
+    "practice_alt_ft": 4000,
+    "command_alt_min_ft": 2300,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5000,
+      "spd_kt": 220,
+      "hdg": 284
+    },
+    "suggested_heading": 299,
+    "pre_capture_floor_ft": 2300
+  },
+  "sources": [
+    "Airport Layouts/Lucknow/AD 2.1VILK.pdf",
+    "Airport Layouts/Lucknow/VILK-ILS-RWY-27-CAT-I.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": 0.25,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Lucknow/AD 2.1VILK.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Lucknow/AD 2.1VILK.pdf",
+        "page": 9,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Lucknow/AD 2.1VILK.pdf",
+        "page": 13,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [
+      "RWY 09/27: threshold separation 2581 m vs published length 2744 m; displacement documented"
+    ],
+    "ils": {
+      "source_file": "Airport Layouts/Lucknow/VILK-ILS-RWY-27-CAT-I.pdf",
+      "source_page": 1,
+      "level_basis": "Published horizontal final segment visually checked; chart TCH used as RDH when so labeled; only vector-to-final segment modeled",
+      "visually_reviewed": true,
+      "warnings": []
+    },
+    "training": "Spawn, speed envelope, localizer capture window, and tolerances are exercise settings, not published procedure minima. Final segment only; omitted chart fixes are not synthesized."
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure.",
+  "training_overrides": {
+    "localizer_min_nm": 7,
+    "localizer_max_nm": 12
+  },
+  "msaw": {
+    "schema_version": 1,
+    "coordinate_reference": "WGS84",
+    "altitude_unit": "ft",
+    "altitude_reference": "AMSL",
+    "source": {
+      "file": "Airport Layouts/Lucknow/VILK-ATC-SMAC.pdf",
+      "chart": "AD 2 VILK 3-301",
+      "effective_date": "2023-11-02",
+      "note": "Single MVA of 2500ft AMSL established within 25NM of ARP (264543N 0805300E)."
+    },
+    "suspend_on_tracked_ils": true,
+    "points": {
+      "ARP": [
+        26.761944444444445,
+        80.88333333333334
+      ],
+      "N25": [
+        27.17861111,
+        80.88333333
+      ],
+      "S25": [
+        26.34527778,
+        80.88333333
+      ]
+    },
+    "regions": [
+      {
+        "id": "vilk-mva-2500",
+        "minimum_ft": 2500,
+        "label": [
+          26.761944444444445,
+          80.88333333333334
+        ],
+        "boundary": [
+          "N25",
+          {
+            "to": "S25",
+            "center": [
+              26.761944444444445,
+              80.88333333333334
+            ]
+          },
+          {
+            "to": "N25",
+            "center": [
+              26.761944444444445,
+              80.88333333333334
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "msaw_availability": "available"
+}

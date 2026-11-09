@@ -1,0 +1,88 @@
+{
+  "icao": "VEPY",
+  "name": "Pakyong",
+  "country_code": "IN",
+  "center": [
+    27.22583333333333,
+    88.58583333333333
+  ],
+  "elevation_ft": 4646.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "02/20",
+    "length_m": 1700.0,
+    "width_m": 30.0,
+    "ends": [
+      {
+        "name": "02",
+        "lat": 27.226025,
+        "lon": 88.58495555555555,
+        "elevation_ft": 4646.0,
+        "bearing_true": 25.37
+      },
+      {
+        "name": "20",
+        "lat": 27.239722222222223,
+        "lon": 88.59222222222222,
+        "elevation_ft": 4617.0,
+        "bearing_true": 205.37
+      }
+    ]
+  },
+  "approach": null,
+  "navaids": [
+    {
+      "name": "DVOR/DME PKG 117.800 MHz CH125X HO",
+      "lat": 27.22972222222222,
+      "lon": 88.58822222222221,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 8000,
+    "command_alt_min_ft": 5700,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 9000,
+      "spd_kt": 220,
+      "hdg": 40
+    },
+    "suggested_heading": 55
+  },
+  "sources": [
+    "Airport Layouts/Pakyong/AD 2.1VEPY.pdf"
+  ],
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Pakyong/AD 2.1VEPY.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Pakyong/AD 2.1VEPY.pdf",
+        "page": 8,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Pakyong/AD 2.1VEPY.pdf",
+        "page": 11,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": []
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. No ILS is identified in the supplied documents; no automatic approach capture. Minimum-altitude warnings unavailable for this airport.",
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

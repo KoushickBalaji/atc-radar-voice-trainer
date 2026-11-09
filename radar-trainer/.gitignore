@@ -1,0 +1,75 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# Virtual environments
+bluesky-env/
+env/
+venv/
+.venv/
+
+# Caches, models and generated data (kept on the cluster, not versioned)
+hf_cache/
+tts_data/
+conda_pkgs/
+pip_cache/
+data_proc/
+outputs/
+*.log
+
+# BlueSky local working data
+bluesky/
+
+# Interface web (frontend/dist est VERSIONNE pour lancer sans Node.js)
+frontend/node_modules/
+frontend/.flowbite-react/class-list.json
+frontend/test-results/
+frontend/playwright-report/
+frontend/scratch/
+.romeo-provenance/
+.romeo-mcp-build.sh
+
+# Rapports d'exercice generes a l'usage
+reports/
+scratch/
+
+# Config providers IA (cles d'API locales - ne jamais versionner)
+.env
+
+# Tests / outils
+.pytest_cache/
+.ruff_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large/local binary artifacts kept outside the source backup
+*.pdf
+*.wav
+*.gif
+*.png
+*.jpg
+*.jpeg
+*.safetensors
+*.tsbuildinfo
+frontend/dist/
+
+# Banc de benchmark : environnements, poids de modeles et artefacts audio lourds
+bench/bench-env/
+bench/models/
+bench/results/tts_audio/
+bench/results/e2e_audio/*_clean.wav
+
+# artefacts de compilation LaTeX (docs/article)
+docs/article/*.aux
+docs/article/*.log
+docs/article/*.out
+docs/article/figures/
+# journaux de serveurs de bench (diagnostic uniquement)
+bench/results/server_*.log
+bench/results/llm_usage.jsonl
+# voix du locuteur humain (donnees personnelles, jamais versionnees)
+bench/results/human_audio/

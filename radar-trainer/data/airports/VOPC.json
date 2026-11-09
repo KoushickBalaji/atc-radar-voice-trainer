@@ -1,0 +1,93 @@
+{
+  "icao": "VOPC",
+  "name": "Puducherry",
+  "country_code": "IN",
+  "center": [
+    11.967222222222222,
+    79.81138888888889
+  ],
+  "elevation_ft": 141.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "07/25",
+    "length_m": 1502.0,
+    "width_m": 30.0,
+    "ends": [
+      {
+        "name": "07",
+        "lat": 11.965822222222222,
+        "lon": 79.80532222222222,
+        "elevation_ft": 140.0,
+        "bearing_true": 69.04
+      },
+      {
+        "name": "25",
+        "lat": 11.970677777777778,
+        "lon": 79.81819999999999,
+        "elevation_ft": 109.0,
+        "bearing_true": 249.04
+      }
+    ]
+  },
+  "approach": null,
+  "navaids": [
+    {
+      "name": "NDB OM 385 kHz As ATS",
+      "lat": 11.967083333333333,
+      "lon": 79.81294444444444,
+      "type": "ndb"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 4000,
+    "command_alt_min_ft": 1200,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5000,
+      "spd_kt": 220,
+      "hdg": 84
+    },
+    "suggested_heading": 99
+  },
+  "sources": [
+    "Airport Layouts/Puducherry/AD 2.1VOPC.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": -1.86,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Puducherry/AD 2.1VOPC.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Puducherry/AD 2.1VOPC.pdf",
+        "page": 7,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Puducherry/AD 2.1VOPC.pdf",
+        "page": 10,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": []
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. No ILS is identified in the supplied documents; no automatic approach capture. Minimum-altitude warnings unavailable for this airport.",
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

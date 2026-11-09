@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VIUT",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Uttarlai CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HJ",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 80
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Uttarlai/AD 2.1VIUT.pdf",
+        "page": 8,
+        "section": "AD 2.17",
+        "effective_date": "2023-03-23",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits MCTR: Circular area centered on 254840N 0712821E within a 25NM radius. | Vertical: FL 80 | Class: D | Hours: HJ"
+      },
+      "shape": "circle",
+      "center": [
+        25.811111111111114,
+        71.4725
+      ],
+      "radius_nm": 25.0
+    }
+  ]
+}

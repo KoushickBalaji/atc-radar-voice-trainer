@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VEKU",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Kumbhigram CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "H24",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 200
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Kumbhigram/AD 2.1VEKU.pdf",
+        "page": 8,
+        "section": "AD 2.17",
+        "effective_date": "2026-04-16",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Circular area centered on 245448N 0925839E within a 25NM radius. | Vertical: FL 200 | Class: D | Hours: H24"
+      },
+      "shape": "circle",
+      "center": [
+        24.91333333333333,
+        92.9775
+      ],
+      "radius_nm": 25.0
+    }
+  ]
+}

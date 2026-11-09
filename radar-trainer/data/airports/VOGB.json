@@ -1,0 +1,140 @@
+{
+  "icao": "VOGB",
+  "name": "Kalaburagi",
+  "country_code": "IN",
+  "center": [
+    17.309722222222224,
+    76.95722222222223
+  ],
+  "elevation_ft": 1567.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "09/27",
+    "length_m": 3175.0,
+    "width_m": 45.0,
+    "ends": [
+      {
+        "name": "09",
+        "lat": 17.30745277777778,
+        "lon": 76.95307222222222,
+        "elevation_ft": 1566.0,
+        "bearing_true": 86.54
+      },
+      {
+        "name": "27",
+        "lat": 17.309025000000002,
+        "lon": 76.98013888888889,
+        "elevation_ft": 1512.0,
+        "bearing_true": 266.54,
+        "bearing_magnetic_chart": 268
+      }
+    ]
+  },
+  "approach": {
+    "runway": "27",
+    "threshold_index": 1,
+    "course_true": 266.54,
+    "course_magnetic": 268,
+    "glide_deg": 3,
+    "rdh_ft": 55.8,
+    "intercept_alt_ft": 3000,
+    "line_length_nm": 16,
+    "reference_fixes": []
+  },
+  "navaids": [
+    {
+      "name": "LOC 27 CAT I IKLB 108.300 MHz As ATS",
+      "lat": 17.30713888888889,
+      "lon": 76.94747222222223,
+      "type": "loc"
+    },
+    {
+      "name": "GP 27 334.100 MHz As ATS",
+      "lat": 17.309944444444444,
+      "lon": 76.97655555555556,
+      "type": "gs"
+    },
+    {
+      "name": "DME ILS 27 IKLB CH20X As ATS",
+      "lat": 17.309944444444444,
+      "lon": 76.97655555555556,
+      "type": "dme"
+    },
+    {
+      "name": "DVOR/DME GGB 116.000 MHz CH107X HO",
+      "lat": 17.306361111111112,
+      "lon": 76.96847222222222,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 1,
+    "practice_alt_ft": 5000,
+    "command_alt_min_ft": 2800,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5000,
+      "spd_kt": 220,
+      "hdg": 282
+    },
+    "suggested_heading": 297,
+    "pre_capture_floor_ft": 2800
+  },
+  "sources": [
+    "Airport Layouts/Kalaburagi/AD 2.1VOGB.pdf",
+    "Airport Layouts/Kalaburagi/VOGB-ILS-LOC-RWY-27-CAT-A-B-C.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": -1.25,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Kalaburagi/AD 2.1VOGB.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Kalaburagi/AD 2.1VOGB.pdf",
+        "page": 8,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Kalaburagi/AD 2.1VOGB.pdf",
+        "page": 12,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [
+      "RWY 09/27: threshold separation 2877 m vs published length 3175 m; displacement documented"
+    ],
+    "ils": {
+      "source_file": "Airport Layouts/Kalaburagi/VOGB-ILS-LOC-RWY-27-CAT-A-B-C.pdf",
+      "source_page": 1,
+      "level_basis": "Published horizontal final segment visually checked; only vector-to-final segment modeled",
+      "visually_reviewed": true,
+      "warnings": [
+        "for Cat C restricted to"
+      ]
+    },
+    "training": "Spawn, speed envelope, localizer capture window, and tolerances are exercise settings, not published procedure minima. Final segment only; omitted chart fixes are not synthesized."
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. Minimum-altitude warnings unavailable for this airport.",
+  "training_overrides": {
+    "localizer_min_nm": 7,
+    "localizer_max_nm": 12
+  },
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

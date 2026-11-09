@@ -1,0 +1,93 @@
+{
+  "icao": "VIGG",
+  "name": "Kangra",
+  "country_code": "IN",
+  "center": [
+    32.164722222222224,
+    76.26222222222222
+  ],
+  "elevation_ft": 2527.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "15/33",
+    "length_m": 1376.0,
+    "width_m": 30.0,
+    "ends": [
+      {
+        "name": "15",
+        "lat": 32.17016666666667,
+        "lon": 76.25918055555556,
+        "elevation_ft": 2527.0,
+        "bearing_true": 147.99
+      },
+      {
+        "name": "33",
+        "lat": 32.15964722222222,
+        "lon": 76.26691111111111,
+        "elevation_ft": 2466.0,
+        "bearing_true": 327.99
+      }
+    ]
+  },
+  "approach": null,
+  "navaids": [
+    {
+      "name": "DVOR/DME KNG 117.700 MHz CH124X HO",
+      "lat": 32.16916666666666,
+      "lon": 76.26308333333333,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 6000,
+    "command_alt_min_ft": 3600,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 7000,
+      "spd_kt": 220,
+      "hdg": 163
+    },
+    "suggested_heading": 178
+  },
+  "sources": [
+    "Airport Layouts/Kangra/AD 2.1VIGG.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": 1.5,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Kangra/AD 2.1VIGG.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Kangra/AD 2.1VIGG.pdf",
+        "page": 7,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Kangra/AD 2.1VIGG.pdf",
+        "page": 9,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": []
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. No ILS is identified in the supplied documents; no automatic approach capture. Minimum-altitude warnings unavailable for this airport.",
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VEIM",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Imphal CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 200
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Imphal/AD 2.1VEIM.pdf",
+        "page": 10,
+        "section": "AD 2.17",
+        "effective_date": "2026-01-22",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Area bounded by lines joining points 250002N 0932548E; 245902N 0933048E then along the clockwise arc of a circle of 25NM radius centred on 244530N 0935352E to 243902N 0932748E; 244102N 0932148E then along the counter clockwise arc of a circ le of 25NM radius centred on 245449N 0925840E to point of origin. | Vertical: FL 200 | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        24.758333333333333,
+        93.89777777777779
+      ],
+      "radius_nm": 25.0
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VOPB",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Portblair CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "0015 \u2013 1045 UTC",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 155
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Portblair/AD 2.1VOPB.pdf",
+        "page": 23,
+        "section": "AD 2.17",
+        "effective_date": "2026-01-22",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits MCTR: Circular area centered on 113858N 0924445E within a 80NM radius. | Vertical: FL 155 | Class: D | Hours: 0015 \u2013 1045 UTC"
+      },
+      "shape": "circle",
+      "center": [
+        11.649444444444445,
+        92.74583333333334
+      ],
+      "radius_nm": 80.0
+    }
+  ]
+}

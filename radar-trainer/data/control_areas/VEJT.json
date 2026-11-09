@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "icao": "VEJT",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Jorhat CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HJ",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 120
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Jorhat/AD 2.1VEJT.pdf",
+        "page": 8,
+        "section": "AD 2.17",
+        "effective_date": "2023-05-18",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits MCTR: Area bounded by lines joining points 265502N 0932448E; 271802N 0935747E; 272902N 0941947E; 264702N 0945947E; 261602N 0943747E; 260902N 0940947E; 262202N 0932448E to point of origin. | Vertical: FL 120 | Class: D | Hours: HJ"
+      },
+      "shape": "polygon",
+      "edges": [
+        {
+          "point": [
+            26.91722222222222,
+            93.41333333333334
+          ]
+        },
+        {
+          "point": [
+            27.300555555555555,
+            93.96305555555556
+          ]
+        },
+        {
+          "point": [
+            27.483888888888888,
+            94.32972222222222
+          ]
+        },
+        {
+          "point": [
+            26.78388888888889,
+            94.99638888888889
+          ]
+        },
+        {
+          "point": [
+            26.26722222222222,
+            94.62972222222221
+          ]
+        },
+        {
+          "point": [
+            26.150555555555552,
+            94.16305555555556
+          ]
+        },
+        {
+          "point": [
+            26.36722222222222,
+            93.41333333333334
+          ]
+        }
+      ]
+    }
+  ]
+}

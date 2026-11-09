@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VOPC",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Puducherry CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 55
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Puducherry/AD 2.1VOPC.pdf",
+        "page": 9,
+        "section": "AD 2.17",
+        "effective_date": "2026-01-22",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Area bounded by lines joining points 121600N 0794100E then along the clockwise arc of a circle of 20NM radius centred on 115802N 0794847E to 114500N 0793300E; 115200N 0792924E; 115542N 0792830E to point of origin. | Vertical: FL 55 | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        11.967222222222222,
+        79.81305555555555
+      ],
+      "radius_nm": 20.0
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VICG",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Chandigarh CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "H24",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 200
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Chandigarh/AD 2.1VICG.pdf",
+        "page": 11,
+        "section": "AD 2.17",
+        "effective_date": "2023-08-10",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits MCTR: Area bounded by lines joining points 304259N 0762356E then along the clockwise arc of a circle of 20NM radius centred on 303959N 0764656E to 302900N 0770555E to point of origin. | Vertical: FL 200 | Class: D | Hours: H24"
+      },
+      "shape": "circle",
+      "center": [
+        30.66638888888889,
+        76.78222222222222
+      ],
+      "radius_nm": 20.0
+    }
+  ]
+}

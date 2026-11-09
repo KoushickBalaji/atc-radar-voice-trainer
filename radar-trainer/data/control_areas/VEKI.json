@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VEKI",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Kushinagar CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 150
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Kushinagar/AD 2.1VEKI.pdf",
+        "page": 11,
+        "section": "AD 2.17",
+        "effective_date": "2026-04-16",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Circular area centered on 264622N 0835343E within a 15NM radius. | Vertical: FL 150 | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        26.772777777777776,
+        83.89527777777778
+      ],
+      "radius_nm": 15.0
+    }
+  ]
+}

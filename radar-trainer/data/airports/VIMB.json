@@ -1,0 +1,86 @@
+{
+  "icao": "VIMB",
+  "name": "Moradabad",
+  "country_code": "IN",
+  "center": [
+    28.819444444444443,
+    78.92444444444445
+  ],
+  "elevation_ft": 635.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "12/30",
+    "length_m": 2112.0,
+    "width_m": 30.0,
+    "ends": [
+      {
+        "name": "12",
+        "lat": 28.821986111111112,
+        "lon": 78.91883055555556,
+        "elevation_ft": 635.0,
+        "bearing_true": 120.51
+      },
+      {
+        "name": "30",
+        "lat": 28.81231111111111,
+        "lon": 78.93747222222223,
+        "elevation_ft": 630.0,
+        "bearing_true": 300.51
+      }
+    ]
+  },
+  "approach": null,
+  "navaids": [],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 4000,
+    "command_alt_min_ft": 1700,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5000,
+      "spd_kt": 220,
+      "hdg": 136
+    },
+    "suggested_heading": 151
+  },
+  "sources": [
+    "Airport Layouts/Moradabad/AD 2.1VIMB.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": 0.75,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Moradabad/AD 2.1VIMB.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Moradabad/AD 2.1VIMB.pdf",
+        "page": 6,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Moradabad/AD 2.1VIMB.pdf",
+        "page": 9,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": []
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. No ILS is identified in the supplied documents; no automatic approach capture. Minimum-altitude warnings unavailable for this airport.",
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

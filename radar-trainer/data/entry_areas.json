@@ -1,0 +1,4684 @@
+{
+  "VAAH": {
+    "areas": [
+      {
+        "name": "VAAH AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Ahmedabad/AD 2.1VAAH.pdf",
+          "page": 24,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          23.07111111111111,
+          72.62638888888888
+        ],
+        "radius_nm": 15.0
+      }
+    ],
+    "unresolved": [
+      "Ahmedabad Control Area-: Border, exclusion or conditional geometry needs review"
+    ]
+  },
+  "VAAM": {
+    "areas": [
+      {
+        "name": "VAAM AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Amravati/AD 2.1VAAM.pdf",
+          "page": 7,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          20.814722222222223,
+          77.71777777777778
+        ],
+        "radius_nm": 15.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VAAU": {
+    "areas": [
+      {
+        "name": "VAAU AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Aurangabad/AD 2.1VAAU.pdf",
+          "page": 16,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          19.864444444444445,
+          75.39750000000001
+        ],
+        "radius_nm": 10.0
+      }
+    ],
+    "unresolved": [
+      "Aurangabad Control Area-: No explicit polygon closure"
+    ]
+  },
+  "VABO": {
+    "areas": [
+      {
+        "name": "VABO AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Vadodara/AD 2.1VABO.pdf",
+          "page": 19,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          22.33,
+          73.21888888888888
+        ],
+        "radius_nm": 15.0
+      }
+    ],
+    "unresolved": [
+      "Vadodara Control Area- Area - 1:: Circle centre is not explicit"
+    ]
+  },
+  "VABP": {
+    "areas": [
+      {
+        "name": "VABP AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Bhopal/AD 2.1VABP.pdf",
+          "page": 13,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          23.286944444444448,
+          77.33694444444444
+        ],
+        "radius_nm": 11.0
+      }
+    ],
+    "unresolved": [
+      "Bhopal Control Area-: No explicit polygon closure"
+    ]
+  },
+  "VABV": {
+    "areas": [
+      {
+        "name": "VABV AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Bhavnagar/AD 2.1VABV.pdf",
+          "page": 23,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          21.754444444444445,
+          72.19055555555556
+        ],
+        "radius_nm": 10.0
+      },
+      {
+        "name": "Bhavnagar Control Area-",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "circle",
+        "center": [
+          21.754444444444445,
+          72.19055555555556
+        ],
+        "radius_nm": 25.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VADN": {
+    "areas": [
+      {
+        "name": "VADN AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Daman/AD 2.1VADN.pdf",
+          "page": 10,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              20.050833333333333,
+              72.83277777777778
+            ]
+          },
+          {
+            "point": [
+              20.334166666666665,
+              72.43277777777779
+            ]
+          },
+          {
+            "point": [
+              20.684166666666666,
+              72.49944444444445
+            ]
+          },
+          {
+            "point": [
+              20.850833333333334,
+              72.83277777777778
+            ]
+          },
+          {
+            "point": [
+              20.700833333333332,
+              73.16611111111112
+            ]
+          },
+          {
+            "point": [
+              20.1175,
+              73.13277777777778
+            ]
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VAGD": {
+    "areas": [
+      {
+        "name": "VAGD AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Gondia/AD 2.1VAGD.pdf",
+          "page": 10,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          21.52361111111111,
+          80.28777777777778
+        ],
+        "radius_nm": 12.0
+      },
+      {
+        "name": "Gondia Control Area-",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              21.46861111111111,
+              79.84472222222222
+            ]
+          },
+          {
+            "point": [
+              21.29638888888889,
+              79.91277777777778
+            ],
+            "center": [
+              21.52361111111111,
+              80.28777777777778
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              21.46861111111111,
+              79.84472222222222
+            ],
+            "center": [
+              21.091666666666665,
+              79.04833333333333
+            ],
+            "clockwise": false
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VAHS": {
+    "areas": [
+      {
+        "name": "VAHS AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Rajkot INTL/AD 2.1VAHS.pdf",
+          "page": 7,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          22.388333333333332,
+          71.0461111111111
+        ],
+        "radius_nm": 25.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VAID": {
+    "areas": [
+      {
+        "name": "VAID AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Indore/AD 2.1VAID.pdf",
+          "page": 12,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          22.723333333333333,
+          75.80555555555556
+        ],
+        "radius_nm": 11.0
+      }
+    ],
+    "unresolved": [
+      "Indore Control Area-: No explicit polygon closure"
+    ]
+  },
+  "VAJB": {
+    "areas": [
+      {
+        "name": "VAJB AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Jabalpur/AD 2.1VAJB.pdf",
+          "page": 11,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          23.179444444444446,
+          80.05972222222222
+        ],
+        "radius_nm": 25.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VAJJ": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: No explicit polygon closure"
+    ]
+  },
+  "VAJL": {
+    "areas": [
+      {
+        "name": "VAJL AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Jalgaon/AD 2.1VAJL.pdf",
+          "page": 12,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              21.0675,
+              75.96972222222223
+            ]
+          },
+          {
+            "point": [
+              21.0675,
+              75.89888888888889
+            ]
+          },
+          {
+            "point": [
+              21.000833333333333,
+              75.89888888888889
+            ]
+          },
+          {
+            "point": [
+              21.000833333333333,
+              75.985
+            ]
+          },
+          {
+            "point": [
+              20.646666666666665,
+              75.7238888888889
+            ],
+            "center": [
+              20.964166666666667,
+              75.63361111111112
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              20.6675,
+              75.64888888888889
+            ]
+          },
+          {
+            "point": [
+              20.635555555555555,
+              75.61277777777777
+            ]
+          },
+          {
+            "point": [
+              21.0675,
+              75.96972222222223
+            ],
+            "center": [
+              20.964166666666667,
+              75.63361111111112
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VAKE": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: No explicit polygon closure"
+    ]
+  },
+  "VAKP": {
+    "areas": [
+      {
+        "name": "VAKP AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Kolhapur/AD 2.1VAKP.pdf",
+          "page": 10,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              16.248055555555556,
+              74.2925
+            ]
+          },
+          {
+            "point": [
+              16.358333333333334,
+              74.58388888888888
+            ],
+            "center": [
+              16.66638888888889,
+              74.29055555555556
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              16.248055555555556,
+              74.2925
+            ],
+            "center": [
+              15.858333333333333,
+              74.61777777777777
+            ],
+            "clockwise": false
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VAKS": {
+    "areas": [
+      {
+        "name": "VAKS AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Keshod/AD 2.1VAKS.pdf",
+          "page": 9,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              21.46722222222222,
+              70.39972222222222
+            ]
+          },
+          {
+            "point": [
+              21.56722222222222,
+              70.48305555555555
+            ]
+          },
+          {
+            "point": [
+              21.53388888888889,
+              70.58305555555555
+            ]
+          },
+          {
+            "point": [
+              21.3175,
+              70.66638888888889
+            ]
+          },
+          {
+            "point": [
+              20.950833333333332,
+              70.26638888888888
+            ]
+          },
+          {
+            "point": [
+              21.134166666666665,
+              70.29972222222221
+            ]
+          },
+          {
+            "point": [
+              21.46722222222222,
+              70.39972222222222
+            ],
+            "center": [
+              21.318055555555556,
+              70.26166666666667
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VAMA": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: No explicit polygon closure"
+    ]
+  },
+  "VANM": {
+    "areas": [
+      {
+        "name": "VANM AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Navi Mumbai/AD 2.1VANM.pdf",
+          "page": 21,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          18.994444444444447,
+          73.07027777777778
+        ],
+        "radius_nm": 2.5
+      }
+    ],
+    "unresolved": []
+  },
+  "VANP": {
+    "areas": [
+      {
+        "name": "VANP AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Nagpur/AD 2.1VANP.pdf",
+          "page": 23,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          21.091666666666665,
+          79.04833333333333
+        ],
+        "radius_nm": 15.0
+      }
+    ],
+    "unresolved": [
+      "Nagpur Control Area - Sector A Nagpur Control Area - A: No explicit polygon closure"
+    ]
+  },
+  "VAOZ": {
+    "areas": [
+      {
+        "name": "VAOZ AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Ozar/AD 2.1VAOZ.pdf",
+          "page": 8,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              20.3175,
+              73.74916666666667
+            ]
+          },
+          {
+            "point": [
+              20.950833333333332,
+              74.04916666666666
+            ]
+          },
+          {
+            "point": [
+              20.250833333333333,
+              74.79916666666666
+            ],
+            "center": [
+              20.1175,
+              73.91583333333334
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              19.884166666666665,
+              73.84916666666666
+            ]
+          },
+          {
+            "point": [
+              20.3175,
+              73.74916666666667
+            ],
+            "center": [
+              20.1175,
+              73.91583333333334
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VAPO": {
+    "areas": [
+      {
+        "name": "VAPO AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Pune/AD 2.1VAPO.pdf",
+          "page": 12,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              18.91861111111111,
+              73.91583333333334
+            ]
+          },
+          {
+            "point": [
+              18.91861111111111,
+              74.72083333333333
+            ]
+          },
+          {
+            "point": [
+              17.762777777777778,
+              74.08111111111111
+            ],
+            "center": [
+              18.584166666666665,
+              73.91583333333334
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              18.396944444444443,
+              73.62527777777777
+            ]
+          },
+          {
+            "point": [
+              18.91861111111111,
+              73.91583333333334
+            ],
+            "center": [
+              18.584166666666665,
+              73.91583333333334
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VAPR": {
+    "areas": [
+      {
+        "name": "VAPR AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Porbandar/AD 2.1VAPR.pdf",
+          "page": 12,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              21.750555555555554,
+              69.44972222222222
+            ]
+          },
+          {
+            "point": [
+              21.833888888888886,
+              69.58305555555555
+            ]
+          },
+          {
+            "point": [
+              21.86722222222222,
+              69.96638888888889
+            ]
+          },
+          {
+            "point": [
+              21.650555555555552,
+              70.08305555555555
+            ]
+          },
+          {
+            "point": [
+              21.483888888888888,
+              69.73305555555555
+            ]
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VASD": {
+    "areas": [
+      {
+        "name": "VASD AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Shirdi/AD 2.1VASD.pdf",
+          "page": 6,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          19.690833333333334,
+          74.37166666666666
+        ],
+        "radius_nm": 11.0
+      }
+    ],
+    "unresolved": [
+      "Shirdi Control Area-: No explicit polygon closure"
+    ]
+  },
+  "VASL": {
+    "areas": [
+      {
+        "name": "VASL AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Solapur/AD 2.1VASL.pdf",
+          "page": 6,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          17.62777777777778,
+          75.93416666666667
+        ],
+        "radius_nm": 10.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VASU": {
+    "areas": [
+      {
+        "name": "VASU AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Surat/AD 2.1VASU.pdf",
+          "page": 15,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          21.116111111111113,
+          72.74194444444444
+        ],
+        "radius_nm": 15.0
+      }
+    ],
+    "unresolved": [
+      "Surat Control Area- Area-A: No explicit polygon closure"
+    ]
+  },
+  "VAUD": {
+    "areas": [
+      {
+        "name": "VAUD AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Udaipur/AD 2.1VAUD.pdf",
+          "page": 18,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          24.618333333333332,
+          73.89277777777778
+        ],
+        "radius_nm": 10.0
+      },
+      {
+        "name": "Udaipur Control Area-",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "circle",
+        "center": [
+          24.618333333333332,
+          73.89277777777778
+        ],
+        "radius_nm": 30.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VEAH": {
+    "areas": [
+      {
+        "name": "VEAH AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Azamgarh/AD 2.1VEAH.pdf",
+          "page": 7,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          26.15722222222222,
+          83.11388888888888
+        ],
+        "radius_nm": 5.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VEAP": {
+    "areas": [
+      {
+        "name": "VEAP AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Ambikapur/AD 2.1VEAP.pdf",
+          "page": 9,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          22.993333333333336,
+          83.19277777777778
+        ],
+        "radius_nm": 25.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VEAT": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: Border, exclusion or conditional geometry needs review"
+    ]
+  },
+  "VEAY": {
+    "areas": [
+      {
+        "name": "VEAY AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Ayodhya/AD 2.1VEAY.pdf",
+          "page": 8,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              26.68138888888889,
+              81.7863888888889
+            ]
+          },
+          {
+            "point": [
+              26.755277777777778,
+              82.52361111111111
+            ],
+            "center": [
+              26.75,
+              82.15472222222223
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VEBD": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: Border, exclusion or conditional geometry needs review"
+    ]
+  },
+  "VEBI": {
+    "areas": [],
+    "unresolved": []
+  },
+  "VEBN": {
+    "areas": [
+      {
+        "name": "VEBN AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Varanasi/AD 2.1VEBN.pdf",
+          "page": 13,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          25.45111111111111,
+          82.8586111111111
+        ],
+        "radius_nm": 30.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VEBS": {
+    "areas": [
+      {
+        "name": "VEBS AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Bhubaneswar/AD 2.1VEBS.pdf",
+          "page": 10,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          20.24416666666667,
+          85.81305555555555
+        ],
+        "radius_nm": 30.0
+      },
+      {
+        "name": "Bhubaneswar Terminal Control Area",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              21.234166666666667,
+              84.99777777777778
+            ]
+          },
+          {
+            "point": [
+              20.700833333333332,
+              85.56444444444445
+            ]
+          },
+          {
+            "point": [
+              20.450833333333332,
+              86.29777777777778
+            ]
+          },
+          {
+            "point": [
+              20.700833333333332,
+              86.9975
+            ]
+          },
+          {
+            "point": [
+              20.000833333333333,
+              86.9975
+            ]
+          },
+          {
+            "point": [
+              18.884444444444444,
+              85.51444444444445
+            ]
+          },
+          {
+            "point": [
+              19.884166666666665,
+              84.43111111111112
+            ]
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VEBU": {
+    "areas": [
+      {
+        "name": "VEBU AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Bilaspur/AD 2.1VEBU.pdf",
+          "page": 8,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          21.99416666666667,
+          82.11527777777778
+        ],
+        "radius_nm": 20.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VECC": {
+    "areas": [
+      {
+        "name": "VECC AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Kolkata/AD 2.1VECC.pdf",
+          "page": 33,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          22.653888888888886,
+          88.44666666666667
+        ],
+        "radius_nm": 25.0
+      }
+    ],
+    "unresolved": [
+      "Kolkata Lower Control Area- Sector Lower Kolkata East (LKE): Border, exclusion or conditional geometry needs review"
+    ]
+  },
+  "VECO": {
+    "areas": [
+      {
+        "name": "VECO AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Cooch-Behar/AD 2.1VECO.pdf",
+          "page": 10,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          26.330833333333334,
+          89.46805555555555
+        ],
+        "radius_nm": 5.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VECT": {
+    "areas": [
+      {
+        "name": "VECT AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Chitrakoot/AD 2.1VECT.pdf",
+          "page": 7,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          25.158055555555553,
+          80.92416666666666
+        ],
+        "radius_nm": 10.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VEDG": {
+    "areas": [
+      {
+        "name": "DURGAPUR Control Area-",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              23.47111111111111,
+              87.56472222222222
+            ]
+          },
+          {
+            "point": [
+              23.473333333333333,
+              87.42972222222222
+            ]
+          },
+          {
+            "point": [
+              23.25,
+              87.15
+            ]
+          },
+          {
+            "point": [
+              23.378611111111113,
+              86.99694444444445
+            ]
+          },
+          {
+            "point": [
+              23.47111111111111,
+              87.56472222222222
+            ],
+            "center": [
+              23.624444444444446,
+              87.2425
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": [
+      "AD 2.17: Circle centre is not explicit"
+    ]
+  },
+  "VEDO": {
+    "areas": [
+      {
+        "name": "VEDO AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Deoghar/AD 2.1VEDO.pdf",
+          "page": 8,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          24.445833333333333,
+          86.70694444444445
+        ],
+        "radius_nm": 25.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VEGK": {
+    "areas": [
+      {
+        "name": "VEGK AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Gorakhpur/AD 2.1VEGK.pdf",
+          "page": 7,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          26.74138888888889,
+          83.45027777777779
+        ],
+        "radius_nm": 25.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VEGT": {
+    "areas": [
+      {
+        "name": "VEGT AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Guwahati/AD 2.1VEGT.pdf",
+          "page": 24,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              26.450555555555553,
+              92.24666666666667
+            ]
+          },
+          {
+            "point": [
+              26.126944444444444,
+              92.39222222222223
+            ]
+          },
+          {
+            "point": [
+              26.120833333333334,
+              92.36527777777778
+            ]
+          },
+          {
+            "point": [
+              25.78888888888889,
+              92.27222222222223
+            ]
+          },
+          {
+            "point": [
+              25.583888888888886,
+              92.49666666666667
+            ]
+          },
+          {
+            "point": [
+              25.583888888888886,
+              90.99694444444445
+            ]
+          },
+          {
+            "point": [
+              26.450555555555553,
+              90.99694444444445
+            ]
+          }
+        ]
+      }
+    ],
+    "unresolved": [
+      "Guwahati Control Area-: Border, exclusion or conditional geometry needs review"
+    ]
+  },
+  "VEGY": {
+    "areas": [
+      {
+        "name": "VEGY AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Gaya/AD 2.1VEGY.pdf",
+          "page": 13,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          24.748055555555556,
+          84.94250000000001
+        ],
+        "radius_nm": 10.0
+      },
+      {
+        "name": "Gaya Control Area- Sector 1",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              25.21222222222222,
+              84.73388888888888
+            ]
+          },
+          {
+            "point": [
+              25.113611111111112,
+              85.25055555555555
+            ],
+            "center": [
+              25.59361111111111,
+              85.09194444444444
+            ],
+            "clockwise": false
+          },
+          {
+            "point": [
+              24.82361111111111,
+              85.45694444444445
+            ]
+          },
+          {
+            "point": [
+              24.984444444444446,
+              84.45777777777778
+            ],
+            "center": [
+              25.59361111111111,
+              85.09194444444444
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              25.21222222222222,
+              84.73388888888888
+            ],
+            "center": [
+              24.748055555555556,
+              84.94250000000001
+            ],
+            "clockwise": true
+          }
+        ]
+      },
+      {
+        "name": "Gaya Control Area- Sector 2",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              24.984444444444446,
+              84.45777777777778
+            ]
+          },
+          {
+            "point": [
+              24.82361111111111,
+              85.45694444444445
+            ],
+            "center": [
+              25.59361111111111,
+              85.09194444444444
+            ],
+            "clockwise": false
+          },
+          {
+            "point": [
+              24.77611111111111,
+              85.49083333333333
+            ]
+          },
+          {
+            "point": [
+              24.984444444444446,
+              84.45777777777778
+            ],
+            "center": [
+              24.748055555555556,
+              84.94250000000001
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VEHO": {
+    "areas": [
+      {
+        "name": "VEHO AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Hollongi/AD 2.1VEHO.pdf",
+          "page": 11,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          26.965555555555554,
+          93.62249999999999
+        ],
+        "radius_nm": 10.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VEIM": {
+    "areas": [
+      {
+        "name": "VEIM AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Imphal/AD 2.1VEIM.pdf",
+          "page": 10,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              25.000555555555554,
+              93.43
+            ]
+          },
+          {
+            "point": [
+              24.983888888888888,
+              93.51333333333334
+            ]
+          },
+          {
+            "point": [
+              24.650555555555552,
+              93.46333333333334
+            ],
+            "center": [
+              24.758333333333333,
+              93.89777777777779
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              24.683888888888887,
+              93.36333333333333
+            ]
+          },
+          {
+            "point": [
+              25.000555555555554,
+              93.43
+            ],
+            "center": [
+              24.91361111111111,
+              92.97777777777777
+            ],
+            "clockwise": false
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VEJH": {
+    "areas": [
+      {
+        "name": "VEJH AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Jharsuguda/AD 2.1VEJH.pdf",
+          "page": 9,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          21.91472222222222,
+          84.04861111111111
+        ],
+        "radius_nm": 20.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VEJR": {
+    "areas": [
+      {
+        "name": "VEJR AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Jagdalpur/AD 2.1VEJR.pdf",
+          "page": 15,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              18.75722222222222,
+              82.32416666666666
+            ]
+          },
+          {
+            "point": [
+              19.12,
+              82.47416666666666
+            ],
+            "center": [
+              19.073888888888888,
+              82.03694444444444
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              18.75722222222222,
+              82.32416666666666
+            ],
+            "center": [
+              18.880555555555556,
+              82.55361111111111
+            ],
+            "clockwise": false
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VEJS": {
+    "areas": [
+      {
+        "name": "VEJS AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Jamshedpur/AD 2.1VEJS.pdf",
+          "page": 14,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              23.166666666666668,
+              85.95
+            ]
+          },
+          {
+            "point": [
+              23.0,
+              86.0
+            ]
+          },
+          {
+            "point": [
+              23.0,
+              86.41666666666667
+            ]
+          },
+          {
+            "point": [
+              22.65,
+              86.41666666666667
+            ]
+          },
+          {
+            "point": [
+              22.645833333333332,
+              86.58333333333333
+            ]
+          },
+          {
+            "point": [
+              22.483333333333334,
+              86.45
+            ],
+            "center": [
+              22.813055555555557,
+              86.1738888888889
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              22.5,
+              86.15
+            ]
+          },
+          {
+            "point": [
+              22.433333333333334,
+              85.96666666666667
+            ]
+          },
+          {
+            "point": [
+              23.166666666666668,
+              85.95
+            ],
+            "center": [
+              22.813055555555557,
+              86.1738888888889
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VEJT": {
+    "areas": [
+      {
+        "name": "VEJT AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Jorhat/AD 2.1VEJT.pdf",
+          "page": 8,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              26.91722222222222,
+              93.41333333333334
+            ]
+          },
+          {
+            "point": [
+              27.300555555555555,
+              93.96305555555556
+            ]
+          },
+          {
+            "point": [
+              27.483888888888888,
+              94.32972222222222
+            ]
+          },
+          {
+            "point": [
+              26.78388888888889,
+              94.99638888888889
+            ]
+          },
+          {
+            "point": [
+              26.26722222222222,
+              94.62972222222221
+            ]
+          },
+          {
+            "point": [
+              26.150555555555552,
+              94.16305555555556
+            ]
+          },
+          {
+            "point": [
+              26.36722222222222,
+              93.41333333333334
+            ]
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VEKI": {
+    "areas": [
+      {
+        "name": "VEKI AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Kushinagar/AD 2.1VEKI.pdf",
+          "page": 11,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          26.772777777777776,
+          83.89527777777778
+        ],
+        "radius_nm": 15.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VEKO": {
+    "areas": [
+      {
+        "name": "VEKO AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Khajuraho/AD 2.1VEKO.pdf",
+          "page": 11,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          24.803055555555556,
+          79.91305555555556
+        ],
+        "radius_nm": 25.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VEKU": {
+    "areas": [
+      {
+        "name": "VEKU AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Kumbhigram/AD 2.1VEKU.pdf",
+          "page": 8,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          24.91333333333333,
+          92.9775
+        ],
+        "radius_nm": 25.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VELP": {
+    "areas": [
+      {
+        "name": "VELP AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Lengpui/AD 2.1VELP.pdf",
+          "page": 11,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          23.830277777777777,
+          92.6236111111111
+        ],
+        "radius_nm": 20.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VELR": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: Border, exclusion or conditional geometry needs review"
+    ]
+  },
+  "VEMR": {
+    "areas": [
+      {
+        "name": "VEMR AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Dimapur/AD 2.1VEMR.pdf",
+          "page": 17,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          25.880833333333335,
+          93.78194444444445
+        ],
+        "radius_nm": 10.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VEPT": {
+    "areas": [
+      {
+        "name": "VEPT AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Patna/AD 2.1VEPT.pdf",
+          "page": 32,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          25.59361111111111,
+          85.09194444444444
+        ],
+        "radius_nm": 15.0
+      },
+      {
+        "name": "Patna Control Area- Sector 1",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "circle",
+        "center": [
+          25.59361111111111,
+          85.09194444444444
+        ],
+        "radius_nm": 30.0
+      },
+      {
+        "name": "Patna Control Area- Sector 2",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              26.380555555555556,
+              84.69722222222222
+            ]
+          },
+          {
+            "point": [
+              26.419722222222223,
+              85.20944444444444
+            ],
+            "center": [
+              25.59361111111111,
+              85.09194444444444
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              24.779999999999998,
+              85.30777777777777
+            ]
+          },
+          {
+            "point": [
+              25.802500000000002,
+              84.19888888888889
+            ],
+            "center": [
+              25.59361111111111,
+              85.09194444444444
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              25.96361111111111,
+              84.71583333333334
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Patna Control Area- Sector 3",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              26.419722222222223,
+              85.20944444444444
+            ]
+          },
+          {
+            "point": [
+              24.779999999999998,
+              85.30777777777777
+            ],
+            "center": [
+              25.59361111111111,
+              85.09194444444444
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VEPY": {
+    "areas": [
+      {
+        "name": "VEPY AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Pakyong/AD 2.1VEPY.pdf",
+          "page": 10,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          27.22583333333333,
+          88.58583333333333
+        ],
+        "radius_nm": 5.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VERC": {
+    "areas": [
+      {
+        "name": "VERC AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Ranchi/AD 2.1VERC.pdf",
+          "page": 19,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          23.31416666666667,
+          85.32111111111111
+        ],
+        "radius_nm": 25.0
+      },
+      {
+        "name": "Ranchi Control Area - Sector A",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              22.561111111111114,
+              85.7
+            ]
+          },
+          {
+            "point": [
+              23.208333333333332,
+              86.22500000000001
+            ],
+            "center": [
+              23.31416666666667,
+              85.32111111111111
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              23.208333333333332,
+              85.8111111111111
+            ]
+          },
+          {
+            "point": [
+              22.880555555555556,
+              85.54027777777777
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Ranchi Control Area - Sector B",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              22.561111111111114,
+              85.7
+            ]
+          },
+          {
+            "point": [
+              22.8125,
+              86.1675
+            ]
+          },
+          {
+            "point": [
+              23.208333333333332,
+              86.22500000000001
+            ]
+          },
+          {
+            "point": [
+              23.208333333333332,
+              85.8111111111111
+            ]
+          },
+          {
+            "point": [
+              22.880555555555556,
+              85.54027777777777
+            ]
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VERK": {
+    "areas": [
+      {
+        "name": "VERK AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Rourkela/AD 2.1VERK.pdf",
+          "page": 6,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              22.046111111111113,
+              84.58472222222221
+            ]
+          },
+          {
+            "point": [
+              22.2375,
+              85.13944444444445
+            ],
+            "center": [
+              22.25611111111111,
+              84.81472222222222
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VERP": {
+    "areas": [
+      {
+        "name": "VERP AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Raipur/AD 2.1VERP.pdf",
+          "page": 9,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          21.18111111111111,
+          81.73861111111111
+        ],
+        "radius_nm": 30.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VERU": {
+    "areas": [],
+    "unresolved": []
+  },
+  "VERW": {
+    "areas": [
+      {
+        "name": "VERW AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Rewa/AD 2.1VERW.pdf",
+          "page": 8,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          24.503611111111113,
+          81.22305555555556
+        ],
+        "radius_nm": 10.0
+      },
+      {
+        "name": "Rewa Control Area",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              24.36138888888889,
+              80.89277777777778
+            ]
+          },
+          {
+            "point": [
+              24.7875,
+              81.02944444444444
+            ]
+          },
+          {
+            "point": [
+              24.36138888888889,
+              80.89277777777778
+            ],
+            "center": [
+              24.503611111111113,
+              81.22305555555556
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VEST": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: Border, exclusion or conditional geometry needs review"
+    ]
+  },
+  "VETJ": {
+    "areas": [
+      {
+        "name": "VETJ AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Tezu/AD 2.1VETJ.pdf",
+          "page": 9,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          27.942222222222224,
+          96.13388888888889
+        ],
+        "radius_nm": 20.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VIAG": {
+    "areas": [
+      {
+        "name": "VIAG AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Agra/AD 2.1VIAG.pdf",
+          "page": 8,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              27.20611111111111,
+              77.31444444444445
+            ]
+          },
+          {
+            "point": [
+              27.75027777777778,
+              77.88194444444444
+            ],
+            "center": [
+              27.150277777777777,
+              77.96527777777779
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              27.55027777777778,
+              78.44861111111112
+            ]
+          },
+          {
+            "point": [
+              27.466944444444444,
+              78.49861111111112
+            ]
+          },
+          {
+            "point": [
+              27.58361111111111,
+              78.14861111111112
+            ]
+          },
+          {
+            "point": [
+              26.700277777777778,
+              78.23194444444445
+            ]
+          },
+          {
+            "point": [
+              26.63361111111111,
+              77.89861111111112
+            ]
+          },
+          {
+            "point": [
+              27.216944444444444,
+              77.49861111111112
+            ]
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VIAH": {
+    "areas": [
+      {
+        "name": "VIAH AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Aligarh/AD 2.1VIAH.pdf",
+          "page": 6,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          27.86138888888889,
+          78.14694444444446
+        ],
+        "radius_nm": 10.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VIAR": {
+    "areas": [
+      {
+        "name": "VIAR AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Amritsar/AD 2.1VIAR.pdf",
+          "page": 10,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          31.728055555555553,
+          74.78583333333333
+        ],
+        "radius_nm": 25.0
+      }
+    ],
+    "unresolved": [
+      "Amritsar Control Area- 1: Border, exclusion or conditional geometry needs review"
+    ]
+  },
+  "VIBR": {
+    "areas": [],
+    "unresolved": []
+  },
+  "VIBY": {
+    "areas": [
+      {
+        "name": "VIBY AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Bareilly/AD 2.1VIBY.pdf",
+          "page": 7,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              28.010833333333334,
+              79.56722222222221
+            ]
+          },
+          {
+            "point": [
+              28.325555555555557,
+              78.99638888888889
+            ]
+          },
+          {
+            "point": [
+              28.666666666666668,
+              79.83166666666666
+            ],
+            "center": [
+              28.41722222222222,
+              79.45694444444445
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              28.16333333333333,
+              79.83166666666666
+            ]
+          },
+          {
+            "point": [
+              28.010833333333334,
+              79.56722222222221
+            ],
+            "center": [
+              28.41722222222222,
+              79.45694444444445
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VICG": {
+    "areas": [
+      {
+        "name": "VICG AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Chandigarh/AD 2.1VICG.pdf",
+          "page": 11,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              30.71638888888889,
+              76.39888888888889
+            ]
+          },
+          {
+            "point": [
+              30.483333333333334,
+              77.09861111111111
+            ],
+            "center": [
+              30.66638888888889,
+              76.78222222222222
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VIDD": {
+    "areas": [
+      {
+        "name": "VIDD AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Safdarjung/AD 2.1VIDD.pdf",
+          "page": 11,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              28.575,
+              77.22027777777778
+            ]
+          },
+          {
+            "point": [
+              28.56833333333333,
+              77.21527777777779
+            ]
+          },
+          {
+            "point": [
+              28.56833333333333,
+              77.19861111111112
+            ]
+          },
+          {
+            "point": [
+              28.58,
+              77.18194444444445
+            ]
+          },
+          {
+            "point": [
+              28.593333333333334,
+              77.18861111111111
+            ]
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VIDN": {
+    "areas": [
+      {
+        "name": "VIDN AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Dehradun/AD 2.1VIDN.pdf",
+          "page": 27,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          30.18888888888889,
+          78.16694444444445
+        ],
+        "radius_nm": 5.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VIDP": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: Border, exclusion or conditional geometry needs review",
+      "Delhi Control Area- 1: Border, exclusion or conditional geometry needs review"
+    ]
+  },
+  "VIDT": {
+    "areas": [
+      {
+        "name": "VIDT AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Datia/AD 2.1VIDT.pdf",
+          "page": 6,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          25.65694444444444,
+          78.50944444444444
+        ],
+        "radius_nm": 5.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VIDX": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: No explicit polygon closure"
+    ]
+  },
+  "VIGG": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: Border, exclusion or conditional geometry needs review"
+    ]
+  },
+  "VIGR": {
+    "areas": [
+      {
+        "name": "VIGR AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Gwalior/AD 2.1VIGR.pdf",
+          "page": 9,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          26.283611111111114,
+          78.23194444444445
+        ],
+        "radius_nm": 15.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VIHX": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: No explicit polygon closure"
+    ]
+  },
+  "VIJO": {
+    "areas": [
+      {
+        "name": "VIJO AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Jodhpur/AD 2.1VIJO.pdf",
+          "page": 9,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          26.25027777777778,
+          73.03277777777778
+        ],
+        "radius_nm": 25.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VIJP": {
+    "areas": [
+      {
+        "name": "VIJP AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Jaipur/AD 2.1VIJP.pdf",
+          "page": 21,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          26.824166666666667,
+          75.8025
+        ],
+        "radius_nm": 10.0
+      }
+    ],
+    "unresolved": [
+      "Jaipur Control Area- 1: Border, exclusion or conditional geometry needs review"
+    ]
+  },
+  "VIJU": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: No explicit polygon closure"
+    ]
+  },
+  "VIKG": {
+    "areas": [
+      {
+        "name": "VIKG AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Kishangarh/AD 2.1VIKG.pdf",
+          "page": 8,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              26.173333333333336,
+              74.82055555555556
+            ]
+          },
+          {
+            "point": [
+              26.411388888888887,
+              74.79888888888888
+            ]
+          },
+          {
+            "point": [
+              26.31638888888889,
+              74.46638888888889
+            ]
+          },
+          {
+            "point": [
+              26.173333333333336,
+              74.82055555555556
+            ],
+            "center": [
+              26.59111111111111,
+              74.81611111111111
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VILD": {
+    "areas": [
+      {
+        "name": "VILD AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Ludhiana/AD 2.1VILD.pdf",
+          "page": 9,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          30.852500000000003,
+          75.95666666666666
+        ],
+        "radius_nm": 5.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VILH": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: No explicit polygon closure"
+    ]
+  },
+  "VILK": {
+    "areas": [
+      {
+        "name": "VILK AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Lucknow/AD 2.1VILK.pdf",
+          "page": 12,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          26.75861111111111,
+          80.89444444444445
+        ],
+        "radius_nm": 25.0
+      },
+      {
+        "name": "Lucknow Control Area - Sector A",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              27.716944444444444,
+              79.84833333333333
+            ]
+          },
+          {
+            "point": [
+              26.966944444444444,
+              81.015
+            ]
+          },
+          {
+            "point": [
+              26.788333333333334,
+              81.41000000000001
+            ]
+          },
+          {
+            "point": [
+              26.503888888888888,
+              81.28805555555556
+            ]
+          },
+          {
+            "point": [
+              26.243055555555557,
+              81.08888888888889
+            ]
+          },
+          {
+            "point": [
+              26.533611111111114,
+              80.73166666666667
+            ]
+          },
+          {
+            "point": [
+              27.216944444444444,
+              79.365
+            ]
+          },
+          {
+            "point": [
+              27.716944444444444,
+              79.84833333333333
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Lucknow Control Area - Sector B",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              26.788333333333334,
+              81.41000000000001
+            ]
+          },
+          {
+            "point": [
+              26.466944444444444,
+              82.01472222222222
+            ]
+          },
+          {
+            "point": [
+              25.88361111111111,
+              81.54805555555555
+            ]
+          },
+          {
+            "point": [
+              26.243055555555557,
+              81.08888888888889
+            ]
+          },
+          {
+            "point": [
+              26.503888888888888,
+              81.28805555555556
+            ]
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VIMB": {
+    "areas": [
+      {
+        "name": "VIMB AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Moradabad/AD 2.1VIMB.pdf",
+          "page": 8,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              29.0,
+              79.12222222222222
+            ]
+          },
+          {
+            "point": [
+              29.0,
+              79.06527777777778
+            ]
+          },
+          {
+            "point": [
+              28.616666666666667,
+              79.03194444444445
+            ]
+          },
+          {
+            "point": [
+              28.58138888888889,
+              79.01361111111112
+            ]
+          },
+          {
+            "point": [
+              29.0,
+              79.12222222222222
+            ],
+            "center": [
+              28.819444444444443,
+              78.92444444444445
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VIND": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: Border, exclusion or conditional geometry needs review"
+    ]
+  },
+  "VIPG": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: No explicit polygon closure"
+    ]
+  },
+  "VIPT": {
+    "areas": [
+      {
+        "name": "VIPT AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Pantnagar/AD 2.1VIPT.pdf",
+          "page": 12,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          29.03222222222222,
+          79.4725
+        ],
+        "radius_nm": 10.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VISM": {
+    "areas": [],
+    "unresolved": []
+  },
+  "VISP": {
+    "areas": [
+      {
+        "name": "VISP AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Sarsawaa/AD 2.1VISP.pdf",
+          "page": 11,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              29.683333333333334,
+              77.5
+            ]
+          },
+          {
+            "point": [
+              29.75,
+              77.18333333333334
+            ]
+          },
+          {
+            "point": [
+              30.029999999999998,
+              77.05111111111111
+            ],
+            "center": [
+              30.0,
+              77.43333333333334
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              30.1,
+              77.13666666666667
+            ],
+            "center": [
+              30.366666666666667,
+              76.76666666666667
+            ],
+            "clockwise": false
+          },
+          {
+            "point": [
+              30.316666666666666,
+              77.53333333333333
+            ]
+          },
+          {
+            "point": [
+              29.683333333333334,
+              77.5
+            ],
+            "center": [
+              30.0,
+              77.43333333333334
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VISR": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: Border, exclusion or conditional geometry needs review"
+    ]
+  },
+  "VIUT": {
+    "areas": [
+      {
+        "name": "VIUT AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Uttarlai/AD 2.1VIUT.pdf",
+          "page": 8,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          25.811111111111114,
+          71.4725
+        ],
+        "radius_nm": 25.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VOAT": {
+    "areas": [
+      {
+        "name": "VOAT AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Agatti/AD 2.1VOAT.pdf",
+          "page": 10,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          10.824166666666667,
+          72.17666666666668
+        ],
+        "radius_nm": 25.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VOBG": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: No explicit polygon closure"
+    ]
+  },
+  "VOBM": {
+    "areas": [],
+    "unresolved": []
+  },
+  "VOBR": {
+    "areas": [
+      {
+        "name": "VOBR AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Bidar/AD 2.1VOBR.pdf",
+          "page": 7,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              17.717777777777776,
+              77.89888888888889
+            ]
+          },
+          {
+            "point": [
+              17.92888888888889,
+              77.9263888888889
+            ],
+            "center": [
+              17.91777777777778,
+              77.49888888888889
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              17.834444444444443,
+              77.79888888888888
+            ],
+            "center": [
+              17.227777777777778,
+              78.40583333333333
+            ],
+            "clockwise": false
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VOCB": {
+    "areas": [
+      {
+        "name": "VOCB AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Coimbatore/AD 2.1VOCB.pdf",
+          "page": 14,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              10.845555555555556,
+              77.16333333333334
+            ]
+          },
+          {
+            "point": [
+              11.17611111111111,
+              77.20222222222222
+            ],
+            "center": [
+              11.026944444444446,
+              77.04166666666667
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              10.845555555555556,
+              77.16333333333334
+            ],
+            "center": [
+              11.013055555555555,
+              77.16250000000001
+            ],
+            "clockwise": true
+          }
+        ]
+      },
+      {
+        "name": "Coimbatore Control Area- A",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              11.234166666666665,
+              76.67361111111111
+            ]
+          },
+          {
+            "point": [
+              10.904444444444445,
+              76.63666666666667
+            ],
+            "center": [
+              11.026944444444446,
+              77.04166666666667
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              10.916666666666666,
+              76.48333333333333
+            ]
+          },
+          {
+            "point": [
+              11.25,
+              76.51666666666667
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Coimbatore Control Area- B",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              11.234166666666665,
+              76.67361111111111
+            ]
+          },
+          {
+            "point": [
+              11.444444444444445,
+              77.01333333333334
+            ],
+            "center": [
+              11.026944444444446,
+              77.04166666666667
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              12.066666666666666,
+              77.21666666666667
+            ]
+          },
+          {
+            "point": [
+              11.966666666666667,
+              77.51666666666667
+            ]
+          },
+          {
+            "point": [
+              11.301666666666668,
+              77.41555555555556
+            ]
+          },
+          {
+            "point": [
+              11.15,
+              77.45
+            ]
+          },
+          {
+            "point": [
+              10.95,
+              77.45
+            ]
+          },
+          {
+            "point": [
+              10.6,
+              77.76666666666667
+            ]
+          },
+          {
+            "point": [
+              10.3,
+              77.45
+            ]
+          },
+          {
+            "point": [
+              10.25,
+              77.41666666666667
+            ]
+          },
+          {
+            "point": [
+              10.610833333333334,
+              77.0886111111111
+            ]
+          },
+          {
+            "point": [
+              10.904444444444445,
+              76.63666666666667
+            ],
+            "center": [
+              11.026944444444446,
+              77.04166666666667
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              10.916666666666666,
+              76.48333333333333
+            ]
+          },
+          {
+            "point": [
+              11.25,
+              76.51666666666667
+            ]
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VOCI": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: Border, exclusion or conditional geometry needs review",
+      "Cochin Control Area- A: Border, exclusion or conditional geometry needs review",
+      "Cochin Control Area- B: Border, exclusion or conditional geometry needs review"
+    ]
+  },
+  "VOCL": {
+    "areas": [
+      {
+        "name": "VOCL AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Calicut/AD 2.1VOCL.pdf",
+          "page": 11,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          11.137777777777778,
+          75.95055555555555
+        ],
+        "radius_nm": 12.0
+      },
+      {
+        "name": "Calicut Control Area- B",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              10.721666666666668,
+              75.90666666666667
+            ]
+          },
+          {
+            "point": [
+              10.721666666666668,
+              75.0
+            ]
+          },
+          {
+            "point": [
+              11.5,
+              75.0
+            ]
+          },
+          {
+            "point": [
+              11.5,
+              75.64111111111112
+            ]
+          },
+          {
+            "point": [
+              11.45361111111111,
+              75.6725
+            ]
+          },
+          {
+            "point": [
+              10.721666666666668,
+              75.90666666666667
+            ],
+            "center": [
+              11.137777777777778,
+              75.95055555555555
+            ],
+            "clockwise": false
+          }
+        ]
+      }
+    ],
+    "unresolved": [
+      "Calicut Control Area- A: No explicit polygon closure"
+    ]
+  },
+  "VOCP": {
+    "areas": [
+      {
+        "name": "VOCP AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Kadapa/AD 2.1VOCP.pdf",
+          "page": 8,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          14.513055555555555,
+          78.77222222222223
+        ],
+        "radius_nm": 25.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VOGA": {
+    "areas": [
+      {
+        "name": "VOGA AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Mopa/AD 2.1VOGA.pdf",
+          "page": 7,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              15.876944444444446,
+              73.52194444444444
+            ]
+          },
+          {
+            "point": [
+              15.876944444444446,
+              74.27222222222223
+            ]
+          },
+          {
+            "point": [
+              15.64861111111111,
+              74.27222222222223
+            ]
+          },
+          {
+            "point": [
+              15.595833333333333,
+              74.19194444444445
+            ]
+          },
+          {
+            "point": [
+              15.595833333333333,
+              73.52194444444444
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Goa Control Area- 1",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              15.595833333333333,
+              73.46638888888889
+            ]
+          },
+          {
+            "point": [
+              15.876944444444446,
+              74.27222222222223
+            ],
+            "center": [
+              15.7425,
+              73.86694444444444
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              15.64861111111111,
+              74.27222222222223
+            ]
+          },
+          {
+            "point": [
+              15.595833333333333,
+              74.19194444444445
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Goa Control Area- 2",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              15.595833333333333,
+              73.46638888888889
+            ]
+          },
+          {
+            "point": [
+              15.595833333333333,
+              74.19194444444445
+            ]
+          },
+          {
+            "point": [
+              15.525277777777779,
+              74.23611111111111
+            ]
+          },
+          {
+            "point": [
+              15.595833333333333,
+              73.46638888888889
+            ],
+            "center": [
+              15.7425,
+              73.86694444444444
+            ],
+            "clockwise": true
+          }
+        ]
+      },
+      {
+        "name": "Goa Control Area- 3",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              15.595833333333333,
+              73.46638888888889
+            ]
+          },
+          {
+            "point": [
+              15.595833333333333,
+              74.19194444444445
+            ]
+          },
+          {
+            "point": [
+              15.525277777777779,
+              74.23611111111111
+            ]
+          },
+          {
+            "point": [
+              15.121944444444445,
+              74.44611111111111
+            ]
+          },
+          {
+            "point": [
+              15.595833333333333,
+              73.01666666666667
+            ],
+            "center": [
+              15.7425,
+              73.86694444444444
+            ],
+            "clockwise": true
+          }
+        ]
+      },
+      {
+        "name": "Goa Control Area- 4",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              15.595833333333333,
+              73.46638888888889
+            ]
+          },
+          {
+            "point": [
+              16.15861111111111,
+              73.91277777777778
+            ],
+            "center": [
+              15.7425,
+              73.86694444444444
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              16.578611111111112,
+              73.86638888888888
+            ]
+          },
+          {
+            "point": [
+              15.595833333333333,
+              73.01666666666667
+            ],
+            "center": [
+              15.7425,
+              73.86694444444444
+            ],
+            "clockwise": false
+          }
+        ]
+      },
+      {
+        "name": "Goa Control Area- 5",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              15.595833333333333,
+              73.46638888888889
+            ]
+          },
+          {
+            "point": [
+              16.15861111111111,
+              73.91277777777778
+            ],
+            "center": [
+              15.7425,
+              73.86694444444444
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              16.578611111111112,
+              73.86638888888888
+            ]
+          },
+          {
+            "point": [
+              15.121944444444445,
+              74.44611111111111
+            ],
+            "center": [
+              15.7425,
+              73.86694444444444
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              15.525277777777779,
+              74.23611111111111
+            ]
+          },
+          {
+            "point": [
+              15.595833333333333,
+              74.19194444444445
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Goa Control Area- 6",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              16.099166666666665,
+              73.08361111111111
+            ]
+          },
+          {
+            "point": [
+              16.25111111111111,
+              72.74944444444445
+            ]
+          },
+          {
+            "point": [
+              16.592777777777776,
+              73.10777777777777
+            ]
+          },
+          {
+            "point": [
+              16.885555555555555,
+              74.12027777777777
+            ],
+            "center": [
+              19.091666666666665,
+              72.86611111111111
+            ],
+            "clockwise": false
+          },
+          {
+            "point": [
+              16.34111111111111,
+              74.47888888888889
+            ]
+          },
+          {
+            "point": [
+              16.099166666666665,
+              73.08361111111111
+            ],
+            "center": [
+              15.7425,
+              73.86694444444444
+            ],
+            "clockwise": false
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VOGB": {
+    "areas": [
+      {
+        "name": "VOGB AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Kalaburagi/AD 2.1VOGB.pdf",
+          "page": 10,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              17.71,
+              76.83027777777778
+            ]
+          },
+          {
+            "point": [
+              17.51,
+              76.94611111111111
+            ]
+          },
+          {
+            "point": [
+              17.51888888888889,
+              77.16861111111112
+            ]
+          },
+          {
+            "point": [
+              17.403055555555554,
+              77.38166666666666
+            ]
+          },
+          {
+            "point": [
+              16.936944444444446,
+              76.76
+            ],
+            "center": [
+              17.309722222222224,
+              76.95722222222223
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              17.35611111111111,
+              76.74388888888889
+            ]
+          },
+          {
+            "point": [
+              17.572777777777777,
+              76.61861111111111
+            ]
+          },
+          {
+            "point": [
+              17.71,
+              76.83027777777778
+            ],
+            "center": [
+              17.309722222222224,
+              76.95722222222223
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VOGO": {
+    "areas": [
+      {
+        "name": "VOGO AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Goa/AD 2.1VOGO.pdf",
+          "page": 19,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              15.834444444444445,
+              72.16611111111112
+            ]
+          },
+          {
+            "point": [
+              16.25111111111111,
+              72.74944444444445
+            ]
+          },
+          {
+            "point": [
+              16.084444444444443,
+              73.11611111111111
+            ]
+          },
+          {
+            "point": [
+              14.051388888888889,
+              74.0825
+            ]
+          },
+          {
+            "point": [
+              13.568055555555555,
+              73.16611111111112
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Goa Control Area- 1",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              15.595833333333333,
+              73.46638888888889
+            ]
+          },
+          {
+            "point": [
+              15.876944444444446,
+              74.27222222222223
+            ],
+            "center": [
+              15.7425,
+              73.86694444444444
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              15.64861111111111,
+              74.27222222222223
+            ]
+          },
+          {
+            "point": [
+              15.595833333333333,
+              74.19194444444445
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Goa Control Area- 2",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              15.595833333333333,
+              73.46638888888889
+            ]
+          },
+          {
+            "point": [
+              15.595833333333333,
+              74.19194444444445
+            ]
+          },
+          {
+            "point": [
+              15.525277777777779,
+              74.23611111111111
+            ]
+          },
+          {
+            "point": [
+              15.595833333333333,
+              73.46638888888889
+            ],
+            "center": [
+              15.7425,
+              73.86694444444444
+            ],
+            "clockwise": true
+          }
+        ]
+      },
+      {
+        "name": "Goa Control Area- 3",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              15.595833333333333,
+              73.46638888888889
+            ]
+          },
+          {
+            "point": [
+              15.595833333333333,
+              74.19194444444445
+            ]
+          },
+          {
+            "point": [
+              15.525277777777779,
+              74.23611111111111
+            ]
+          },
+          {
+            "point": [
+              15.121944444444445,
+              74.44611111111111
+            ]
+          },
+          {
+            "point": [
+              15.595833333333333,
+              73.01666666666667
+            ],
+            "center": [
+              15.7425,
+              73.86694444444444
+            ],
+            "clockwise": true
+          }
+        ]
+      },
+      {
+        "name": "Goa Control Area- 4",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              15.595833333333333,
+              73.46638888888889
+            ]
+          },
+          {
+            "point": [
+              16.15861111111111,
+              73.91277777777778
+            ],
+            "center": [
+              15.7425,
+              73.86694444444444
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              16.578611111111112,
+              73.86638888888888
+            ]
+          },
+          {
+            "point": [
+              15.595833333333333,
+              73.01666666666667
+            ],
+            "center": [
+              15.7425,
+              73.86694444444444
+            ],
+            "clockwise": false
+          }
+        ]
+      },
+      {
+        "name": "Goa Control Area- 5",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              15.595833333333333,
+              73.46638888888889
+            ]
+          },
+          {
+            "point": [
+              16.15861111111111,
+              73.91277777777778
+            ],
+            "center": [
+              15.7425,
+              73.86694444444444
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              16.578611111111112,
+              73.86638888888888
+            ]
+          },
+          {
+            "point": [
+              15.121944444444445,
+              74.44611111111111
+            ],
+            "center": [
+              15.7425,
+              73.86694444444444
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              15.525277777777779,
+              74.23611111111111
+            ]
+          },
+          {
+            "point": [
+              15.595833333333333,
+              74.19194444444445
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Goa Control Area- 6",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              16.099166666666665,
+              73.08361111111111
+            ]
+          },
+          {
+            "point": [
+              16.25111111111111,
+              72.74944444444445
+            ]
+          },
+          {
+            "point": [
+              16.592777777777776,
+              73.10777777777777
+            ]
+          },
+          {
+            "point": [
+              16.885555555555555,
+              74.12027777777777
+            ],
+            "center": [
+              19.091666666666665,
+              72.86611111111111
+            ],
+            "clockwise": false
+          },
+          {
+            "point": [
+              16.34111111111111,
+              74.47888888888889
+            ]
+          },
+          {
+            "point": [
+              16.099166666666665,
+              73.08361111111111
+            ],
+            "center": [
+              15.7425,
+              73.86694444444444
+            ],
+            "clockwise": false
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VOHB": {
+    "areas": [
+      {
+        "name": "VOHB AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Hubballi/AD 2.1VOHB.pdf",
+          "page": 9,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              15.778055555555556,
+              75.12972222222221
+            ]
+          },
+          {
+            "point": [
+              15.3575,
+              74.65333333333334
+            ],
+            "center": [
+              15.361944444444443,
+              75.08444444444444
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              15.778055555555556,
+              75.12972222222221
+            ],
+            "center": [
+              15.858333333333333,
+              74.61777777777777
+            ],
+            "clockwise": false
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VOHS": {
+    "areas": [
+      {
+        "name": "VOHS AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Shamshabad (RGI)/AD 2.1VOHS.pdf",
+          "page": 11,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              17.402777777777775,
+              78.6286111111111
+            ]
+          },
+          {
+            "point": [
+              17.452222222222222,
+              78.28805555555556
+            ],
+            "center": [
+              17.240555555555556,
+              78.42888888888889
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              17.402777777777775,
+              78.6286111111111
+            ],
+            "center": [
+              17.453333333333333,
+              78.4625
+            ],
+            "clockwise": true
+          }
+        ]
+      },
+      {
+        "name": "Hyderabad Control Area- A",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "circle",
+        "center": [
+          17.240555555555556,
+          78.42888888888889
+        ],
+        "radius_nm": 25.0
+      }
+    ],
+    "unresolved": [
+      "Hyderabad Control Area- B: Border, exclusion or conditional geometry needs review"
+    ]
+  },
+  "VOHY": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: Border, exclusion or conditional geometry needs review"
+    ]
+  },
+  "VOJV": {
+    "areas": [
+      {
+        "name": "VOJV AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Jindal Vijayanagar/AD 2.1VOJV.pdf",
+          "page": 25,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          15.166666666666666,
+          76.63333333333334
+        ],
+        "radius_nm": 15.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VOKN": {
+    "areas": [
+      {
+        "name": "VOKN AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Kannur/AD 2.1VOKN.pdf",
+          "page": 7,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          11.915833333333333,
+          75.54583333333333
+        ],
+        "radius_nm": 10.0
+      },
+      {
+        "name": "Kannur Control Area-",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              11.45361111111111,
+              75.6725
+            ]
+          },
+          {
+            "point": [
+              11.5,
+              75.64111111111112
+            ]
+          },
+          {
+            "point": [
+              11.5,
+              75.0
+            ]
+          },
+          {
+            "point": [
+              12.131944444444445,
+              75.0
+            ]
+          },
+          {
+            "point": [
+              12.388055555555555,
+              75.50694444444444
+            ],
+            "center": [
+              12.961944444444443,
+              74.88972222222223
+            ],
+            "clockwise": false
+          },
+          {
+            "point": [
+              12.170277777777777,
+              75.76666666666667
+            ]
+          },
+          {
+            "point": [
+              11.649722222222222,
+              75.75194444444445
+            ],
+            "center": [
+              11.915833333333333,
+              75.54583333333333
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              11.535555555555556,
+              75.81861111111111
+            ]
+          },
+          {
+            "point": [
+              11.45361111111111,
+              75.6725
+            ],
+            "center": [
+              11.137777777777778,
+              75.95055555555555
+            ],
+            "clockwise": false
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VOKU": {
+    "areas": [
+      {
+        "name": "VOKU AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Kurnool/AD 2.1VOKU.pdf",
+          "page": 10,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          15.714722222222221,
+          78.16305555555556
+        ],
+        "radius_nm": 10.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VOML": {
+    "areas": [
+      {
+        "name": "VOML AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Mangaluru/AD 2.1VOML.pdf",
+          "page": 19,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          12.961944444444443,
+          74.88972222222223
+        ],
+        "radius_nm": 12.0
+      },
+      {
+        "name": "Mangalore Control Area- A",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "circle",
+        "center": [
+          12.961944444444443,
+          74.88972222222223
+        ],
+        "radius_nm": 25.0
+      },
+      {
+        "name": "Mangalore Control Area- B",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "circle",
+        "center": [
+          12.961944444444443,
+          74.88972222222223
+        ],
+        "radius_nm": 50.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VOMY": {
+    "areas": [
+      {
+        "name": "VOMY AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Mysuru/AD 2.1VOMY.pdf",
+          "page": 8,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          12.2325,
+          76.6563888888889
+        ],
+        "radius_nm": 10.0
+      },
+      {
+        "name": "Mysuru Control Area-",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              11.883333333333333,
+              76.88333333333334
+            ]
+          },
+          {
+            "point": [
+              12.627777777777778,
+              76.52083333333333
+            ],
+            "center": [
+              12.2325,
+              76.6563888888889
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VOND": {
+    "areas": [
+      {
+        "name": "VOND AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Nanded/AD 2.1VOND.pdf",
+          "page": 17,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          19.18111111111111,
+          77.32249999999999
+        ],
+        "radius_nm": 10.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VOPB": {
+    "areas": [
+      {
+        "name": "VOPB AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Portblair/AD 2.1VOPB.pdf",
+          "page": 23,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          11.649444444444445,
+          92.74583333333334
+        ],
+        "radius_nm": 80.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VOPC": {
+    "areas": [
+      {
+        "name": "VOPC AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Puducherry/AD 2.1VOPC.pdf",
+          "page": 9,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              12.266666666666667,
+              79.68333333333334
+            ]
+          },
+          {
+            "point": [
+              11.75,
+              79.55
+            ],
+            "center": [
+              11.967222222222222,
+              79.81305555555555
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              11.866666666666667,
+              79.49
+            ]
+          },
+          {
+            "point": [
+              11.928333333333333,
+              79.47500000000001
+            ]
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VOPN": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: No explicit polygon closure"
+    ]
+  },
+  "VORY": {
+    "areas": [
+      {
+        "name": "VORY AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Rajahmundry/AD 2.1VORY.pdf",
+          "page": 8,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          17.109444444444446,
+          81.81944444444444
+        ],
+        "radius_nm": 10.0
+      },
+      {
+        "name": "Rajahmundry Control Area-",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              16.735833333333336,
+              81.62333333333332
+            ]
+          },
+          {
+            "point": [
+              16.630277777777778,
+              81.4025
+            ]
+          },
+          {
+            "point": [
+              16.93027777777778,
+              81.25333333333333
+            ]
+          },
+          {
+            "point": [
+              17.00027777777778,
+              81.39972222222222
+            ]
+          },
+          {
+            "point": [
+              16.735833333333336,
+              81.62333333333332
+            ],
+            "center": [
+              17.109444444444446,
+              81.81944444444444
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VOSH": {
+    "areas": [
+      {
+        "name": "VOSH AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Shivamogga/AD 2.1VOSH.pdf",
+          "page": 6,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          13.859722222222222,
+          75.61777777777777
+        ],
+        "radius_nm": 18.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VOSM": {
+    "areas": [],
+    "unresolved": [
+      "AD 2.17: Circle centre is not explicit"
+    ]
+  },
+  "VOSR": {
+    "areas": [
+      {
+        "name": "VOSR AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Sindhudurg/AD 2.1VOSR.pdf",
+          "page": 14,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              15.970277777777778,
+              73.36333333333333
+            ]
+          },
+          {
+            "point": [
+              15.855,
+              73.61277777777777
+            ],
+            "center": [
+              16.003333333333334,
+              73.53277777777778
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VOTK": {
+    "areas": [
+      {
+        "name": "VOTK AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Tuticorin/AD 2.1VOTK.pdf",
+          "page": 9,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          8.726666666666667,
+          78.02638888888889
+        ],
+        "radius_nm": 25.0
+      }
+    ],
+    "unresolved": []
+  },
+  "VOTR": {
+    "areas": [
+      {
+        "name": "VOTR AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Tiruchirappalli/AD 2.1VOTR.pdf",
+          "page": 17,
+          "section": "AD 2.17"
+        },
+        "shape": "circle",
+        "center": [
+          10.765555555555556,
+          78.715
+        ],
+        "radius_nm": 10.0
+      },
+      {
+        "name": "Tiruchirappalli Control Area-",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "circle",
+        "center": [
+          10.765588888888887,
+          78.71504444444446
+        ],
+        "radius_nm": 25.0
+      },
+      {
+        "name": "Tiruchirappalli Control Area-",
+        "source": {
+          "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+          "section": "ENR 2.1",
+          "edition": "July 2026"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              10.433333333333334,
+              78.18916666666667
+            ]
+          },
+          {
+            "point": [
+              10.296944444444444,
+              78.40083333333334
+            ]
+          },
+          {
+            "point": [
+              10.158055555555556,
+              78.61222222222221
+            ]
+          },
+          {
+            "point": [
+              10.093611111111112,
+              78.75
+            ]
+          },
+          {
+            "point": [
+              9.931944444444444,
+              78.79194444444444
+            ]
+          },
+          {
+            "point": [
+              11.599166666666667,
+              78.6388888888889
+            ],
+            "center": [
+              10.765555555555556,
+              78.715
+            ],
+            "clockwise": false
+          },
+          {
+            "point": [
+              11.358333333333333,
+              78.12916666666666
+            ],
+            "center": [
+              12.951388888888888,
+              77.66555555555556
+            ],
+            "clockwise": true
+          },
+          {
+            "point": [
+              11.233333333333333,
+              78.2
+            ]
+          },
+          {
+            "point": [
+              11.05,
+              78.28333333333333
+            ]
+          },
+          {
+            "point": [
+              10.818333333333333,
+              78.16555555555556
+            ]
+          },
+          {
+            "point": [
+              10.535,
+              78.23194444444445
+            ]
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VOVI": {
+    "areas": [
+      {
+        "name": "VOVI AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Bhogapuram/AD 2.1VOVI.pdf",
+          "page": 9,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              17.916944444444447,
+              83.10111111111111
+            ]
+          },
+          {
+            "point": [
+              17.819166666666668,
+              83.66027777777778
+            ]
+          },
+          {
+            "point": [
+              17.94638888888889,
+              84.02916666666667
+            ]
+          },
+          {
+            "point": [
+              18.091388888888886,
+              82.99555555555555
+            ],
+            "center": [
+              17.973888888888887,
+              83.50555555555556
+            ],
+            "clockwise": false
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  },
+  "VOVZ": {
+    "areas": [
+      {
+        "name": "VOVZ AD 2.17",
+        "source": {
+          "file": "Airport Layouts/Visakhapatnam/AD 2.1VOVZ.pdf",
+          "page": 11,
+          "section": "AD 2.17"
+        },
+        "shape": "polygon",
+        "edges": [
+          {
+            "point": [
+              17.916944444444447,
+              83.10111111111111
+            ]
+          },
+          {
+            "point": [
+              17.819166666666668,
+              83.66027777777778
+            ]
+          },
+          {
+            "point": [
+              18.029166666666665,
+              83.03305555555555
+            ],
+            "center": [
+              17.66777777777778,
+              83.25277777777778
+            ],
+            "clockwise": true
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  }
+}

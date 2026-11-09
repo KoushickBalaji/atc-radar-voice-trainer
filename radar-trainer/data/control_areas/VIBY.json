@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VIBY",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Bareilly CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HJ",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 145
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Bareilly/AD 2.1VIBY.pdf",
+        "page": 7,
+        "section": "AD 2.17",
+        "effective_date": "2026-01-22",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits MCTR: Area bounded by lines joining points 280039N 0793402E; 281932N 0785947E then along the clockwise arc of a circle of 25NM radius centred on 282502N 0792725E to 284000N 0794954E; 280948N 0794954E then along the clockwise arc of a circle of 25NM radius centred on 282502N 0792725E to point of origin. | Vertical: FL 145 | Class: D | Hours: HJ"
+      },
+      "shape": "circle",
+      "center": [
+        28.41722222222222,
+        79.45694444444445
+      ],
+      "radius_nm": 25.0
+    }
+  ]
+}

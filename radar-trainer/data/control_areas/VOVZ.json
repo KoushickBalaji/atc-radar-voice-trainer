@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VOVZ",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Visakhapatnam CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "AMSL",
+        "value": 5500.0
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Visakhapatnam/AD 2.1VOVZ.pdf",
+        "page": 11,
+        "section": "AD 2.17",
+        "effective_date": "2026-09-03",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits MCTR: Area bounded by lines joining points 175501N 0830604E; 174909N 0833937E then along the clockwise arc of a circle of 25NM radius centred on 174004N 0831510E to 180145N 0830159E to point of origin. | Vertical: 5500 FT AMSL | Class: D AD 2 VOVZ -11 03 SEP 2026 AMDT 08-26 Airports Authority of India India AIP | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        17.66777777777778,
+        83.25277777777778
+      ],
+      "radius_nm": 25.0
+    }
+  ]
+}

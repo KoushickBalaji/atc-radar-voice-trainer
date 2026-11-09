@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VEGK",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Gorakhpur CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HJ",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 150
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Gorakhpur/AD 2.1VEGK.pdf",
+        "page": 7,
+        "section": "AD 2.17",
+        "effective_date": "2025-01-23",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits MCTR: GORAKHPUR MCTR - 1 Circular area centered on 264429N 0832701E within a 25NM radius. FL150/GND GORAKHPUR MCTR \u2013 2 Circular area centered on 264622N0835343 within a 15NM radius. FL150/GND | Vertical: FL 150 | Class: D | Hours: HJ"
+      },
+      "shape": "circle",
+      "center": [
+        26.74138888888889,
+        83.45027777777779
+      ],
+      "radius_nm": 25.0
+    }
+  ]
+}

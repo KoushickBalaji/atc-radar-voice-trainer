@@ -1,0 +1,100 @@
+{
+  "scenarios": [
+    {
+      "id": "S1",
+      "title": "Climb clearance",
+      "situation": "INDAIR 809 is maintaining FL160. Instruct commencement of climb to FL180. No SID restriction, conditional timing, or climb-rate instruction applies.",
+      "required_action": "Issue the climb instruction.",
+      "expected_information": {"callsign": "INDAIR 809", "action": "climb", "level": "180"},
+      "mandatory_elements": ["S1.callsign", "S1.action", "S1.level"],
+      "acceptable_examples": ["INDAIR EIGHT ZERO NINE, CLIMB TO FLIGHT LEVEL ONE EIGHT ZERO."],
+      "incorrect_examples": [
+        {"text": "INDAIR EIGHT ZERO NINE, CLIMB TO FLIGHT LEVEL ONE NINE ZERO.", "reason": "Wrong target level 190."},
+        {"text": "INDAIR EIGHT ZERO NINE, MAINTAIN FLIGHT LEVEL ONE EIGHT ZERO.", "reason": "MAINTAIN does not substitute for CLIMB for a level change."}
+      ],
+      "permitted_variation_notes": ["Do not require REPORT REACHING.", "WHEN READY changes the requested timing and is not interchangeable here."],
+      "assessment_scope": "Assess full callsign, climb terminology, flight-level designation, and target 180. Broader operational procedure is not assessed.",
+      "excerpt_ids": ["num-12.5.1", "callsign-12.7.2", "standard-12.13.3", "grouping-12.14", "climb-12.16.1", "maintain-note-12.16.2.3"],
+      "check_dimensions": {"S1.callsign": "information", "S1.action": "phraseology", "S1.level": "information"}
+    },
+    {
+      "id": "S2",
+      "title": "Left turn to heading 080",
+      "situation": "Under ATS surveillance control, INDAIR 809 is flying heading 120. Instruct a left turn to heading 080 for spacing.",
+      "required_action": "Issue the left-turn vector.",
+      "expected_information": {"callsign": "INDAIR 809", "action": "turn", "direction": "left", "heading": "080"},
+      "mandatory_elements": ["S2.callsign", "S2.action", "S2.direction", "S2.heading"],
+      "acceptable_examples": [
+        "INDAIR EIGHT ZERO NINE, TURN LEFT HEADING ZERO EIGHT ZERO.",
+        "INDAIR EIGHT ZERO NINE, TURN LEFT HEADING ZERO EIGHT ZERO FOR SPACING."
+      ],
+      "incorrect_examples": [
+        {"text": "INDAIR EIGHT ZERO NINE, TURN RIGHT HEADING ZERO EIGHT ZERO.", "reason": "Wrong turn direction."},
+        {"text": "INDAIR EIGHT ZERO NINE, TURN LEFT HEADING EIGHTY.", "reason": "Grouped wording conflicts with the heading-080 example only when wording evidence is reliably retained."}
+      ],
+      "permitted_variation_notes": ["FOR SPACING is permitted but not mandatory.", "A transcript containing only 080 cannot establish how the digits were spoken."],
+      "assessment_scope": "Assess full callsign, turn terminology, left direction, heading value 080, and number wording only when recognition evidence supports it. Broader procedure is not assessed.",
+      "excerpt_ids": ["num-12.5.1", "callsign-12.7.2", "grouping-12.14", "vector-12.17.1.3"],
+      "check_dimensions": {"S2.callsign": "information", "S2.action": "phraseology", "S2.direction": "information", "S2.heading": "information"}
+    },
+    {
+      "id": "S3",
+      "title": "Departure squawk assignment",
+      "situation": "Before departure, assign INDAIR 809 new transponder code 3425. This is not a reselection, confirmation, or IDENT request.",
+      "required_action": "Assign the new transponder code.",
+      "expected_information": {"callsign": "INDAIR 809", "action": "squawk", "code": "3425"},
+      "mandatory_elements": ["S3.callsign", "S3.action", "S3.code"],
+      "acceptable_examples": [
+        "INDAIR EIGHT ZERO NINE, SQUAWK THREE FOUR TWO FIVE.",
+        "INDAIR EIGHT ZERO NINE, FOR DEPARTURE SQUAWK THREE FOUR TWO FIVE."
+      ],
+      "incorrect_examples": [
+        {"text": "INDAIR EIGHT ZERO NINE, SQUAWK THREE FOUR TWO SIX.", "reason": "Wrong code 3426."},
+        {"text": "INDAIR EIGHT ZERO NINE, CONFIRM SQUAWK THREE FOUR TWO FIVE.", "reason": "A confirmation request is not a setting instruction."}
+      ],
+      "permitted_variation_notes": ["FOR DEPARTURE is permitted but not required.", "Do not require IDENT."],
+      "assessment_scope": "Assess full callsign, setting instruction, and complete code 3425. Broader operational procedure is not assessed.",
+      "excerpt_ids": ["num-12.5.1", "callsign-12.7.2", "readback-12.9.4", "grouping-12.14", "squawk-12.17.3"],
+      "check_dimensions": {"S3.callsign": "information", "S3.action": "phraseology", "S3.code": "information"}
+    },
+    {
+      "id": "S4",
+      "title": "Detailed taxi instruction",
+      "situation": "At a fictional aerodrome, INDAIR 809 is at Stand 3. ATIS is available. Instruct taxi via taxiway A to holding point 1 for runway 27, explicitly holding short of runway 27. No intervening runway crossing exists.",
+      "required_action": "Issue the detailed taxi and hold-short instruction.",
+      "expected_information": {"callsign": "INDAIR 809", "action": "taxi", "holding_point": "1", "runway": "27", "route": "A", "hold_short": "27"},
+      "mandatory_elements": ["S4.callsign", "S4.action", "S4.holding_point", "S4.runway", "S4.route", "S4.hold_short"],
+      "acceptable_examples": ["INDAIR EIGHT ZERO NINE, TAXI TO HOLDING POINT ONE RUNWAY TWO SEVEN VIA ALFA, HOLD SHORT OF RUNWAY TWO SEVEN."],
+      "incorrect_examples": [
+        {"text": "INDAIR EIGHT ZERO NINE, TAXI TO HOLDING POINT ONE RUNWAY TWO SEVEN VIA BRAVO, HOLD SHORT OF RUNWAY TWO SEVEN.", "reason": "Wrong taxi route."},
+        {"text": "INDAIR EIGHT ZERO NINE, TAXI TO HOLDING POINT ONE RUNWAY TWO SEVEN VIA ALFA, CROSS RUNWAY TWO SEVEN.", "reason": "Contradicts the exercise's hold-short restriction."}
+      ],
+      "permitted_variation_notes": ["ALPHA transcript spelling is equivalent to ALFA without acoustic scoring.", "The explicit hold-short restriction is exercise-specific, not a universal claim for every taxi instruction."],
+      "assessment_scope": "Assess detailed taxi content and the exercise-specific hold-short boundary; do not assess fictional aerodrome feasibility.",
+      "excerpt_ids": ["alphabet-12.4.2", "num-12.5.1", "readback-12.9.4", "grouping-12.14", "notation-12.15-note", "taxi-12.16.4.7", "holding-12.16.4.8"],
+      "check_dimensions": {"S4.callsign": "information", "S4.action": "phraseology", "S4.holding_point": "information", "S4.runway": "information", "S4.route": "information", "S4.hold_short": "procedure"}
+    },
+    {
+      "id": "S5",
+      "title": "Incorrect level readback",
+      "situation": "The pilot has read back FL280 after a clearance to FL180. Correct the discrepancy without adopting FL280.",
+      "required_action": "Address the aircraft and correct the readback to FL180.",
+      "previous_clearance": "INDAIR EIGHT ZERO NINE, CLIMB TO FLIGHT LEVEL ONE EIGHT ZERO.",
+      "pilot_readback": "CLIMB TO FLIGHT LEVEL TWO EIGHT ZERO, INDAIR EIGHT ZERO NINE.",
+      "expected_information": {"callsign": "INDAIR 809", "action": "climb", "level": "180", "correction": "correction"},
+      "mandatory_elements": ["S5.callsign", "S5.action", "S5.level", "S5.correction"],
+      "acceptable_examples": [
+        "INDAIR EIGHT ZERO NINE, NEGATIVE, CLIMB TO FLIGHT LEVEL ONE EIGHT ZERO.",
+        "INDAIR EIGHT ZERO NINE, NEGATIVE, I SAY AGAIN, CLIMB TO FLIGHT LEVEL ONE EIGHT ZERO."
+      ],
+      "incorrect_examples": [
+        {"text": "INDAIR EIGHT ZERO NINE, CORRECT.", "reason": "Confirms the erroneous readback and omits the correct level."},
+        {"text": "INDAIR EIGHT ZERO NINE, NEGATIVE, CLIMB TO FLIGHT LEVEL TWO EIGHT ZERO.", "reason": "Repeats the wrong level 280."}
+      ],
+      "permitted_variation_notes": ["Do not require the exact sample sentence or make NEGATIVE/CORRECTION universally mandatory.", "NEGATIVE alone is insufficient because the correct clearance remains unstated.", "Applicability of 12.8.7-12.8.8 to pilot-readback correction remains uncertain."],
+      "assessment_scope": "Assess addressing the aircraft, correction rather than confirmation, restating FL180, and avoiding adoption of FL280.",
+      "excerpt_ids": ["num-12.5.1", "words-12.6.1", "callsign-12.7.2", "correction-12.8.7", "readback-12.9.4", "grouping-12.14", "climb-12.16.1"],
+      "check_dimensions": {"S5.callsign": "information", "S5.action": "phraseology", "S5.level": "information", "S5.correction": "procedure"}
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "icao": "VIPG",
+  "name": "Pithoragarh",
+  "country_code": "IN",
+  "center": [
+    29.593333333333334,
+    80.23861111111111
+  ],
+  "elevation_ft": 4967.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "14/32",
+    "length_m": 1568.0,
+    "width_m": 30.0,
+    "ends": [
+      {
+        "name": "14",
+        "lat": 29.599925,
+        "lon": 80.2336138888889,
+        "elevation_ft": 4967.0,
+        "bearing_true": 142.46
+      },
+      {
+        "name": "32",
+        "lat": 29.589302777777778,
+        "lon": 80.24284722222222,
+        "elevation_ft": 4902.0,
+        "bearing_true": 322.46
+      }
+    ]
+  },
+  "approach": null,
+  "navaids": [],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 8000,
+    "command_alt_min_ft": 6000,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 9000,
+      "spd_kt": 220,
+      "hdg": 157
+    },
+    "suggested_heading": 172
+  },
+  "sources": [
+    "Airport Layouts/Pithoragarh/AD 2.1VIPG.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": 0.75,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Pithoragarh/AD 2.1VIPG.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Pithoragarh/AD 2.1VIPG.pdf",
+        "page": 11,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Pithoragarh/AD 2.1VIPG.pdf",
+        "page": 14,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [
+      "RWY 14/32: threshold separation 1480 m vs published length 1568 m; displacement documented"
+    ]
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. No ILS is identified in the supplied documents; no automatic approach capture. Minimum-altitude warnings unavailable for this airport.",
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

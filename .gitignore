@@ -1,0 +1,49 @@
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+tmp/
+recordings/
+.streamlit/secrets.toml
+
+# Uninstalled game remnants and installer are not part of the source backup.
+Endless ATC/
+Install-Endless ATC Lite-GooglePlayGames.exe
+
+# Generated/local dependency trees and build output.
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+coverage/
+**/coverage/
+test-results/
+**/test-results/
+*.tsbuildinfo
+*.log
+*.sqlite
+*.db
+
+# Nested project checkout has its own Git repository and ignore rules.
+radar-trainer/.git/
+
+# Nested trainer local environments, generated output, and build artifacts.
+radar-trainer/.venv/
+radar-trainer/__pycache__/
+radar-trainer/.pytest_cache/
+radar-trainer/bluesky/
+radar-trainer/outputs/
+radar-trainer/scratch/
+radar-trainer/reports/
+radar-trainer/audio/
+radar-trainer/model/
+radar-trainer/frontend/scratch/
+radar-trainer/bench/bench-env/
+radar-trainer/bench/models/
+radar-trainer/bench/results/tts_audio/
+radar-trainer/bench/results/e2e_audio/
+radar-trainer/bench/results/human_audio/
+radar-trainer/bench/results/*.log
+radar-trainer/bench/results/llm_usage.jsonl
+radar-trainer/*.env

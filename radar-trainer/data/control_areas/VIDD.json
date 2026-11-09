@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "icao": "VIDD",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Safdarjung CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "AMSL",
+        "value": 1400.0
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Safdarjung/AD 2.1VIDD.pdf",
+        "page": 11,
+        "section": "AD 2.17",
+        "effective_date": "2026-01-22",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits ATZ: Area bounded by lines joining points 283430N 0771313E; 283406N 0771255E; 283406N 0771155E; 283448N 0771055E; 283536N 0771119E to point of origin. | Vertical: 1400 FT AMSL | Class: D | Hours: HO"
+      },
+      "shape": "polygon",
+      "edges": [
+        {
+          "point": [
+            28.575,
+            77.22027777777778
+          ]
+        },
+        {
+          "point": [
+            28.56833333333333,
+            77.21527777777779
+          ]
+        },
+        {
+          "point": [
+            28.56833333333333,
+            77.19861111111112
+          ]
+        },
+        {
+          "point": [
+            28.58,
+            77.18194444444445
+          ]
+        },
+        {
+          "point": [
+            28.593333333333334,
+            77.18861111111111
+          ]
+        }
+      ]
+    }
+  ]
+}

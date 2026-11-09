@@ -1,0 +1,99 @@
+{
+  "icao": "VIBR",
+  "name": "Kullu Manali",
+  "country_code": "IN",
+  "center": [
+    31.876944444444444,
+    77.15527777777778
+  ],
+  "elevation_ft": 3571.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "16/34",
+    "length_m": 1049.0,
+    "width_m": 30.0,
+    "ends": [
+      {
+        "name": "16",
+        "lat": 31.880827777777778,
+        "lon": 77.15247222222223,
+        "elevation_ft": 3571.0,
+        "bearing_true": 158.8
+      },
+      {
+        "name": "34",
+        "lat": 31.87201111111111,
+        "lon": 77.15647777777778,
+        "elevation_ft": 3546.0,
+        "bearing_true": 338.8
+      }
+    ]
+  },
+  "approach": null,
+  "navaids": [
+    {
+      "name": "DVOR/DME KUL 115.000 MHz CH97X AS ATS",
+      "lat": 31.68461111111111,
+      "lon": 77.21338888888889,
+      "type": "vor"
+    },
+    {
+      "name": "NDB BNR 334 kHz As ATS",
+      "lat": 31.881527777777777,
+      "lon": 77.15125,
+      "type": "ndb"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 7000,
+    "command_alt_min_ft": 4600,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 8000,
+      "spd_kt": 220,
+      "hdg": 174
+    },
+    "suggested_heading": 189
+  },
+  "sources": [
+    "Airport Layouts/Kullu Manali/AD 2.1VIBR.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": 1.42,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Kullu Manali/AD 2.1VIBR.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Kullu Manali/AD 2.1VIBR.pdf",
+        "page": 14,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Kullu Manali/AD 2.1VIBR.pdf",
+        "page": 17,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": []
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. No ILS is identified in the supplied documents; no automatic approach capture. Minimum-altitude warnings unavailable for this airport.",
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

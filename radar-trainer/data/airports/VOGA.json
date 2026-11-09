@@ -1,0 +1,139 @@
+{
+  "icao": "VOGA",
+  "name": "Mopa",
+  "country_code": "IN",
+  "center": [
+    15.7425,
+    73.86694444444444
+  ],
+  "elevation_ft": 564.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "10/28",
+    "length_m": 3500.0,
+    "width_m": 45.0,
+    "ends": [
+      {
+        "name": "10",
+        "lat": 15.745697222222221,
+        "lon": 73.84451666666666,
+        "elevation_ft": 503.8,
+        "bearing_true": 94.68
+      },
+      {
+        "name": "28",
+        "lat": 15.743108333333332,
+        "lon": 73.87707499999999,
+        "elevation_ft": 563.9,
+        "bearing_true": 274.68,
+        "bearing_magnetic_chart": 276
+      }
+    ]
+  },
+  "approach": {
+    "runway": "28",
+    "threshold_index": 1,
+    "course_true": 274.68,
+    "course_magnetic": 276,
+    "glide_deg": 3,
+    "rdh_ft": 56.7,
+    "intercept_alt_ft": 3400,
+    "line_length_nm": 17,
+    "reference_fixes": []
+  },
+  "navaids": [
+    {
+      "name": "LOC 28 IMPA 110.500 MHz H24",
+      "lat": 15.745944444444444,
+      "lon": 73.84152777777777,
+      "type": "loc"
+    },
+    {
+      "name": "GP 28 329.600 MHz H24",
+      "lat": 15.744472222222221,
+      "lon": 73.87372222222221,
+      "type": "gs"
+    },
+    {
+      "name": "DME ILS 28 IMPA CH42X H24",
+      "lat": 15.744499999999999,
+      "lon": 73.87372222222221,
+      "type": "dme"
+    },
+    {
+      "name": "DVOR/DME MPG 117.400 MHz CH121X H24",
+      "lat": 15.746916666666666,
+      "lon": 73.85666666666665,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 1,
+    "practice_alt_ft": 4000,
+    "command_alt_min_ft": 3200,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 17,
+      "cross_nm": 3,
+      "alt_ft": 5400,
+      "spd_kt": 220,
+      "hdg": 290
+    },
+    "suggested_heading": 305,
+    "pre_capture_floor_ft": 3200
+  },
+  "sources": [
+    "Airport Layouts/Mopa/AD 2.1VOGA.pdf",
+    "Airport Layouts/Mopa/VOGA-ILS-RWY-28.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": -1.5,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Mopa/AD 2.1VOGA.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Mopa/AD 2.1VOGA.pdf",
+        "page": 5,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Mopa/AD 2.1VOGA.pdf",
+        "page": 8,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [],
+    "ils": {
+      "source_file": "Airport Layouts/Mopa/VOGA-ILS-RWY-28.pdf",
+      "source_page": 1,
+      "level_basis": "Published horizontal final segment visually checked; only vector-to-final segment modeled",
+      "visually_reviewed": true,
+      "warnings": [
+        "Missed approach speed is restricted",
+        " Caution ; Terrain of spot elevation "
+      ]
+    },
+    "training": "Spawn, speed envelope, localizer capture window, and tolerances are exercise settings, not published procedure minima. Final segment only; omitted chart fixes are not synthesized."
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. Minimum-altitude warnings unavailable for this airport.",
+  "training_overrides": {
+    "localizer_min_nm": 10,
+    "localizer_max_nm": 13
+  },
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

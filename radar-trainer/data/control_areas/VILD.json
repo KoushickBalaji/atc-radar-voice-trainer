@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VILD",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Ludhiana CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "AMSL",
+        "value": 3000.0
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Ludhiana/AD 2.1VILD.pdf",
+        "page": 9,
+        "section": "AD 2.17",
+        "effective_date": "2026-01-22",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits ATZ: Circular area centered on 305109N 0755724E within a 5NM radius. | Vertical: 3000 FT AMSL | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        30.852500000000003,
+        75.95666666666666
+      ],
+      "radius_nm": 5.0
+    }
+  ]
+}

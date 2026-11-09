@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VIJO",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Jodhpur CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HJ",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 100
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Jodhpur/AD 2.1VIJO.pdf",
+        "page": 9,
+        "section": "AD 2.17",
+        "effective_date": "2026-01-22",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits MCTR: Circular area centered on 261501N 0730158E within a 25NM radius. | Vertical: FL 100 | Class: D | Hours: HJ"
+      },
+      "shape": "circle",
+      "center": [
+        26.25027777777778,
+        73.03277777777778
+      ],
+      "radius_nm": 25.0
+    }
+  ]
+}

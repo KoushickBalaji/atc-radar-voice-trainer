@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VIKG",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Kishangarh CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 80
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Kishangarh/AD 2.1VIKG.pdf",
+        "page": 8,
+        "section": "AD 2.17",
+        "effective_date": "2026-07-09",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Area bounded by lines joining points 261024N 0744914E; 262441N 0744756E; 261859N 0742759E then along the clockwise arc of a circle of 25NM radius centred on 263528N 0744858E to point of origin. | Vertical: FL 80 | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        26.59111111111111,
+        74.81611111111111
+      ],
+      "radius_nm": 25.0
+    }
+  ]
+}

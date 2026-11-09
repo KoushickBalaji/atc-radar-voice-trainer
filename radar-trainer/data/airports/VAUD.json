@@ -1,0 +1,133 @@
+{
+  "icao": "VAUD",
+  "name": "Udaipur",
+  "country_code": "IN",
+  "center": [
+    24.618333333333332,
+    73.89277777777778
+  ],
+  "elevation_ft": 1690.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "08/26",
+    "length_m": 2741.0,
+    "width_m": 45.0,
+    "ends": [
+      {
+        "name": "08",
+        "lat": 24.616555555555557,
+        "lon": 73.8887888888889,
+        "elevation_ft": 1679.1,
+        "bearing_true": 81.56
+      },
+      {
+        "name": "26",
+        "lat": 24.61906666666667,
+        "lon": 73.90728611111112,
+        "elevation_ft": 1665.7,
+        "bearing_true": 261.56,
+        "bearing_magnetic_chart": 262
+      }
+    ]
+  },
+  "approach": {
+    "runway": "26",
+    "threshold_index": 1,
+    "course_true": 261.56,
+    "course_magnetic": 262,
+    "glide_deg": 3,
+    "rdh_ft": 52.7,
+    "intercept_alt_ft": 3700,
+    "line_length_nm": 16,
+    "reference_fixes": []
+  },
+  "navaids": [
+    {
+      "name": "LOC 26 CAT I IUDR 109.900 MHz As ATS",
+      "lat": 24.615444444444446,
+      "lon": 73.88061111111111,
+      "type": "loc"
+    },
+    {
+      "name": "GP 26 IUDR 333.800 MHz As ATS",
+      "lat": 24.61975,
+      "lon": 73.90419444444446,
+      "type": "gs"
+    },
+    {
+      "name": "DME ILS 26 IUDR CH36X As ATS",
+      "lat": 24.619777777777777,
+      "lon": 73.90416666666667,
+      "type": "dme"
+    },
+    {
+      "name": "DVOR/DME UUD 115.900 MHz CH106X H24",
+      "lat": 24.614722222222223,
+      "lon": 73.89380555555556,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 1,
+    "practice_alt_ft": 5000,
+    "command_alt_min_ft": 3500,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5700,
+      "spd_kt": 220,
+      "hdg": 277
+    },
+    "suggested_heading": 292,
+    "pre_capture_floor_ft": 3500
+  },
+  "sources": [
+    "Airport Layouts/Udaipur/AD 2.1VAUD.pdf",
+    "Airport Layouts/Udaipur/VAUD-ILS-LOC-RWY-26.pdf"
+  ],
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Udaipur/AD 2.1VAUD.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Udaipur/AD 2.1VAUD.pdf",
+        "page": 16,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Udaipur/AD 2.1VAUD.pdf",
+        "page": 19,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [
+      "RWY 08/26: threshold separation 1889 m vs published length 2741 m; displacement documented"
+    ],
+    "ils": {
+      "source_file": "Airport Layouts/Udaipur/VAUD-ILS-LOC-RWY-26.pdf",
+      "source_page": 1,
+      "level_basis": "Published horizontal final segment visually checked; only vector-to-final segment modeled",
+      "visually_reviewed": true,
+      "warnings": []
+    },
+    "training": "Spawn, speed envelope, localizer capture window, and tolerances are exercise settings, not published procedure minima. Final segment only; omitted chart fixes are not synthesized."
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. Minimum-altitude warnings unavailable for this airport.",
+  "training_overrides": {
+    "localizer_min_nm": 7,
+    "localizer_max_nm": 12
+  },
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

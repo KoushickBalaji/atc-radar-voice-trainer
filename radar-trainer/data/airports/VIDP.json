@@ -1,0 +1,280 @@
+{
+  "icao": "VIDP",
+  "name": "Delhi",
+  "country_code": "IN",
+  "center": [
+    28.56861111111111,
+    77.11222222222221
+  ],
+  "elevation_ft": 778.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "09/27",
+    "length_m": 2816.0,
+    "width_m": 45.0,
+    "ends": [
+      {
+        "name": "09",
+        "lat": 28.57055,
+        "lon": 77.08813333333333,
+        "elevation_ft": 718.8,
+        "bearing_true": 91.25,
+        "bearing_magnetic_chart": 91
+      },
+      {
+        "name": "27",
+        "lat": 28.569927777777778,
+        "lon": 77.1153611111111,
+        "elevation_ft": 752.4,
+        "bearing_true": 271.25
+      }
+    ]
+  },
+  "approach": {
+    "runway": "09",
+    "threshold_index": 0,
+    "course_true": 91.25,
+    "course_magnetic": 91,
+    "glide_deg": 3,
+    "rdh_ft": 56,
+    "intercept_alt_ft": 2600,
+    "line_length_nm": 16,
+    "reference_fixes": []
+  },
+  "navaids": [
+    {
+      "name": "LOC 10 CAT III IDEL 109.500 MHz H24",
+      "lat": 28.55777777777778,
+      "lon": 77.12588888888888,
+      "type": "loc"
+    },
+    {
+      "name": "LOC 11R CAT III IDMR 111.300 MHz H24",
+      "lat": 28.537055555555558,
+      "lon": 77.11261111111111,
+      "type": "loc"
+    },
+    {
+      "name": "LOC 29L CAT III IDGM 110.900 MHz H24",
+      "lat": 28.54788888888889,
+      "lon": 77.06213888888888,
+      "type": "loc"
+    },
+    {
+      "name": "LOC 28 CAT III IPLM 110.300 MHz H24",
+      "lat": 28.568166666666666,
+      "lon": 77.08077777777777,
+      "type": "loc"
+    },
+    {
+      "name": "LOC 27 CAT I IDLH 110.500 MHz H24",
+      "lat": 28.570694444444445,
+      "lon": 77.08227777777778,
+      "type": "loc"
+    },
+    {
+      "name": "LOC 09 CAT I IDIA 108.500 MHz H24",
+      "lat": 28.56986111111111,
+      "lon": 77.11841666666666,
+      "type": "loc"
+    },
+    {
+      "name": "LOC 11L CAT III IDLP 108.700 MHz H24",
+      "lat": 28.540083333333335,
+      "lon": 77.11505555555554,
+      "type": "loc"
+    },
+    {
+      "name": "LOC 29R CAT III IDPN 111.100 MHz H24",
+      "lat": 28.550805555555556,
+      "lon": 77.065,
+      "type": "loc"
+    },
+    {
+      "name": "GP 27 329.600 MHz H24",
+      "lat": 28.569027777777777,
+      "lon": 77.11169444444444,
+      "type": "gs"
+    },
+    {
+      "name": "GP 10 IDEL 332.600 MHz H24",
+      "lat": 28.567555555555554,
+      "lon": 77.08830555555555,
+      "type": "gs"
+    },
+    {
+      "name": "GP 29L IDGM 330.800 MHz",
+      "lat": 28.540555555555557,
+      "lon": 77.09108333333333,
+      "type": "gs"
+    },
+    {
+      "name": "GP 11R IDMR 332.300 MHz H24",
+      "lat": 28.544027777777778,
+      "lon": 77.07483333333333,
+      "type": "gs"
+    },
+    {
+      "name": "GP 28 IPLM 335.000 MHz H24",
+      "lat": 28.5605,
+      "lon": 77.11902777777777,
+      "type": "gs"
+    },
+    {
+      "name": "GP 09 IDIA 329.900 MHz H24",
+      "lat": 28.571583333333333,
+      "lon": 77.09133333333332,
+      "type": "gs"
+    },
+    {
+      "name": "GP 11L IDLP 330.500 MHz H24",
+      "lat": 28.546944444444446,
+      "lon": 77.07783333333333,
+      "type": "gs"
+    },
+    {
+      "name": "GP 29R 331.700 MHz H24",
+      "lat": 28.54211111111111,
+      "lon": 77.10024999999999,
+      "type": "gs"
+    },
+    {
+      "name": "DME ILS 10 IDEL CH32X H24",
+      "lat": 28.567611111111113,
+      "lon": 77.08833333333332,
+      "type": "dme"
+    },
+    {
+      "name": "DME ILS 28 IPLM CH40X H24",
+      "lat": 28.56052777777778,
+      "lon": 77.11902777777777,
+      "type": "dme"
+    },
+    {
+      "name": "DME ILS 27 IDLH CH42X H24",
+      "lat": 28.569027777777777,
+      "lon": 77.11169444444444,
+      "type": "dme"
+    },
+    {
+      "name": "DME ILS 09 IDIA CH22X H24",
+      "lat": 28.571638888888888,
+      "lon": 77.09136111111111,
+      "type": "dme"
+    },
+    {
+      "name": "DME ILS 11R IDMR CH58X H24",
+      "lat": 28.544,
+      "lon": 77.0748611111111,
+      "type": "dme"
+    },
+    {
+      "name": "DME ILS 29L IDGM CH46X H24",
+      "lat": 28.540583333333334,
+      "lon": 77.09105555555556,
+      "type": "dme"
+    },
+    {
+      "name": "DME ILS 11L IDLP CH24X H24",
+      "lat": 28.546916666666668,
+      "lon": 77.07780555555556,
+      "type": "dme"
+    },
+    {
+      "name": "DME ILS 29R IDPN CH48X H24",
+      "lat": 28.542083333333334,
+      "lon": 77.10024999999999,
+      "type": "dme"
+    },
+    {
+      "name": "DVOR/DME DPN 116.100 MHz CH108X H24 Logon address, as appropriate Hours of operation Remarks AD 2 VIDP -68 22 JAN 2026 AMDT 01-26 Airports Authority of India AIRAC effective date India AIP",
+      "lat": 28.566916666666668,
+      "lon": 77.09352777777778,
+      "type": "vor"
+    },
+    {
+      "name": "DVOR/DME DIG 114.600 MHz CH93X H24 Type of aids, magnetic variation and type of supported operation for ILS/ MLS, basic GNSS, SBAS and GBAS, and for",
+      "lat": 28.542194444444448,
+      "lon": 77.08047222222221,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 4000,
+    "command_alt_min_ft": 2400,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5000,
+      "spd_kt": 220,
+      "hdg": 106
+    },
+    "suggested_heading": 121,
+    "pre_capture_floor_ft": 2400
+  },
+  "sources": [
+    "Airport Layouts/Delhi/AD 2.1VIDP.pdf",
+    "Airport Layouts/Delhi/VIDP-ILS-LOC-RWY-09.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": 0.75,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Delhi/AD 2.1VIDP.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Delhi/AD 2.1VIDP.pdf",
+        "page": 52,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Delhi/AD 2.1VIDP.pdf",
+        "page": 68,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [
+      "RWY 11L dimensions from ordered AD 2.12 remarks",
+      "RWY 29R dimensions from ordered AD 2.12 remarks",
+      "RWY 11R dimensions from ordered AD 2.12 remarks",
+      "RWY 29L dimensions from ordered AD 2.12 remarks",
+      "RWY 11L/29R: threshold separation 2993 m vs published length 3670 m; displacement documented",
+      "RWY 11L/29R: asymmetric published dimensions; do not select this pair without manual review",
+      "RWY 11R/29L: threshold separation 2320 m vs published length 4110 m; displacement documented",
+      "RWY 11R/29L: asymmetric published dimensions; do not select this pair without manual review",
+      "RWY 09/27: threshold separation 2658 m vs published length 2816 m; displacement documented"
+    ],
+    "ils": {
+      "source_file": "Airport Layouts/Delhi/VIDP-ILS-LOC-RWY-09.pdf",
+      "source_page": 1,
+      "level_basis": "Published horizontal final segment visually checked; only vector-to-final segment modeled",
+      "visually_reviewed": true,
+      "warnings": [
+        "CAUTION FOR CLOSELY SPACED"
+      ]
+    },
+    "training": "Spawn, speed envelope, localizer capture window, and tolerances are exercise settings, not published procedure minima. Final segment only; omitted chart fixes are not synthesized."
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. Other airport runways are not modeled. Minimum-altitude warnings unavailable for this airport.",
+  "training_overrides": {
+    "localizer_min_nm": 7,
+    "localizer_max_nm": 12
+  },
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

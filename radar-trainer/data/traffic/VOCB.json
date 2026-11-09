@@ -1,0 +1,13 @@
+[
+  {
+    "id": "routine-23",
+    "title": "Routine mixed traffic · RWY 23",
+    "brief": "Work combined tower and approach positions. AFR123 starts at 12,000 ft with 30 NM to fly to CCB on W118 via SATBI. DLH908 enters one NM inside Coimbatore CTA B on W43 from DODSI at 13,000 ft. Both follow their routes until vectored. Entry levels represent a simulated coordinated release to approach. Vector and descend both aircraft for ILS Z RWY 23. White dotted tracks show published CCB routes from the July 2026 AAI edition. Each edge label names the next fix beyond CTA B. The departure has its onward clearance and awaits an explicit runway clearance. The through flight has coordinated entry at 7,000 ft. Issue an onward heading, level or speed after its entry call. The simulated receiving controller accepts the departure after liftoff and the transit approaching CTR exit. Transfer each on a separate transmission to Coimbatore Approach 120.050. Tower handoffs for arrivals use 118.150. MATS Part 1 §§4.11.7.5.4 and 10.1.2.3–4 govern separate frequency changes and coordinated transfer. The five-minute transit lookahead uses the general timing in §10.1.2.4.1. The route, combined positions and local transfer arrangements are exercise assumptions.",
+    "flights": [
+      {"role":"arrival","callsign":"AFR123","type":"A320","at_s":0,"route":"W118","via":"SATBI","route_distance_nm":30,"entry_alt_ft":12000,"speed_kt":180},
+      {"role":"departure","callsign":"BAW452","type":"A320","at_s":10,"runway":"23","climb_ft":7000,"departure_heading":217.7,"station":"Coimbatore Approach","frequency":"120.050"},
+      {"role":"overflight","callsign":"UAE681","type":"A320","at_s":20,"x_nm":2,"y_nm":-14,"heading":0,"alt_ft":7000,"speed_kt":210,"area":"ctr","lead_s":300,"station":"Coimbatore Approach","frequency":"120.050"},
+      {"role":"arrival","callsign":"DLH908","type":"A320","at_s":40,"route":"W43","via":"DODSI","entry_alt_ft":13000,"speed_kt":180}
+    ]
+  }
+]

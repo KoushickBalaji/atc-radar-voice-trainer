@@ -1,0 +1,15 @@
+{
+  "icao": "VOCB",
+  "patterns": [{
+    "id": "CCB-047",
+    "fix": "CCB",
+    "position": [11.0330777778, 77.0486361111],
+    "inbound_magnetic_deg": 47,
+    "variation_east_deg": -2.08,
+    "turn": "left",
+    "leg_seconds": 60,
+    "minimum_ft": 6300,
+    "max_kias": 210,
+    "source": "AAI AD 2 VOCB 2-107, ILS or LOC Z RWY 23, 17 APR 2025"
+  }]
+}

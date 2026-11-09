@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "icao": "VILK",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Lucknow CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 105
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Lucknow/AD 2.1VILK.pdf",
+        "page": 12,
+        "section": "AD 2.17",
+        "effective_date": "2026-08-06",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Circular area centered on 264531N 0805340E within a 25NM radius. | Vertical: FL 105 | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        26.75861111111111,
+        80.89444444444445
+      ],
+      "radius_nm": 25.0
+    },
+    {
+      "id": "cta-a",
+      "name": "Lucknow CTA Sector A",
+      "kind": "CTA",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "FL",
+        "value": 50
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 105
+      },
+      "excludes": [],
+      "source": {
+        "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+        "section": "ENR 2.1",
+        "edition": "July 2026",
+        "evidence": "Lucknow Control Area - Sector A Area bounded by lines joining points 274301N 0795054E; 265801N 0810054E; 264718N 0812436E; 263014N 0811717E; 261435N 0810520E; 263201N 0804354E; 271301N 0792154E; 274301N 0795054E to point of origin. FL 105 / FL 50 D",
+        "snapshot": "scratch/enr-2.1.html"
+      },
+      "shape": "polygon",
+      "edges": [
+        {
+          "point": [
+            27.716944444444444,
+            79.84833333333333
+          ]
+        },
+        {
+          "point": [
+            26.966944444444444,
+            81.015
+          ]
+        },
+        {
+          "point": [
+            26.788333333333334,
+            81.41000000000001
+          ]
+        },
+        {
+          "point": [
+            26.503888888888888,
+            81.28805555555556
+          ]
+        },
+        {
+          "point": [
+            26.243055555555557,
+            81.08888888888889
+          ]
+        },
+        {
+          "point": [
+            26.533611111111114,
+            80.73166666666667
+          ]
+        },
+        {
+          "point": [
+            27.216944444444444,
+            79.365
+          ]
+        },
+        {
+          "point": [
+            27.716944444444444,
+            79.84833333333333
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cta-b",
+      "name": "Lucknow CTA Sector B",
+      "kind": "CTA",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "FL",
+        "value": 60
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 105
+      },
+      "excludes": [],
+      "source": {
+        "url": "https://aim-india.aai.aero/eaip/eaip-v2-07-2026/eAIP/IN-ENR%202.1-en-GB.html",
+        "section": "ENR 2.1",
+        "edition": "July 2026",
+        "evidence": "Lucknow Control Area - Sector B Area bounded by lines joining points 264718N 0812436E; 262801N 0820053E; 255301N 0813253E; 261435N 0810520E; 263014N 0811717E to point of origin. FL 105 / FL 60 D",
+        "snapshot": "scratch/enr-2.1.html"
+      },
+      "shape": "polygon",
+      "edges": [
+        {
+          "point": [
+            26.788333333333334,
+            81.41000000000001
+          ]
+        },
+        {
+          "point": [
+            26.466944444444444,
+            82.01472222222222
+          ]
+        },
+        {
+          "point": [
+            25.88361111111111,
+            81.54805555555555
+          ]
+        },
+        {
+          "point": [
+            26.243055555555557,
+            81.08888888888889
+          ]
+        },
+        {
+          "point": [
+            26.503888888888888,
+            81.28805555555556
+          ]
+        }
+      ]
+    }
+  ]
+}

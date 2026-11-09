@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VANM",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Navi Mumbai CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "H24",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "AMSL",
+        "value": 1500.0
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Navi Mumbai/AD 2.1VANM.pdf",
+        "page": 21,
+        "section": "AD 2.17",
+        "effective_date": "2026-03-19",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits ATZ: ATZ: Circular area centered on 185940N 0730413E within a 2.5NM radius. CTR: Under CTR of Mumbai | Vertical: 1500 FT AMSL | Class: D | Hours: H24"
+      },
+      "shape": "circle",
+      "center": [
+        18.994444444444447,
+        73.07027777777778
+      ],
+      "radius_nm": 2.5
+    }
+  ]
+}

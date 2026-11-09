@@ -1,0 +1,801 @@
+"""
+Application d'entrainement ATC - serveur local (FastAPI)
+========================================================
+LE point d'entree unique pour l'utilisateur. Lance le simulateur temps reel
+(BlueSky via atc_sim), sert l'interface radar dans le navigateur, et orchestre
+la boucle d'entrainement :
+
+  - l'INSTRUCTEUR decrit une situation en langage naturel -> des avions
+    apparaissent sur le radar (generation par l'API LLM configuree) ;
+  - l'ELEVE (controleur) parle (push-to-talk) ou tape une clairance -> elle est
+    transcrite (API STT) + interpretee (API LLM) + executee dans BlueSky ->
+    l'avion manoeuvre et le pilote collationne (readback), TOUJOURS vocalise
+    par l'API TTS avec une voix stable par indicatif.
+
+Backend IA UNIQUE (ai_client.AIClient) : trois services au contrat OpenAI
+(STT/LLM/TTS) configures par .env - facade auto-hebergee (server.py) ou cloud,
+interchangeables par URL + cle + modele. Toute erreur de fournisseur est
+VISIBLE (HTTP 502 + log UI) ; seule exception voulue : un indicatif inconnu
+au radar reste muet (realisme radio).
+
+Lancer :  bluesky-env/Scripts/python.exe atc_app.py     (ouvre le navigateur)
+"""
+import os
+import re
+import sys
+import json
+import math
+import queue
+import base64
+import asyncio
+import logging
+import threading
+import subprocess
+import webbrowser
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, UploadFile, File, Body, HTTPException
+from fastapi.staticfiles import StaticFiles
+
+import atc_sim
+import atc_ai                    # bibliotheque pure : _items_to_aircraft (scenarios JSON)
+import ai_client
+import voices
+import atc_exercise
+import readback as RB
+import simple_demo
+import airport_profiles
+import airport_weather
+from concurrent.futures import ThreadPoolExecutor
+from collections import deque
+import hashlib
+import time
+from atc_stream import WSManager
+
+_HERE = os.path.dirname(os.path.abspath(__file__))
+WEB_DIST = os.path.join(os.path.dirname(_HERE), "frontend", "dist")
+SCEN_DIR = os.path.join(_HERE, "scenarios")
+
+log = logging.getLogger("atc_app")
+
+SIM = atc_sim.SimManager()
+AI = ai_client.AIClient()        # facade API unique (aucun appel reseau a l'init)
+
+# File d'evenements (transcript / readback / situation) a diffuser via WebSocket.
+_event_q = queue.Queue()
+
+
+def emit(ev):
+    _event_q.put(ev)
+
+
+EX = atc_exercise.ExerciseEngine(SIM, AI, emit)
+_radio_lock = threading.Lock()
+_voice_evidence = deque(maxlen=20)
+
+
+# --- diffusion WebSocket -----------------------------------------------------
+MGR = WSManager()
+
+
+async def _voice_pilot_call(call):
+    voice = voices.voice_for_callsign(call['callsign'], AI.tts_pool)
+    try:
+        wav = await asyncio.to_thread(AI.tts, call['text'], voice)
+        event = dict(type='pilot_audio', id=call['id'], audio_b64=base64.b64encode(wav).decode('ascii'))
+    except ai_client.ProviderError as exc:
+        event = dict(type='error', provider='tts', message=str(exc))
+    snap = SIM.snapshot()
+    if snap.get('pilot_call') == call or call in snap.get('traffic_calls', []):
+        emit(event)
+
+
+async def _broadcaster():
+    """Pousse l'etat ~8 Hz + les evenements en attente vers tous les clients."""
+    last_call = None
+    audio_task = None
+    voiced = set()
+    while True:
+        try:
+            await asyncio.sleep(0.12)
+            for _ in range(8):
+                try:
+                    event = _event_q.get_nowait()
+                except queue.Empty:
+                    break
+                await MGR.broadcast(event)
+            msg = {"type": "state", **SIM.snapshot()}
+            call = msg.get('pilot_call')
+            if call != last_call:
+                last_call = call
+                if audio_task:
+                    audio_task.cancel()
+                if call:
+                    audio_task = asyncio.create_task(_voice_pilot_call(call))
+            traffic_calls = msg.get('traffic_calls', [])
+            voiced.intersection_update(c['id'] for c in traffic_calls)
+            if traffic_calls and (audio_task is None or audio_task.done()):
+                pending = next((c for c in traffic_calls if c['id'] not in voiced), None)
+                if pending:
+                    voiced.add(pending['id'])
+                    audio_task = asyncio.create_task(_voice_pilot_call(pending))
+            if EX.active:
+                ex = EX.state()
+                msg["exercise"] = {"elapsed_s": ex.get("elapsed_s"),
+                                   "remaining_s": ex.get("remaining_s"),
+                                   "score": ex.get("score")}
+            await MGR.broadcast(msg)
+        except asyncio.CancelledError:
+            if audio_task:
+                audio_task.cancel()
+            raise
+        except Exception:
+            log.exception("Echec de diffusion de l'etat de simulation")
+
+
+@asynccontextmanager
+async def lifespan(app):
+    SIM.start()
+    if simple_demo.ENABLED:
+        SIM.pause()
+        SIM.create_aircraft([SIM.airport.aircraft()])
+    task = asyncio.create_task(_broadcaster())
+    try:
+        yield
+    finally:
+        task.cancel()
+        await asyncio.gather(task, return_exceptions=True)
+        await MGR.shutdown()
+        if EX.active:
+            await asyncio.to_thread(EX.stop)
+        await asyncio.to_thread(SIM.stop)
+
+
+app = FastAPI(title="ATC training app", lifespan=lifespan)
+
+
+# --- coeur : interpretation -> execution -> readback -------------------------
+_VERB_DESC = re.compile(r"\b(descend|descending|descent|descende[zr]|descendre)\b", re.I)
+_VERB_CLIMB = re.compile(r"\b(climb|climbing|monte[zr]|monter)\b", re.I)
+
+
+def _check_alt_coherence(text, orders, lines, rejected, cur_alt):
+    """Garde-fou semantique : si la phrase dit 'descend' (sans 'climb'), un ordre
+    ALT au-dessus du niveau actuel est incoherent (transcription tronquee ou
+    hallucination du LLM) -> rejete plutot qu'execute. Et symetriquement.
+
+    orders et lines sont PARALLELES (contrat AI.interpret, preserve par le
+    filtre indicatif inconnu) : on retire l'ordre ET sa ligne par position,
+    jamais par reconstruction de chaine (le type brut de o['value'] rendrait
+    la comparaison fragile : 32000.0 != '32000')."""
+    want_desc = _VERB_DESC.search(text) and not _VERB_CLIMB.search(text)
+    want_climb = _VERB_CLIMB.search(text) and not _VERB_DESC.search(text)
+    if not (want_desc or want_climb) or len(orders) != len(lines):
+        return orders, lines
+    kept, kept_lines = [], []
+    for o, ln in zip(orders, lines):
+        cur = cur_alt.get(o.get("callsign"))
+        if o.get("action") == "ALT" and cur is not None:
+            bad_up = want_desc and o["value"] > cur + 200
+            bad_down = want_climb and o["value"] < cur - 200
+            if bad_up or bad_down:
+                sens = "« descend »" if bad_up else "« climb »"
+                rejected.append(f"incohérence : {sens} entendu mais FL{int(o['value'] / 100):03d} "
+                                f"est {'au-dessus' if bad_up else 'au-dessous'} du niveau actuel "
+                                f"FL{int(cur / 100):03d} - ordre non exécuté")
+                continue
+        kept.append(o)
+        kept_lines.append(ln)
+    return kept, kept_lines
+
+
+def process_instruction(text, interpreted=None):
+    text = (text or "").strip()
+    if not text:
+        return {"transcript": "", "orders": [], "trafscript": [], "rejected": [], "readback_text": ""}
+    res = interpreted if interpreted is not None else AI.interpret(text)
+    orders, lines = res.get("orders", []), res.get("trafscript", [])
+    rejected = list(res.get("rejected", []))
+
+    # Realisme radio : un indicatif absent du radar ne repond pas (et la
+    # commande n'est pas envoyee au simulateur).
+    snap = SIM.snapshot()
+    if simple_demo.ENABLED:
+        problem = simple_demo.validate(text, orders, snap['aircraft'], SIM.airport)
+        if problem or rejected:
+            return {'transcript': text, 'orders': [], 'trafscript': [],
+                    'rejected': [problem] if problem else rejected, 'readback_text': ''}
+        import approach_radio
+        if orders and orders[0].get('action') in approach_radio.ACTIONS:
+            problem = SIM.procedure_command(orders[0])
+            return dict(transcript=text, orders=[] if problem else orders, trafscript=[],
+                        rejected=[problem] if problem else [],
+                        readback_text='' if problem else approach_radio.readback(orders[0]))
+        if (snap.get('ils') or {}).get('phase') in ('handoff_ready', 'complete', 'approach_complete', 'missed', 'missed_finished', 'missed_fix_altitude'):
+            return dict(transcript=text, orders=[], trafscript=[],
+                        rejected=['Approach stage paused. Complete the tower handoff or reset the exercise.'], readback_text='')
+        if (snap.get('ils') or {}).get('phase') == 'going_around':
+            limit = snap['ils']['missed_approach']['max_kias']
+            if any(o['action']=='SPD' and o['value'] > limit for o in orders):
+                return dict(transcript=text, orders=[], trafscript=[],
+                            rejected=[f'The published missed approach limits speed to {limit} KIAS.'], readback_text='')
+        hold = (snap.get('ils') or {}).get('holding')
+        if hold and not any(o['action']=='HDG' for o in orders):
+            if any((o['action']=='SPD' and o['value'] > hold['max_kias']) or
+                   (o['action']=='ALT' and o['value'] < hold['minimum_ft']) for o in orders):
+                return dict(transcript=text, orders=[], trafscript=[], readback_text='',
+                            rejected=['Assignment outside the published holding limits.'])
+    known = {a["id"] for a in snap["aircraft"]}
+    unknown = sorted({o.get("callsign") for o in orders
+                      if o.get("callsign") and o["callsign"] not in known})
+    if unknown:
+        rejected += [f"{cs} : indicatif inconnu au radar (pas de réponse)" for cs in unknown]
+        orders = [o for o in orders if o.get("callsign") in known]
+        lines = [ln for ln in lines if len(ln.split()) > 1 and ln.split()[1] in known]
+
+    cur_alt = {a["id"]: a["alt_ft"] for a in snap["aircraft"]}
+    orders, lines = _check_alt_coherence(text, orders, lines, rejected, cur_alt)
+
+    for line in lines:
+        SIM.enqueue(line)
+    if EX.active:
+        EX.note_command(text, len(lines), len(rejected))
+    rb = RB.readback_text(orders, cur_alt)
+    if simple_demo.ENABLED:
+        rb = simple_demo.readback(orders, text, cur_alt)
+    return {"transcript": text, "orders": orders, "trafscript": lines,
+            "rejected": rejected, "readback_text": rb}
+
+
+def _synthesize_readback(out):
+    """Vocalise SYSTEMATIQUEMENT le collationnement via l'API TTS (voix stable
+    par indicatif). Readback vide (indicatif inconnu au radar = silence radio
+    voulu, ou aucun ordre valide) -> pas d'appel TTS. Echec TTS -> tts_error
+    renseigne + event 'error' visible dans l'UI (jamais avale)."""
+    out["audio_b64"] = None
+    out["tts_error"] = None
+    if not out["readback_text"]:
+        return out
+    cs = out["orders"][0].get("callsign", "") if out["orders"] else ""
+    voice = voices.voice_for_callsign(cs, AI.tts_pool)
+    try:
+        out["audio_b64"] = base64.b64encode(AI.tts(out["readback_text"], voice)).decode("ascii")
+    except ai_client.ProviderError as e:
+        out["tts_error"] = str(e)
+        emit({"type": "error", "provider": "tts", "message": str(e)})
+    return out
+
+
+def _handle_instruction(text, interpreted=None):
+    """Chemin commun /api/command et /api/voice : interpretation (API LLM) ->
+    execution sim -> readback texte + AUDIO. Erreur LLM -> 502 explicite."""
+    try:
+        out = process_instruction(text, interpreted)
+    except ai_client.ProviderError as e:
+        emit({"type": "error", "provider": e.provider, "message": str(e)})
+        raise HTTPException(502, str(e)) from e
+    out = _synthesize_readback(out)
+    emit({"type": "exchange", "transcript": out["transcript"], "orders": out["orders"],
+          "trafscript": out["trafscript"], "rejected": out["rejected"],
+          "readback": out["readback_text"], "audio_b64": out["audio_b64"],
+          "tts_error": out["tts_error"]})
+    return out
+
+
+def _list_scenarios():
+    out = []
+    if os.path.isdir(SCEN_DIR):
+        for fn in sorted(os.listdir(SCEN_DIR)):
+            if fn.endswith(".json"):
+                try:
+                    with open(os.path.join(SCEN_DIR, fn), encoding="utf-8") as f:
+                        d = json.load(f)
+                    out.append({"name": fn[:-5], "title": d.get("title", fn[:-5]),
+                                "description": d.get("description", "")})
+                except Exception as e:
+                    log.warning("scenario %s ignore (illisible/malforme) : %s", fn, e)
+    return out
+
+
+# --- validation d'entree (payloads Body(dict) -> 400 propre, pas 500) --------
+def _flt(v, ctx):
+    try:
+        f = float(v)
+    except (TypeError, ValueError) as e:
+        raise HTTPException(400, f"{ctx} doit etre numerique (recu {v!r})") from e
+    if not math.isfinite(f):
+        # NaN/Inf passent float() mais corrompent l'etat (JSON invalide,
+        # exercice sans fin, vent aberrant) -> rejet explicite.
+        raise HTTPException(400, f"{ctx} doit etre un nombre fini (recu {v!r})")
+    return f
+
+
+def _req_flt(payload, key):
+    v = payload.get(key)
+    if v is None or v == "":
+        raise HTTPException(400, f"champ '{key}' requis")
+    return _flt(v, f"champ '{key}'")
+
+
+def _opt_flt(payload, key, default):
+    v = payload.get(key, default)
+    if v is None or v == "":
+        return default
+    return _flt(v, f"champ '{key}'")
+
+
+# --- API ---------------------------------------------------------------------
+@app.get("/api/health")
+def health():
+    return {"providers": AI.health()}
+
+
+@app.post("/api/health/refresh")
+def health_refresh():
+    return {"providers": AI.health()}
+
+
+@app.get("/api/nav")
+def nav():
+    result = SIM.nav_static()
+    if simple_demo.ENABLED:
+        result = SIM.airport.nav()
+    return result
+
+
+@app.get('/api/demo')
+def demo_info():
+    return {'enabled': simple_demo.ENABLED, 'aircraft': SIM.airport.aircraft() if SIM.airport else None,
+            'airport': SIM.airport.info() if SIM.airport else None, 'airports': airport_profiles.available(),
+            'models': {name: getattr(AI, '_' + name).cfg.model for name in ('stt', 'llm', 'tts')}}
+
+
+@app.post('/api/demo/reset')
+def demo_reset():
+    if not simple_demo.ENABLED:
+        raise HTTPException(404, 'Demo profile is not enabled')
+    if not _radio_lock.acquire(blocking=False):
+        raise HTTPException(409, 'Wait for the current transmission to finish.')
+    try:
+        scenario = SIM.snapshot().get('traffic')
+        if scenario:
+            SIM.select_airport(SIM.airport.ICAO, scenario['id'])
+        else:
+            SIM.select_airport(SIM.airport.ICAO)
+        _voice_evidence.clear()
+        return {'ok': True}
+    finally:
+        _radio_lock.release()
+
+
+@app.post('/api/demo/go-around')
+def trigger_go_around(body: dict):
+    if not simple_demo.ENABLED:
+        raise HTTPException(404, 'Demo profile is not enabled')
+    if not _radio_lock.acquire(blocking=False):
+        raise HTTPException(409, 'Wait for the current transmission to finish.')
+    try:
+        order = {k: body.get(k) for k in ('icao','runway','approach_id','callsign')}
+        armed = body.get('armed', True)
+        if not isinstance(armed, bool):
+            raise HTTPException(422, 'armed must be a boolean')
+        problem = SIM.procedure_command(dict(order, action='SET_GO_AROUND_ON_HANDOFF', armed=armed))
+        if problem:
+            raise HTTPException(409, problem)
+        return {'ok':True}
+    finally:
+        _radio_lock.release()
+
+
+@app.post('/api/demo/airport')
+def select_demo_airport(body: dict):
+    if not simple_demo.ENABLED:
+        raise HTTPException(404, 'Demo profile is not enabled')
+    icao = body.get('icao')
+    if not isinstance(icao, str):
+        raise HTTPException(400, 'Specify an airport ICAO code')
+    try:
+        airport_profiles.get_profile(icao)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    if not _radio_lock.acquire(blocking=False):
+        raise HTTPException(409, 'Wait for the current transmission to finish.')
+    try:
+        scenario_id = body.get('scenario_id')
+        if scenario_id is not None and not isinstance(scenario_id, str):
+            raise HTTPException(400, 'Specify a valid exercise ID.')
+        try:
+            profile = SIM.select_airport(icao, scenario_id) if scenario_id else SIM.select_airport(icao)
+        except ValueError as exc:
+            raise HTTPException(400, str(exc)) from exc
+        _voice_evidence.clear()
+        return {'airport': profile}
+    finally:
+        _radio_lock.release()
+
+
+@app.get("/api/state")
+def state():
+    """Etat courant (repli si le WebSocket est indisponible / diagnostic)."""
+    return SIM.snapshot()
+
+
+@app.get("/api/scenarios")
+def scenarios():
+    return {"scenarios": _list_scenarios()}
+
+
+@app.post("/api/scenario")
+def scenario(payload: dict = Body(...)):
+    desc = payload.get("description", "")
+    if not isinstance(desc, str) or len(desc) > 4000:
+        raise HTTPException(400, "description attendue : texte de 4000 caractères maximum")
+    desc = desc.strip()
+    if not desc:
+        raise HTTPException(400, "description vide")
+    try:
+        ac = AI.scenario(desc)
+    except ai_client.ProviderError as e:
+        emit({"type": "error", "provider": e.provider, "message": str(e)})
+        raise HTTPException(502, str(e)) from e
+    created = SIM.create_aircraft(ac)
+    emit({"type": "situation", "description": desc, "created": created})
+    return {"aircraft": ac, "created": created}
+
+
+@app.post("/api/scenario/load")
+def scenario_load(payload: dict = Body(...)):
+    name = os.path.basename(str(payload.get("name", "")))
+    path = os.path.join(SCEN_DIR, name + ".json")
+    if not os.path.isfile(path):
+        raise HTTPException(404, "scenario inconnu")
+    try:
+        with open(path, encoding="utf-8") as f:
+            d = json.load(f)
+        if not isinstance(d, dict):
+            raise ValueError("le scenario doit etre un objet JSON")
+    except (ValueError, OSError) as e:
+        raise HTTPException(400, f"scenario '{name}' illisible : {e}") from e
+    if d.get("aircraft"):
+        ac = atc_ai._items_to_aircraft(d["aircraft"])
+    else:
+        try:
+            ac = AI.scenario(d.get("description", ""))
+        except ai_client.ProviderError as e:
+            emit({"type": "error", "provider": e.provider, "message": str(e)})
+            raise HTTPException(502, str(e)) from e
+    created = SIM.create_aircraft(ac)
+    emit({"type": "situation", "description": d.get("title", name), "created": created})
+    return {"aircraft": ac, "created": created}
+
+
+@app.get("/api/weather/observation/{icao}")
+def weather_observation(icao: str):
+    icao = icao.upper()
+    try:
+        airport_profiles.get_profile(icao)
+    except ValueError:
+        raise HTTPException(404, "Unknown airport")
+    return airport_weather.observation(icao)
+
+
+@app.post("/api/weather/wind")
+def weather_wind(payload: dict = Body(...)):
+    d = payload.get("dir")
+    if d is None or d == "":
+        SIM.set_wind(None, None)
+        emit({"type": "info", "message": "Vent supprimé."})
+        return {"ok": True}
+    dd = _flt(d, "champ 'dir'")
+    spd = _opt_flt(payload, "spd", 0.0)
+    alt = _opt_flt(payload, "alt", None)
+    if not 0 <= spd <= 250 or (alt is not None and not 0 <= alt <= 60000):
+        raise HTTPException(400, "vent attendu : 0 à 250 kt, altitude de 0 à 60000 ft")
+    SIM.set_wind(dd, spd, alt)
+    emit({"type": "info", "message": f"Vent réglé : {int(dd):03d}°/{int(spd)} kt"})
+    return {"ok": True}
+
+
+@app.post("/api/weather/turbulence")
+def weather_turb(payload: dict = Body(...)):
+    lvl = _opt_flt(payload, "level", 0.0)
+    if not 0 <= lvl <= 8:
+        raise HTTPException(400, "turbulence attendue : 0 à 8 m/s")
+    SIM.set_turbulence(lvl)
+    emit({"type": "info", "message": f"Turbulence : {'OFF' if lvl <= 0 else str(lvl) + ' m/s'}"})
+    return {"ok": True}
+
+
+@app.post("/api/weather/zone")
+def weather_zone(payload: dict = Body(...)):
+    ztype = payload.get("ztype", "storm")
+    shape = str(payload.get("shape", "CIRCLE")).upper()
+    if ztype not in ("storm", "restricted") or shape not in ("CIRCLE", "POLY"):
+        raise HTTPException(400, "type ou forme de zone inconnu")
+    if shape == "CIRCLE":
+        lat, lon = atc_sim.from_nm(_req_flt(payload, "x"), _req_flt(payload, "y"))
+        coords = [lat, lon, _opt_flt(payload, "r", 12.0)]
+        if not 0 < coords[2] <= 200:
+            raise HTTPException(400, "rayon attendu : supérieur à 0 et au plus 200 NM")
+    else:
+        pts = payload.get("points") or []
+        if not isinstance(pts, list):
+            raise HTTPException(400, "champ 'points' doit etre une liste [[x, y], ...]")
+        if not 3 <= len(pts) <= 128:
+            raise HTTPException(400, "un polygone doit contenir de 3 à 128 points")
+        coords = []
+        for p in pts:
+            try:
+                px, py = p
+            except (TypeError, ValueError) as e:
+                raise HTTPException(400, "chaque point doit etre [x, y]") from e
+            la, lo = atc_sim.from_nm(_flt(px, "point x"), _flt(py, "point y"))
+            coords += [la, lo]
+    SIM.add_zone(ztype, shape, coords)
+    emit({"type": "info", "message": f"Zone {'orageuse' if ztype == 'storm' else 'interdite'} ajoutée."})
+    return {"ok": True}
+
+
+@app.post("/api/weather/clearzones")
+def weather_clearzones():
+    SIM.clear_zones()
+    emit({"type": "info", "message": "Zones effacées."})
+    return {"ok": True}
+
+
+@app.post("/api/command")
+def command(payload: dict = Body(...)):
+    """Clairance TAPEE : interpretation (API LLM) -> sim -> readback texte + AUDIO
+    (reponse vocale systematique, voix stable par indicatif)."""
+    if simple_demo.ENABLED:
+        raise HTTPException(403, 'Trainee clearances are voice-only. Use the microphone.')
+    text = payload.get("text", "")
+    if not isinstance(text, str):
+        raise HTTPException(400, "champ 'text' doit etre une chaine")
+    if len(text) > 4000:
+        raise HTTPException(400, "clairance trop longue (4000 caractères maximum)")
+    return _handle_instruction(text)
+
+
+MAX_UPLOAD_BYTES = 20 * 1024 * 1024      # ~10 min de WAV 16 kHz mono : tres large
+
+
+def _read_upload(file):
+    """Lecture bornee d'un upload audio : refuse les fichiers aberrants AVANT
+    de les charger entierement en memoire (413, pas d'OOM)."""
+    data = file.file.read(MAX_UPLOAD_BYTES + 1)
+    if len(data) > MAX_UPLOAD_BYTES:
+        raise HTTPException(413, f"audio trop volumineux (> {MAX_UPLOAD_BYTES // (1024 * 1024)} Mo)")
+    return data
+
+
+@app.post("/api/voice")
+def voice(file: UploadFile = File(...)):
+    """Clairance PARLEE : audio -> STT (API) -> interpretation -> readback texte + AUDIO."""
+    if simple_demo.ENABLED:
+        return demo_voice(_read_upload(file))
+    wav = _read_upload(file)
+    try:
+        text = AI.asr(wav, ai_client.radio_keywords())
+    except ai_client.ProviderError as e:
+        emit({"type": "error", "provider": "stt", "message": str(e)})
+        raise HTTPException(502, str(e)) from e
+    out = _handle_instruction(text)
+    return out
+
+
+def demo_voice(wav):
+    if not _radio_lock.acquire(blocking=False):
+        raise HTTPException(409, 'Another transmission is being processed.')
+    try:
+        import io
+        import wave
+        try:
+            simple_demo.validate_audio(wav)
+        except (wave.Error, EOFError, ValueError) as exc:
+            raise HTTPException(400, str(exc)) from exc
+        started = time.monotonic()
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            first = pool.submit(AI.asr, wav, ai_client.radio_keywords(SIM.airport))
+            second = pool.submit(AI.asr, wav)
+            texts = [first.result(), second.result()]
+            interpretations = list(pool.map(AI.interpret, texts))
+        _voice_evidence.append({'audio': wav, 'sha256': hashlib.sha256(wav).hexdigest(),
+                                'transcripts': texts, 'interpretations': interpretations})
+        # Compare semantic observations, never choose the one matching the scenario.
+        def signature(result):
+            return json.dumps(result.get('orders', []), sort_keys=True)
+        problems = [simple_demo.validate(t, r.get('orders', []), SIM.snapshot()['aircraft'], SIM.airport)
+                    for t, r in zip(texts, interpretations)]
+        if (signature(interpretations[0]) != signature(interpretations[1]) or
+                any(r.get('rejected') for r in interpretations) or any(problems)):
+            reason = next((p for p in problems if p), None) or 'Recognition disagreed. No action taken; transmit again if you wish.'
+            out = {'transcript': texts[0], 'orders': [], 'trafscript': [], 'rejected': [reason],
+                   'readback_text': '', 'audio_b64': None, 'tts_error': None}
+            emit({'type': 'exchange', **out, 'readback': ''})
+        else:
+            out = _handle_instruction(texts[0], interpretations[0])
+        out['elapsed_s'] = round(time.monotonic() - started, 2)
+        return out
+    except ai_client.ProviderError as exc:
+        emit({'type': 'error', 'provider': exc.provider, 'message': str(exc)})
+        raise HTTPException(502, str(exc)) from exc
+    finally:
+        _radio_lock.release()
+
+
+@app.post("/api/transcribe")
+def transcribe(file: UploadFile = File(...)):
+    """Transcription SEULE (dictee de situation instructeur) : audio -> texte (API STT)."""
+    wav = _read_upload(file)
+    try:
+        return {"text": AI.asr(wav)}
+    except ai_client.ProviderError as e:
+        emit({"type": "error", "provider": "stt", "message": str(e)})
+        raise HTTPException(502, str(e)) from e
+
+
+@app.post("/api/sim/reset")
+def sim_reset():
+    if EX.active:                       # RESET pendant un exercice = abandon
+        EX.stop()
+    SIM.reset()
+    emit({"type": "info", "message": "Simulation reinitialisee."})
+    return {"ok": True}
+
+
+@app.post("/api/sim/pause")
+def sim_pause():
+    SIM.pause()
+    return {"ok": True}
+
+
+@app.post("/api/sim/resume")
+def sim_resume():
+    SIM.resume()
+    return {"ok": True}
+
+
+@app.post("/api/sim/speed")
+def sim_speed(payload: dict = Body(...)):
+    SIM.set_speed(_opt_flt(payload, "value", 1.0))
+    return {"ok": True}
+
+
+# --- exercice (l'IA cree la situation, l'eleve s'adapte, tout est note) -------
+@app.get("/api/exercise")
+def exercise_state():
+    return EX.state()
+
+
+@app.post("/api/exercise/start")
+def exercise_start(payload: dict = Body(default={})):
+    if EX.active:
+        raise HTTPException(409, "un exercice est déjà en cours")
+    dm = payload.get("duration_min")
+    dm = _flt(dm, "champ 'duration_min'") if dm not in (None, "") else None
+    if dm is not None and not (1.0 <= dm <= 180.0):
+        raise HTTPException(400, "champ 'duration_min' doit etre entre 1 et 180 minutes")
+    seed = payload.get("seed")
+    if seed is not None and not isinstance(seed, (int, str)):
+        raise HTTPException(400, "champ 'seed' doit etre un entier ou une chaine")
+    try:
+        st = EX.start(difficulty=str(payload.get("difficulty", "moyen")),
+                      duration_min=dm, seed=seed)
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+    except RuntimeError as e:
+        # course entre le pre-check EX.active et start() : double POST simultane
+        raise HTTPException(409, str(e)) from e
+    except ai_client.ProviderError as e:
+        # le trafic de remplissage vient de l'API LLM : panne -> erreur claire
+        emit({"type": "error", "provider": e.provider, "message": str(e)})
+        raise HTTPException(502, str(e)) from e
+    emit({"type": "info", "message": f"Exercice {st.get('label', '')} démarré."})
+    return st
+
+
+@app.post("/api/exercise/stop")
+def exercise_stop():
+    if not EX.active:
+        raise HTTPException(409, "aucun exercice en cours")
+    return EX.stop()
+
+
+@app.get("/api/exercise/report")
+def exercise_report():
+    rep = EX.last_report()
+    if not rep:
+        raise HTTPException(404, "aucun rapport disponible")
+    return rep
+
+
+def _build_scn(snap):
+    """Construit un scenario BlueSky (.scn) a partir de l'etat courant."""
+    L = ["00:00:00.00>CDMETHOD ON", "00:00:00.00>ZONER 5", "00:00:00.00>ZONEDH 1000",
+         "00:00:00.00>DTLOOK 120",
+         f"00:00:00.00>PAN {atc_sim.CLAT} {atc_sim.CLON}", "00:00:00.00>ZOOM 4"]
+    w = snap.get("wind")
+    if w:
+        L.append(f"00:00:00.00>WIND {atc_sim.CLAT} {atc_sim.CLON} {w['dir']} {w['spd']}")
+    for a in snap.get("aircraft", []):
+        L.append(f"00:00:00.00>CRE {a['id']} {a['type'] or 'A320'} "
+                 f"{a['lat']} {a['lon']} {a['hdg']} {a['alt_ft']} {a['gs']}")
+    for z in snap.get("zones", []):
+        if z["shape"] == "CIRCLE":
+            la, lo = atc_sim.from_nm(z["cx"], z["cy"])
+            L.append(f"00:00:00.00>CIRCLE {z['name']} {la:.5f} {lo:.5f} {z['r']}")
+        else:
+            pts = " ".join(f"{atc_sim.from_nm(p[0], p[1])[0]:.5f} {atc_sim.from_nm(p[0], p[1])[1]:.5f}"
+                           for p in z["points"])
+            L.append(f"00:00:00.00>POLY {z['name']} {pts}")
+    return "\n".join(L) + "\n"
+
+
+@app.post("/api/gui/launch")
+def gui_launch():
+    """Exporte la situation en .scn et lance le GUI natif de BlueSky dessus."""
+    try:
+        import PyQt5  # noqa: F401
+    except Exception:
+        try:
+            import PyQt6  # noqa: F401
+        except Exception:
+            raise HTTPException(503, "GUI natif BlueSky indisponible : installez PyQt5 et PyOpenGL "
+                                     "(bluesky-env/Scripts/python.exe -m pip install pyqt5 pyopengl).") \
+                from None
+    scn = _build_scn(SIM.snapshot())
+    scen_dir = os.path.join(os.path.expanduser("~"), "bluesky", "scenario")
+    if os.path.isdir(scen_dir):
+        path, arg = os.path.join(scen_dir, "atc_trainer_export.scn"), "atc_trainer_export.scn"
+    else:
+        os.makedirs(os.path.join(_HERE, "demo_out"), exist_ok=True)
+        path = arg = os.path.join(_HERE, "demo_out", "atc_trainer_export.scn")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(scn)
+    try:
+        subprocess.Popen([sys.executable, "-m", "bluesky", arg], cwd=_HERE)
+    except Exception as e:
+        raise HTTPException(500, f"lancement BlueSky: {e}") from e
+    emit({"type": "info", "message": "Fenêtre BlueSky native lancée (situation exportée)."})
+    return {"ok": True, "scenario": path}
+
+
+@app.websocket("/ws")
+async def ws(websocket: WebSocket):
+    await MGR.connect(websocket, {"type": "state", **SIM.snapshot()})
+    try:
+        while True:
+            await websocket.receive_text()        # keepalive (messages ignores)
+    except WebSocketDisconnect:
+        MGR.disconnect(websocket)
+    except Exception:
+        MGR.disconnect(websocket)
+
+
+# --- interface web (SPA buildee dans frontend/dist) --------------------------
+if os.path.isdir(WEB_DIST):
+    # Monte en DERNIER : toutes les routes /api et /ws ci-dessus restent prioritaires.
+    app.mount("/", StaticFiles(directory=WEB_DIST, html=True), name="web")
+else:
+    log.warning("Interface web absente : %s introuvable. Lancez `npm run build` "
+                "dans frontend/. L'API reste disponible mais aucune UI n'est servie.", WEB_DIST)
+
+
+def main():
+    import uvicorn
+    host = os.environ.get("ATC_APP_HOST", "127.0.0.1")
+    port = int(os.environ.get("ATC_APP_PORT", "8000"))
+    url = f"http://{host}:{port}"
+    print(f"[*] Application d'entrainement ATC : {url}")
+    h = AI.health()
+    print(f"[*] Fournisseurs IA : stt={'OK' if h['stt'] else 'KO'}  "
+          f"llm={'OK' if h['llm'] else 'KO'}  tts={'OK' if h['tts'] else 'KO'}  "
+          f"(config : .env, voir .env.example)")
+    if os.environ.get("ATC_APP_NOBROWSER") != "1":
+        threading.Timer(1.5, lambda: webbrowser.open(url)).start()
+    uvicorn.run(app, host=host, port=port, log_level="warning")
+
+
+if __name__ == "__main__":
+    main()

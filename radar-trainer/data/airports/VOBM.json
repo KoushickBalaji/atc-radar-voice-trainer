@@ -1,0 +1,139 @@
+{
+  "icao": "VOBM",
+  "name": "Belagavi",
+  "country_code": "IN",
+  "center": [
+    15.858333333333333,
+    74.61777777777777
+  ],
+  "elevation_ft": 2489.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "08/26",
+    "length_m": 2300.0,
+    "width_m": 45.0,
+    "ends": [
+      {
+        "name": "08",
+        "lat": 15.856897222222221,
+        "lon": 74.60552777777777,
+        "elevation_ft": 2467.0,
+        "bearing_true": 79.27
+      },
+      {
+        "name": "26",
+        "lat": 15.860769444444443,
+        "lon": 74.62662499999999,
+        "elevation_ft": 2452.0,
+        "bearing_true": 259.27,
+        "bearing_magnetic_chart": 261
+      }
+    ]
+  },
+  "approach": {
+    "runway": "26",
+    "threshold_index": 1,
+    "course_true": 259.27,
+    "course_magnetic": 261,
+    "glide_deg": 3,
+    "rdh_ft": 50.4,
+    "intercept_alt_ft": 4500,
+    "line_length_nm": 16,
+    "reference_fixes": []
+  },
+  "navaids": [
+    {
+      "name": "LOC 26 CAT I IBGM 111.300 MHz HO",
+      "lat": 15.856388888888889,
+      "lon": 74.60272222222221,
+      "type": "loc"
+    },
+    {
+      "name": "GP 26 332.300 MHz HO",
+      "lat": 15.85925,
+      "lon": 74.6245,
+      "type": "gs"
+    },
+    {
+      "name": "DME ILS 26 IBGM CH50X HO",
+      "lat": 15.859222222222222,
+      "lon": 74.62452777777777,
+      "type": "dme"
+    },
+    {
+      "name": "DVOR/DME BBM 112.100 MHz CH58X H24",
+      "lat": 15.857138888888889,
+      "lon": 74.61927777777777,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 1,
+    "practice_alt_ft": 6000,
+    "command_alt_min_ft": 4300,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 6500,
+      "spd_kt": 220,
+      "hdg": 274
+    },
+    "suggested_heading": 289,
+    "pre_capture_floor_ft": 4300
+  },
+  "sources": [
+    "Airport Layouts/Belagavi/AD 2.1VOBM.pdf",
+    "Airport Layouts/Belagavi/VOBM-ILS Y-LOC Y-RWY-26.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": -1.41,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Belagavi/AD 2.1VOBM.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Belagavi/AD 2.1VOBM.pdf",
+        "page": 6,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Belagavi/AD 2.1VOBM.pdf",
+        "page": 9,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [],
+    "ils": {
+      "source_file": "Airport Layouts/Belagavi/VOBM-ILS Y-LOC Y-RWY-26.pdf",
+      "source_page": 1,
+      "level_basis": "Published horizontal final segment visually checked; only vector-to-final segment modeled",
+      "visually_reviewed": true,
+      "warnings": [
+        " for Cat C is restricted to ",
+        "Speed restricted to 210 KIAS Max"
+      ]
+    },
+    "training": "Spawn, speed envelope, localizer capture window, and tolerances are exercise settings, not published procedure minima. Final segment only; omitted chart fixes are not synthesized."
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. Minimum-altitude warnings unavailable for this airport.",
+  "training_overrides": {
+    "localizer_min_nm": 7,
+    "localizer_max_nm": 12
+  },
+  "msaw_availability": "unavailable: no SMAC supplied"
+}

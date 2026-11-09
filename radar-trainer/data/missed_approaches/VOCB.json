@@ -1,0 +1,16 @@
+{
+  "icao": "VOCB",
+  "procedures": [
+    {
+      "runway": "23", "approach_id": "ILS-Z", "name": "ILS Z RWY 23",
+      "source": "VOCB-ILS-LOC-Z-RWY 23.pdf, AD 2 VOCB 2-107, 17 APR 2025",
+      "max_kias": 185, "hold_id": "CCB-047",
+      "fixes": {"CCB": [11.0330777778, 77.0486361111]},
+      "legs": [
+        {"type": "straight", "alt_ft": 2000, "past_threshold": true, "label": "Climb straight ahead to 2,000 ft. No turn before the threshold."},
+        {"type": "radial", "fix": "CCB", "course_true": 208.92, "turn": "left", "alt_ft": 3500, "label": "Climbing left turn onto CCB radial 211° magnetic to 3,500 ft."},
+        {"type": "direct", "fix": "CCB", "turn": "left", "alt_ft": 6300, "label": "Climbing left turn to CCB to join the hold at 6,300 ft."}
+      ]
+    }
+  ]
+}

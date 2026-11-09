@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "icao": "VIND",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Jewar CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 75
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Jewar/AD 2.1VIND.pdf",
+        "page": 10,
+        "section": "AD 2.17",
+        "effective_date": "2026-03-19",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: 1. Area bounded by 281251.8N 0772525.6E; 281100.5N 0773532.7E; 280439.3N 0780939.1E then along a clockwise arc of radius 30 NM center at 281032.22N 0773622.49E to 274443.2N 0775345.8E; 274346N 0774740E; 274036.04N 0773941.90E then along a clockwise arc of radius 30 NM center at 281032.22N 0773622.49E to 274442.22N 0771900.95E; 280431.86N 0772331.78E to the point of origin, excluding airspace of Aligarh CTR. Vertical Limit: FL 75 2. Area bounded by 282134.19N 0771657.61E; 281752.8N 0773709.5E; 281749.3N 0780502.5E; 281658.5N 0780933.1E then along a clockwise arc of radius 30 NM center at 281032.22N 0773622.49E to 280439.3N 0780939.1E; 281100.5N 0773532.7E; 281251.8N 0772525.6E; 280431.86N 0772331.78E; 280620.60N 0771326.41E; 281738.46N 0771603.02E to the point of origin. Vertical Limit: 4500 FT AMSL 3. Area bounded by 280620.60N 0771326.41E; 280431.86N 0772331.78E; 274442.22N 0771900.95E; then along a clockwise arc of radius 30 NM center at 281032.22N 0773622.49E to 275136.64N 0771001.68E to the point of origin. Vertical Limit: 5500 FT AMSL | Vertical: FL 75 | Class: D | Hours: HO"
+      },
+      "shape": "polygon",
+      "edges": [
+        {
+          "point": [
+            28.214388888888887,
+            77.42377777777779
+          ]
+        },
+        {
+          "point": [
+            28.18347222222222,
+            77.59241666666667
+          ]
+        },
+        {
+          "point": [
+            28.077583333333333,
+            78.16086111111112
+          ]
+        },
+        {
+          "point": [
+            27.745333333333335,
+            77.89605555555556
+          ],
+          "center": [
+            28.175616666666667,
+            77.60624722222222
+          ],
+          "radius_nm": 30.0,
+          "clockwise": true
+        },
+        {
+          "point": [
+            27.729444444444443,
+            77.79444444444444
+          ]
+        },
+        {
+          "point": [
+            27.67667777777778,
+            77.66163888888889
+          ]
+        },
+        {
+          "point": [
+            27.745061111111113,
+            77.31693055555556
+          ],
+          "center": [
+            28.175616666666667,
+            77.60624722222222
+          ],
+          "radius_nm": 30.0,
+          "clockwise": true
+        },
+        {
+          "point": [
+            28.075516666666665,
+            77.39216111111112
+          ]
+        }
+      ]
+    }
+  ]
+}

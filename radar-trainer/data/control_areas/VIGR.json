@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VIGR",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Gwalior CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HJ",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 160
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Gwalior/AD 2.1VIGR.pdf",
+        "page": 9,
+        "section": "AD 2.17",
+        "effective_date": "2024-10-03",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits MCTR: Circular area centered on 261701N 0781355E within a 15NM radius. | Vertical: FL 160 | Class: D | Hours: HJ"
+      },
+      "shape": "circle",
+      "center": [
+        26.283611111111114,
+        78.23194444444445
+      ],
+      "radius_nm": 15.0
+    }
+  ]
+}

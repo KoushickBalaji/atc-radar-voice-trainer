@@ -1,0 +1,148 @@
+{
+  "document_title": "Manual of Air Traffic Services-Part 1",
+  "edition": "7.0",
+  "document_date": "2025-05-09",
+  "sha256": "1DE3FE5E2D2087C4C170D281D1913FE19DA8F5205A29EFAF5C6BCEE75C7868F8",
+  "curation_notes": [
+    "Only Chapter 12 excerpts inspected in rendered PDF pages are included.",
+    "Line wrapping was normalized; wording and punctuation were otherwise preserved.",
+    "Paragraphs 12.8.7-12.8.8 concern errors in an operator's own transmission; applicability to correcting a pilot readback remains an SME question."
+  ],
+  "excerpts": [
+    {
+      "id": "num-12.5.1",
+      "paragraph_reference": "12.5.1, Table 12-3",
+      "printed_pages": ["12-4"],
+      "pdf_pages": [324],
+      "circumstance_text": "Transmissions of numbers in radiotelephony",
+      "exact_text": "All numbers except as prescribed in Para 12.5.2, shall be transmitted by pronouncing each digit separately. The following examples illustrate the application of the procedure: FL 180 - Flight level one eight zero; FL 200 - Flight level two hundred; 080 degrees - Heading zero eight zero; 1000 - Squawk one thousand.",
+      "notes": ["The rendered table contains grouped-number examples alongside the general digit-by-digit rule; do not extrapolate a blanket rule beyond the cited examples."]
+    },
+    {
+      "id": "alphabet-12.4.2",
+      "paragraph_reference": "12.4.2, Table 12-2",
+      "printed_pages": ["12-3"],
+      "pdf_pages": [323],
+      "circumstance_text": "Pronunciation of spelling alphabets",
+      "exact_text": "A - Alfa - AL FAH; B - Bravo - BRAH VOH.",
+      "notes": ["ALFA is the spelling shown in the Word column; ordinary transcript spelling ALPHA is treated as equivalent without acoustic scoring."]
+    },
+    {
+      "id": "words-12.6.1",
+      "paragraph_reference": "12.6.1, Table 12-5",
+      "printed_pages": ["12-6"],
+      "pdf_pages": [326],
+      "circumstance_text": "Standard words and phrases",
+      "exact_text": "CORRECT - True or accurate. CORRECTION - An error has been made in the transmission (or message indicated). The correct version is.... I SAY AGAIN - I repeat for clarity or emphasis. NEGATIVE - 'No' or 'Permission not granted' or 'That is not correct' or 'Not capable'. READ BACK - Repeat all, or the specified part, of this message back to me exactly as received. ROGER - I have received all of your last transmission.",
+      "notes": ["The ROGER row includes a note restricting its use for questions requiring READBACK or a direct affirmative/negative answer."]
+    },
+    {
+      "id": "callsign-12.7.2",
+      "paragraph_reference": "12.7.2.1-12.7.2.2, Tables 12-7 and 12-8",
+      "printed_pages": ["12-8", "12-9"],
+      "pdf_pages": [328, 329],
+      "circumstance_text": "Aircraft call signs",
+      "exact_text": "An aircraft radiotelephony call sign shall be one of the following types: c) The telephony designator of the aircraft operating agency, followed by the flight identification - INDAIR 809. After satisfactory communication has been established, and provided that no confusion is likely to occur, aircraft call signs may be abbreviated as follows: c) The telephony designator of the aircraft operating agency, followed by the flight identification - No abbreviated form.",
+      "notes": []
+    },
+    {
+      "id": "correction-12.8.7",
+      "paragraph_reference": "12.8.7-12.8.8",
+      "printed_pages": ["12-10"],
+      "pdf_pages": [330],
+      "circumstance_text": "Correction of a transmission",
+      "exact_text": "When an error is made in a transmission, the word 'CORRECTION' shall be spoken, the last correct group or phase repeated and then the correct version transmitted. If a correction can best be made by repeating the entire message, the operator shall use the phrase 'CORRECTION I SAY AGAIN' before transmitting the message a second time.",
+      "notes": ["Applicability to an ATC response correcting a pilot's readback is uncertain and must not be treated as a universal mandatory construction."]
+    },
+    {
+      "id": "readback-12.9.4",
+      "paragraph_reference": "12.9.4-12.9.5",
+      "printed_pages": ["12-10"],
+      "pdf_pages": [330],
+      "circumstance_text": "Issue of clearance and read-back requirements",
+      "exact_text": "The flight crew shall read back to the air traffic controller safety-related parts of the clearances and instructions which are transmitted by voice. Following items shall always be read back: c) Runway-in-use, altimeter settings, SSR codes, level instructions, heading and speed instructions and, whether issued by the controller or contained in ATIS broadcasts, transition levels, e.g. Air traffic services: '(aircraft call sign) SQUAWK THREE FOUR TWO FIVE' Aircraft reply: 'SQUAWK THREE FOUR TWO FIVE (aircraft call sign)'. The controller shall listen to the read-back to ascertain that the clearances has been correctly acknowledged by the flight crew and shall take immediate action to correct any discrepancies revealed by the read-back.",
+      "notes": ["The source requires correction of discrepancies but does not prescribe one universal correction sentence."]
+    },
+    {
+      "id": "standard-12.13.3",
+      "paragraph_reference": "12.13.3",
+      "printed_pages": ["12-12"],
+      "pdf_pages": [332],
+      "circumstance_text": "Use of standard phraseology",
+      "exact_text": "Standard phraseology shall be used in all situations for which it has been specified. Only when standardized phraseology cannot serve an intended transmission, plain language shall be used.",
+      "notes": []
+    },
+    {
+      "id": "grouping-12.14",
+      "paragraph_reference": "12.14.1 and 12.14.4",
+      "printed_pages": ["12-13"],
+      "pdf_pages": [333],
+      "circumstance_text": "Grouping of phraseologies",
+      "exact_text": "All phraseologies shall be used in conjunction with call signs (aircraft, ground vehicle, ATC, or other) as appropriate. In order that the phraseologies listed should be readily discernible in Para 12.15, call signs have been omitted. The phraseologies with '*' denote pilot's transmission. If the level of an aircraft is reported in relation to standard pressure 1013.2 hPa, the words 'FLIGHT LEVEL' should precede the level figures.",
+      "notes": []
+    },
+    {
+      "id": "notation-12.15-note",
+      "paragraph_reference": "Note after 12.15.3",
+      "printed_pages": ["12-14"],
+      "pdf_pages": [334],
+      "circumstance_text": "Notation used in phraseology tables",
+      "exact_text": "Words in parentheses indicate that specific information, such as a level, a place or a time, etc., must be inserted to complete the phrase, or alternatively that optional phrases may be used. Words in square parentheses indicate optional additional words or information that may be necessary in specific instances.",
+      "notes": []
+    },
+    {
+      "id": "climb-12.16.1",
+      "paragraph_reference": "12.16.1.1(a), 12.16.1.2(a)(i)",
+      "printed_pages": ["12-15"],
+      "pdf_pages": [335],
+      "circumstance_text": "Description of levels; instruction that a climb or descent is to commence",
+      "exact_text": "FLIGHT LEVEL (number); CLIMB (or DESCEND); followed as necessary by: TO (level).",
+      "notes": []
+    },
+    {
+      "id": "maintain-note-12.16.2.3",
+      "paragraph_reference": "Note under 12.16.2.3",
+      "printed_pages": ["12-27"],
+      "pdf_pages": [347],
+      "circumstance_text": "Level instructions",
+      "exact_text": "Note: The term 'MAINTAIN' is not to be used in lieu of 'DESCEND' or 'CLIMB' when instructing an aircraft to change level.",
+      "notes": []
+    },
+    {
+      "id": "taxi-12.16.4.7",
+      "paragraph_reference": "12.16.4.7(c), (e), (h)",
+      "printed_pages": ["12-34", "12-35"],
+      "pdf_pages": [354, 355],
+      "circumstance_text": "Taxi procedures; where detailed taxi instructions are required",
+      "exact_text": "TAXI TO HOLDING POINT [number] [RUNWAY (number)] [HOLD SHORT OF RUNWAY (number) (or CROSS RUNWAY (number))] [TIME (time)]; TAXI TO HOLDING POINT [number] [RUNWAY (number)] VIA (specific route to be followed) [TIME (time)] [HOLD SHORT OF RUNWAY (number) (or CROSS RUNWAY (number))]; TAXI VIA (identification of taxiway).",
+      "notes": ["Square-bracketed information can be necessary in a specific instance; the synthetic scenario explicitly requires the hold-short restriction."]
+    },
+    {
+      "id": "holding-12.16.4.8",
+      "paragraph_reference": "12.16.4.8(d) and note",
+      "printed_pages": ["12-36"],
+      "pdf_pages": [356],
+      "circumstance_text": "Holding; to hold not closer to a runway than specified",
+      "exact_text": "HOLD SHORT OF (position); Requires specific acknowledgement from the pilot. Note-The procedure words ROGER and WILCO are insufficient acknowledgement of the instructions HOLD, HOLD POSITION and HOLD SHORT OF (position).",
+      "notes": []
+    },
+    {
+      "id": "vector-12.17.1.3",
+      "paragraph_reference": "12.17 introductory note, 12.17.1.3(e), note after 12.17.1.5",
+      "printed_pages": ["12-47", "12-48"],
+      "pdf_pages": [367, 368],
+      "circumstance_text": "ATS surveillance service phraseologies; vectoring instructions",
+      "exact_text": "The following comprise phraseologies specifically applicable when an ATS surveillance system is used in the provision of air traffic services. TURN LEFT (or RIGHT) HEADING (three digits) [reason]. Note-When it is necessary to specify a reason for vectoring or for the above manoeuvres, the following phraseologies should be used: FOR SPACING.",
+      "notes": []
+    },
+    {
+      "id": "squawk-12.17.3",
+      "paragraph_reference": "12.17.3.3-12.17.3.6",
+      "printed_pages": ["12-54"],
+      "pdf_pages": [374],
+      "circumstance_text": "To instruct setting of transponder; reselection and confirmation distinctions",
+      "exact_text": "To Instruct Setting Of Transponder: FOR DEPARTURE SQUAWK (code); SQUAWK (code). To Request The Pilot To Reselect The Assigned Mode And Code: RESET SQUAWK [(mode)] (code). To Request The Pilot To Confirm The Code Selected On The Aircraft's Transponder: CONFIRM SQUAWK (code).",
+      "notes": []
+    }
+  ]
+}

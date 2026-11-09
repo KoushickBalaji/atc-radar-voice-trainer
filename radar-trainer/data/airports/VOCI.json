@@ -1,0 +1,163 @@
+{
+  "icao": "VOCI",
+  "name": "Cochin",
+  "country_code": "IN",
+  "center": [
+    10.153611111111111,
+    76.40722222222223
+  ],
+  "elevation_ft": 30.0,
+  "range_nm": 25,
+  "runway": {
+    "name": "09/27",
+    "length_m": 3400.0,
+    "width_m": 45.0,
+    "ends": [
+      {
+        "name": "09",
+        "lat": 10.150547222222222,
+        "lon": 76.385,
+        "elevation_ft": 28.0,
+        "bearing_true": 87.64,
+        "bearing_magnetic_chart": 90
+      },
+      {
+        "name": "27",
+        "lat": 10.151683333333335,
+        "lon": 76.41601944444444,
+        "elevation_ft": 30.0,
+        "bearing_true": 267.64
+      }
+    ]
+  },
+  "approach": {
+    "runway": "09",
+    "threshold_index": 0,
+    "course_true": 87.64,
+    "course_magnetic": 90,
+    "glide_deg": 3,
+    "rdh_ft": 56,
+    "intercept_alt_ft": 1700,
+    "line_length_nm": 16,
+    "reference_fixes": []
+  },
+  "navaids": [
+    {
+      "name": "LOC 27 CAT I ICIL 110.300 MHz H24",
+      "lat": 10.150222222222222,
+      "lon": 76.38147222222221,
+      "type": "loc"
+    },
+    {
+      "name": "LOC 09 CAT I ICNB 111.100 MHz H24",
+      "lat": 10.151777777777777,
+      "lon": 76.41888888888889,
+      "type": "loc"
+    },
+    {
+      "name": "GP 27 ICIL 335.000 MHz H24 AD 2 VOCI -10 03 SEP 2026 AMDT 08-26 Airports Authority of India India AIP",
+      "lat": 10.150472222222223,
+      "lon": 76.4131388888889,
+      "type": "gs"
+    },
+    {
+      "name": "GP 09 331.700 MHz H24",
+      "lat": 10.149555555555555,
+      "lon": 76.38825000000001,
+      "type": "gs"
+    },
+    {
+      "name": "DME ILS 27 ICIL CH72X H24",
+      "lat": 10.150500000000001,
+      "lon": 76.4131388888889,
+      "type": "dme"
+    },
+    {
+      "name": "DME ILS 09 ICNB CH48X H24",
+      "lat": 10.149555555555555,
+      "lon": 76.38825000000001,
+      "type": "dme"
+    },
+    {
+      "name": "DVOR/DME CIA 113.500 MHz CH82X H24",
+      "lat": 10.150500000000001,
+      "lon": 76.37258333333332,
+      "type": "vor"
+    },
+    {
+      "name": "DVOR/DME CIB 117.300 MHz CH120X H24",
+      "lat": 10.116888888888889,
+      "lon": 76.68058333333333,
+      "type": "vor"
+    }
+  ],
+  "exercise": {
+    "reference_runway_index": 0,
+    "practice_alt_ft": 4000,
+    "command_alt_min_ft": 1500,
+    "start": {
+      "callsign": "AFR123",
+      "type": "A320",
+      "along_nm": 16,
+      "cross_nm": 3,
+      "alt_ft": 5000,
+      "spd_kt": 220,
+      "hdg": 103
+    },
+    "suggested_heading": 118,
+    "pre_capture_floor_ft": 1500
+  },
+  "sources": [
+    "Airport Layouts/Cochin/AD 2.1VOCI.pdf",
+    "Airport Layouts/Cochin/VOCI-ILS-Z-RWY-09.pdf"
+  ],
+  "magnetic_variation": {
+    "degrees": -2.12,
+    "epoch": 2010,
+    "source": "AD 2.2; not extrapolated"
+  },
+  "provenance": {
+    "geometry": [
+      {
+        "file": "Airport Layouts/Cochin/AD 2.1VOCI.pdf",
+        "page": 1,
+        "sections": [
+          "AD 2.2 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Cochin/AD 2.1VOCI.pdf",
+        "page": 6,
+        "sections": [
+          "AD 2.12 "
+        ]
+      },
+      {
+        "file": "Airport Layouts/Cochin/AD 2.1VOCI.pdf",
+        "page": 10,
+        "sections": [
+          "AD 2.19 "
+        ]
+      }
+    ],
+    "method": "Deterministic cached pypdf AD2.2/2.12/2.19 table parsing; chart values plus explicitly synthetic exercise setup",
+    "notes": [],
+    "ils": {
+      "source_file": "Airport Layouts/Cochin/VOCI-ILS-Z-RWY-09.pdf",
+      "source_page": 1,
+      "level_basis": "Published horizontal final segment visually checked; only vector-to-final segment modeled",
+      "visually_reviewed": true,
+      "warnings": [
+        "Speed restricted to 185 KIAS Max",
+        "RNAV 1 REQUIRED"
+      ]
+    },
+    "training": "Spawn, speed envelope, localizer capture window, and tolerances are exercise settings, not published procedure minima. Final segment only; omitted chart fixes are not synthesized."
+  },
+  "scope_note": "One aircraft and one selected runway. Airborne vectoring practice; no landing, departures, or full instrument procedure. Minimum-altitude warnings unavailable for this airport.",
+  "training_overrides": {
+    "localizer_min_nm": 7,
+    "localizer_max_nm": 12
+  },
+  "msaw_availability": "chart supplied; boundary validation pending"
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VIAG",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Agra CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "H24",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 150
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Agra/AD 2.1VIAG.pdf",
+        "page": 8,
+        "section": "AD 2.17",
+        "effective_date": "2026-01-22",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits MCTR: Area bounded by lines joining points 271222N 0771852E then along the clockwise arc of a circle of 35NM radius centred on 270901N 0775755E to 274501N 0775255E; 273301N 0782655E; 272801N 0782955E; 273501N 0780855E; 264201N 0781355E; 263801N 0775355E; 271301N 0772955E to point of origin. | Vertical: FL 150 | Class: D | Hours: H24"
+      },
+      "shape": "circle",
+      "center": [
+        27.150277777777777,
+        77.96527777777779
+      ],
+      "radius_nm": 35.0
+    }
+  ]
+}

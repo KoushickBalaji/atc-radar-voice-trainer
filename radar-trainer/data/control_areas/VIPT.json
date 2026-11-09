@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VIPT",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Pantnagar CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "AMSL",
+        "value": 6500.0
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Pantnagar/AD 2.1VIPT.pdf",
+        "page": 12,
+        "section": "AD 2.17",
+        "effective_date": "2026-07-09",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Circular area centered on 290156N 0792821E within a 10NM radius. | Vertical: 6500 FT | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        29.03222222222222,
+        79.4725
+      ],
+      "radius_nm": 10.0
+    }
+  ]
+}

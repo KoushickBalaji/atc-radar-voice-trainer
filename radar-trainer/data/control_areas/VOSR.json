@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VOSR",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Sindhudurg CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 85
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Sindhudurg/AD 2.1VOSR.pdf",
+        "page": 14,
+        "section": "AD 2.17",
+        "effective_date": "2026-01-22",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: Area bounded by lines joining points 155813N 0732148E then along the clockwise arc of a circle of 10NM radius centred on 160012N 0733158E to 155118N 0733646E to point of origin. | Vertical: FL 85 | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        16.003333333333334,
+        73.53277777777778
+      ],
+      "radius_nm": 10.0
+    }
+  ]
+}

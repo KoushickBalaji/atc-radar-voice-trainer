@@ -1,0 +1,796 @@
+"""
+Gestionnaire de simulation temps reel - Application d'entrainement ATC
+======================================================================
+Pilote BlueSky (bluesky_runtime) dans un THREAD UNIQUE pour le rendu radar live :
+- boucle d'avancement en temps reel (dt mur x vitesse de simulation),
+- file de commandes thread-safe (CRE / HDG / ALT / SPD / ADDWPT),
+- snapshot d'etat protege par verrou (lu par le serveur web / WebSocket),
+- creation d'avions a partir d'une liste (situation generee par l'IA),
+- donnees statiques de carte (navaids, aeroports, routes, contour secteur),
+- detection de perte de separation (< 5 NM et < 1000 ft).
+
+BlueSky n'etant pas thread-safe, TOUS les appels BlueSky se font dans le thread
+de simulation : les autres threads deposent des commandes dans la file et lisent
+une COPIE du snapshot. Les conventions geometriques/visuelles (centre Reims,
+portee 70 NM, conversion NM) reprennent radar_anim.py sans importer matplotlib.
+"""
+import math
+import time
+import queue
+import logging
+import threading
+import os
+from airport_profiles import get_profile
+from ils_trainer import ILSTrainer
+from traffic_scenario import TrafficRun, catalogue
+from collections import deque
+from copy import deepcopy
+
+import bluesky_runtime as bsk
+
+_log = logging.getLogger("atc_sim")
+
+# --- Reperes du secteur (identiques a radar_anim.py : Reims / URCA) ----------
+CLAT, CLON = 49.25, 4.05
+if os.environ.get('ATC_SIMPLE_DEMO') == '1':
+    _default_airport = get_profile(os.environ.get('ATC_AIRPORT', 'VOCB'))
+    CLAT, CLON = _default_airport.LAT, _default_airport.LON
+RANGE_NM = 70
+COSLAT = math.cos(math.radians(CLAT))
+SEP_NM = 5.0            # separation reglementaire (cf. secteur_graphe.json)
+SEP_FT = 1000.0         # separation verticale
+LOOKAHEAD_S = 120.0     # horizon de prediction de conflit (STCA ~ 2 min)
+
+
+def to_nm(lat, lon):
+    """Position (lat, lon) -> coordonnees plan (x, y) en NM autour du centre."""
+    return (lon - CLON) * 60.0 * COSLAT, (lat - CLAT) * 60.0
+
+
+def from_nm(x_nm, y_nm):
+    """Coordonnees plan (x, y) en NM -> (lat, lon) autour du centre."""
+    lat = CLAT + y_nm / 60.0
+    lon = CLON + x_nm / (60.0 * COSLAT)
+    return lat, lon
+
+
+def _point_in_poly(x, y, pts):
+    """Point dans polygone (ray casting), pts = [[x,y], ...] en NM."""
+    n, inside, j = len(pts), False, len(pts) - 1
+    for i in range(n):
+        xi, yi = pts[i]
+        xj, yj = pts[j]
+        if ((yi > y) != (yj > y)) and (x < (xj - xi) * (y - yi) / ((yj - yi) or 1e-9) + xi):
+            inside = not inside
+        j = i
+    return inside
+
+
+def sector_polygon(radius=55):
+    pts = []
+    for deg in (20, 75, 140, 200, 260, 320):
+        a = math.radians(90 - deg)
+        pts.append([radius * math.cos(a), radius * 0.85 * math.sin(a)])
+    return pts + [pts[0]]
+
+
+class SimManager:
+    """Boucle BlueSky temps reel + etat partage thread-safe."""
+
+    def __init__(self, dt=0.1, speed=1.0):
+        self._dt = dt
+        self._speed = speed
+        self._paused = False
+        self._running = False
+        self._lock = threading.Lock()
+        self._cmd_q = queue.Queue()
+        self._thread = None
+        self._nav = None
+        self._meta = {}        # callsign -> {"type": str}
+        self._sector_fixes = []
+        self._wind = None      # {"dir": deg, "spd": kt, "alt": ft|None}
+        self._turb = 0.0       # intensite de turbulence (m/s)
+        self._zones = {}       # name -> {"type","shape","coords","color"}
+        self._zone_seq = 0
+        self._cd_on = False    # moteur CD BlueSky reellement actif (cf. _enable_cd)
+        self._last_error = None
+        self._command_errors = deque(maxlen=10)
+        self._advance_failures = 0
+        self.airport = get_profile(os.environ.get('ATC_AIRPORT', 'VOCB')) if os.environ.get('ATC_SIMPLE_DEMO') == '1' else None
+        self._ils = ILSTrainer(self.airport) if self.airport and self.airport.approach else None
+        self.traffic = None
+        self._ils_t = None
+        self._snapshot = {"t": 0.0, "running": False, "paused": False,
+                          "speed": speed, "aircraft": [], "conflicts": [], "predicted": []}
+
+    # --- cycle de vie --------------------------------------------------------
+    def start(self):
+        if self._running:
+            return
+        self._running = True
+        self._thread = threading.Thread(target=self._run, name="atc-sim", daemon=True)
+        self._thread.start()
+
+    def stop(self):
+        self._running = False
+        if self._thread:
+            self._thread.join(timeout=2.0)
+
+    # --- API appelee depuis les threads HTTP (non bloquante) -----------------
+    def enqueue(self, trafscript_line):
+        """Depose une ligne TrafScript (ex. 'HDG AFR1234 270') a appliquer."""
+        if trafscript_line:
+            self._cmd_q.put({"kind": "cmd", "line": str(trafscript_line)})
+
+    def select_airport(self, icao, scenario_id=None):
+        profile = get_profile(icao)
+        done = threading.Event()
+        scenarios = catalogue(profile) if scenario_id else {}
+        if scenario_id and scenario_id not in scenarios:
+            raise ValueError('Unknown traffic exercise for this airport.')
+        item = {'kind': 'airport', 'profile': profile, 'scenario': scenarios.get(scenario_id), 'done': done}
+        self._cmd_q.put(item)
+        if not done.wait(15):
+            raise RuntimeError('Airport change is still pending; refresh before retrying.')
+        if item.get('error'):
+            raise RuntimeError(item['error'])
+        return profile.info()
+
+    def procedure_command(self, order):
+        done = threading.Event()
+        item = dict(kind='procedure', order=deepcopy(order), done=done)
+        self._cmd_q.put(item)
+        if not done.wait(15):
+            raise RuntimeError('Procedure command is still pending; check the exercise state before retrying.')
+        if item.get('error'):
+            raise RuntimeError(item['error'])
+        return item.get('rejected')
+
+    def to_nm(self, lat, lon):
+        return self.airport.to_nm(lat, lon) if self.airport else to_nm(lat, lon)
+
+    def from_nm(self, x, y):
+        return self.airport.from_nm(x, y) if self.airport else from_nm(x, y)
+
+    def create_aircraft(self, aircraft):
+        """Cree une liste d'avions [{callsign,type,lat,lon,hdg,alt_ft,spd_kt}, ...]."""
+        created = []
+        for ac in aircraft:
+            cs = str(ac.get("callsign", "")).upper().strip()
+            if not cs:
+                continue
+            item = {"kind": "create", "cs": cs,
+                    "type": ac.get("type", "A320"),
+                    "lat": float(ac["lat"]), "lon": float(ac["lon"]),
+                    "hdg": float(ac.get("hdg", 0)), "alt_ft": float(ac.get("alt_ft", 20000)),
+                    "spd_kt": float(ac.get("spd_kt", 250))}
+            self._cmd_q.put(item)
+            created.append(cs)
+        return created
+
+    # --- meteo / zones (fonctions BlueSky) -----------------------------------
+    def set_wind(self, direction, speed, alt=None):
+        """Definit le vent (BlueSky WIND). direction None -> efface le vent."""
+        self._cmd_q.put({"kind": "wind", "dir": direction, "spd": speed, "alt": alt})
+
+    def set_turbulence(self, level):
+        """Active/regle la turbulence (m/s). 0 -> off."""
+        self._cmd_q.put({"kind": "turb", "level": float(level)})
+
+    def add_zone(self, ztype, shape, coords):
+        """Ajoute une zone : ztype 'storm'|'restricted', shape 'CIRCLE'|'POLY',
+        coords [lat,lon,rayon_nm] (cercle) ou [lat,lon,lat,lon,...] (polygone)."""
+        self._cmd_q.put({"kind": "zone", "ztype": ztype, "shape": shape, "coords": coords})
+
+    def clear_zones(self):
+        self._cmd_q.put({"kind": "clearzones"})
+
+    def set_speed(self, x):
+        with self._lock:
+            self._speed = max(0.1, min(20.0, float(x)))
+
+    def pause(self):
+        with self._lock:
+            self._paused = True
+
+    def resume(self):
+        with self._lock:
+            if self._ils and self._ils.phase in ('handoff_ready', 'approach_complete', 'complete', 'missed', 'missed_finished', 'missed_fix_altitude'):
+                return
+            self._paused = False
+
+    def reset(self):
+        self._cmd_q.put({"kind": "reset"})
+
+    def snapshot(self):
+        """Copie thread-safe du dernier etat (pour HTTP / WebSocket)."""
+        with self._lock:
+            snap = deepcopy(self._snapshot)
+            snap["last_error"] = self._last_error
+            snap["command_errors"] = deepcopy(list(self._command_errors))
+            snap["advance_failures"] = self._advance_failures
+            snap["running"] = self._running
+        snap["pending_commands"] = self._cmd_q.qsize()
+        # temoin de vie : un thread sim mort (init BlueSky en echec...) rendrait
+        # l'app zombie - l'UI peut desormais l'afficher au lieu d'un radar fige.
+        snap["sim_alive"] = bool(self._thread and self._thread.is_alive())
+        return snap
+
+    def nav_static(self):
+        """Donnees statiques de carte (calculees une fois par le thread sim)."""
+        t0 = time.monotonic()
+        while self._nav is None and time.monotonic() - t0 < 30:
+            time.sleep(0.05)
+        return self._nav or {"waypoints": [], "airports": [], "routes": [],
+                             "sector": sector_polygon(), "range_nm": RANGE_NM,
+                             "center": [CLAT, CLON]}
+
+    # --- thread de simulation (seul a toucher BlueSky) -----------------------
+    def _run(self):
+        try:
+            self._run_loop()
+        except Exception as exc:
+            with self._lock:
+                self._last_error = str(exc)
+            _log.exception("arret du thread de simulation")
+        finally:
+            self._running = False
+
+    def _run_loop(self):
+        bsk.bs()
+        bsk.reset()
+        self._define_sector_fixes()
+        self._enable_cd()
+        self._nav = self._compute_nav()
+        last = time.monotonic()
+        while self._running:
+            now = time.monotonic()
+            wall = min(1.0, now - last)        # borne anti-saut (pause systeme, GC)
+            last = now
+            self._drain_queue()
+            with self._lock:
+                paused, speed = self._paused, self._speed
+            if not paused and wall > 0:
+                try:
+                    self._advance(wall * speed)
+                    with self._lock:
+                        self._advance_failures = 0
+                        self._last_error = None
+                except Exception as exc:
+                    # jamais avale en silence : le temps sim figerait sans trace.
+                    # Log au 1er echec puis tous les 100 (boucle a ~8 Hz).
+                    with self._lock:
+                        self._advance_failures += 1
+                        self._last_error = str(exc)
+                    if self._advance_failures == 1 or self._advance_failures % 100 == 0:
+                        _log.exception("bsk.advance en echec (x%d) - temps simule fige",
+                                       self._advance_failures)
+            self._update_snapshot(paused, speed)
+            time.sleep(self._dt)
+
+    def _advance(self, seconds):
+        advanced = bsk.advance(seconds)
+        if self.traffic:
+            # A timetable and a takeoff roll keep time even without airborne targets.
+            self.traffic.elapsed += advanced if bsk.bs().traf.ntraf else seconds
+
+    def _drain_queue(self):
+        # Keep advancing the simulation even when producers continuously add
+        # instructions. FIFO order is preserved across ticks.
+        deadline = time.monotonic() + 0.025
+        for _ in range(64):
+            try:
+                item = self._cmd_q.get_nowait()
+            except queue.Empty:
+                return
+            try:
+                self._apply(item)
+            except Exception as exc:
+                # la file a deja ete acquittee cote HTTP : sans log, l'echec
+                # d'une commande serait strictement invisible.
+                _log.exception("commande sim en echec (ignoree) : %r", item)
+                with self._lock:
+                    self._command_errors.append({"kind": item.get("kind"), "message": str(exc)})
+                item['error'] = str(exc)
+            finally:
+                if 'done' in item:
+                    item['done'].set()
+            if time.monotonic() >= deadline:
+                return
+
+    def _apply(self, item):
+        kind = item.get("kind")
+        if kind == 'procedure':
+            import approach_radio
+            order = item['order']
+            if self.traffic:
+                item['rejected'] = self.traffic.procedure(order, self.traffic.elapsed, self.snapshot()['aircraft'])
+                if not item['rejected']:
+                    if self.traffic.phase[order['callsign']] == 'complete':
+                        bsk.cmd(f"DEL {order['callsign']}")
+                        bsk.flush_commands()
+                        self._meta.pop(order['callsign'], None)
+                    self._update_snapshot(self._paused, self._speed)
+                return
+            if order['action'] in ('CONTACT_UNIT', 'TAKEOFF'):
+                item['rejected'] = 'This clearance requires a mixed traffic exercise.'
+                return
+            if order['action'] == 'SET_GO_AROUND_ON_HANDOFF':
+                trainer = self._ils
+                if not trainer or not trainer.missed.plan:
+                    item['rejected'] = 'No published missed approach is configured for this approach.'
+                    return
+                plan = trainer.missed.plan
+                if (order['icao'],order['runway'],order['approach_id'],order['callsign']) != (
+                        self.airport.ICAO,plan['runway'],plan['approach_id'],trainer.callsign):
+                    item['rejected'] = 'Selected aircraft or approach changed. Refresh the exercise.'
+                    return
+                if trainer.phase not in ('awaiting_clearance','armed','localizer','glideslope','handoff_ready'):
+                    item['rejected'] = 'Arm the go-around before tower handoff.'
+                    return
+                ac = next((a for a in bsk.state() if a['id'] == trainer.callsign), None)
+                if not ac or ac['alt_ft'] <= self.airport.threshold['elevation_ft']:
+                    item['rejected'] = 'An airborne exercise aircraft is required.'
+                    return
+                trainer.go_around_on_handoff = order.get('armed', True)
+                self._update_snapshot(self._paused, self._speed)
+                return
+            if order.get('action') not in approach_radio.ACTIONS:
+                item['rejected'] = 'Unsupported procedure command.'
+                return
+            item['rejected'] = approach_radio.validate(order, self.airport, self._ils.phase if self._ils else None)
+            if not item['rejected']:
+                if order['action'] == 'HOLD_PUBLISHED':
+                    candidates = [p for p in self.airport.holds.values() if p['fix'] == order['fix']]
+                    preferred = (self._ils.missed.plan or {}).get('hold_id')
+                    if len(candidates) > 1:
+                        candidates = [p for p in candidates if p['id'] == preferred]
+                    if len(candidates) != 1:
+                        item['rejected'] = 'No unique published hold for this fix and active approach.'
+                        return
+                    pattern = candidates[0]
+                    ac = next((a for a in bsk.state() if a['id'] == self._ils.callsign), None)
+                    if not ac:
+                        item['rejected'] = 'Aircraft unavailable.'
+                        return
+                    altitude = order['altitude_ft']
+                    if altitude is None:
+                        altitude = self._ils.hold.altitude if self._ils.hold else round(ac['alt_ft'])
+                    if not pattern['minimum_ft'] <= altitude <= 18000:
+                        item['rejected'] = f"Assign a holding altitude between {pattern['minimum_ft']} and 18000 feet."
+                        return
+                    if self._ils.hold and self._ils.hold.pattern == pattern:
+                        self._ils.hold.altitude = altitude
+                        self._ils.hold.expected = order['expected']
+                    else:
+                        self._ils.start_hold(pattern, altitude, order['expected'])
+                elif order['action'] == 'MISSED_INSTRUCTION':
+                    if self._ils.hold_after_missed:
+                        item['rejected'] = 'The missed approach has reached its hold. Issue an immediate instruction.'
+                        return
+                    if not self._ils.missed.plan:
+                        item['rejected'] = 'No configured missed approach for this runway and variant.'
+                        return
+                    self._ils.missed.assign(order['axis'],order['value'],conditional=True)
+                elif order['action'] == 'CLEAR_ILS':
+                    self._ils.clear_approach()
+                else:
+                    if self._ils.go_around_on_handoff:
+                        self._ils.start_go_around()
+                        self.resume()
+                    else:
+                        self._ils.phase = 'complete'
+                        self._ils.pilot_call = None
+                self._update_snapshot(self._paused, self._speed)
+        elif kind == 'airport':
+            self.pause()
+            self._apply({'kind': 'reset'})
+            self.airport = item['profile']
+            self._ils = ILSTrainer(self.airport) if self.airport.approach else None
+            self._ils_t = None
+            self._nav = self.airport.nav()
+            if item.get('scenario'):
+                self._ils = None
+                self.traffic = TrafficRun(self.airport, item['scenario'])
+            else:
+                ac = self.airport.aircraft()
+                self._apply(dict(ac, kind='create', cs=ac['callsign']))
+            self._update_snapshot(True, self._speed)
+        elif kind == "cmd":
+            if self.traffic:
+                fields = item['line'].split()
+                cs = fields[1] if len(fields) > 1 else None
+                if not self.traffic.accept_vector(cs):
+                    return
+                trainer = self.traffic.approaches.get(cs)
+                if trainer:
+                    trainer.manual_command(item['line'])
+            if self._ils:
+                self._ils.manual_command(item['line'])
+            bsk.cmd(item["line"])
+            bsk.flush_commands()
+        elif kind == "create":
+            if item["cs"] in self._meta:
+                return                              # indicatif deja present -> on ignore
+            bsk.create(item["cs"], item["type"], item["lat"], item["lon"],
+                       item["hdg"], item["alt_ft"], item["spd_kt"])
+            self._meta[item["cs"]] = {"type": item["type"]}
+        elif kind == "wind":
+            self._apply_wind(item["dir"], item["spd"], item["alt"])
+        elif kind == "turb":
+            self._apply_turb(item["level"])
+        elif kind == "zone":
+            self._apply_zone(item["ztype"], item["shape"], item["coords"])
+        elif kind == "clearzones":
+            self._clear_zones()
+        elif kind == "reset":
+            self.traffic = None
+            if self._ils:
+                self._ils = ILSTrainer(self.airport)
+                self._ils_t = None
+            # On vide le radar (DEL de chaque avion) sans RESET global : cela
+            # preserve le temps simu, les navaids et les fix deja definis.
+            for s in bsk.state():
+                bsk.cmd(f"DEL {s['id']}")
+            bsk.flush_commands()
+            self._meta.clear()
+            self._clear_zones()
+            self._apply_wind(None, None, None)
+            self._apply_turb(0.0)
+
+    def _apply_wind(self, direction, speed, alt):
+        lat, lon = (self.airport.LAT, self.airport.LON) if self.airport else (CLAT, CLON)
+        wind = bsk.bs().traf.wind
+        if direction is None:
+            wind.clear()
+            self._wind = None
+            return
+        d, s = int(round(float(direction))) % 360, max(0, int(round(float(speed))))
+        if alt is not None:                # alt=0 ft est une altitude valide
+            bsk.cmd(f"WIND {lat:.4f} {lon:.4f} {float(alt)} {d} {s}")
+        else:
+            bsk.cmd(f"WIND {lat:.4f} {lon:.4f} {d} {s}")
+        bsk.flush_commands()
+        self._wind = {"dir": d, "spd": s, "alt": (int(alt) if alt is not None else None)}
+
+    def _apply_turb(self, level):
+        try:
+            turb = bsk.bs().traf.turbulence
+            if level and level > 0:
+                turb.SetStandards([level, level, level * 0.6])
+                turb.setnoise(True)
+            else:
+                turb.setnoise(False)
+            self._turb = float(level or 0.0)
+        except Exception:
+            self._turb = 0.0
+            raise
+
+    def _apply_zone(self, ztype, shape, coords):
+        from bluesky.tools import areafilter
+        self._zone_seq += 1
+        name = f"{'STORM' if ztype == 'storm' else 'ZONE'}{self._zone_seq}"
+        areafilter.defineArea(name, shape, [float(c) for c in coords])
+        self._zones[name] = {"type": ztype, "shape": shape,
+                             "coords": [float(c) for c in coords],
+                             "color": ("#ff5ab0" if ztype == "storm" else "#ff4350")}
+
+    def _clear_zones(self):
+        try:
+            from bluesky.tools import areafilter
+            for name in list(self._zones):
+                areafilter.deleteArea(name)
+        except Exception:
+            pass
+        self._zones = {}
+
+    def _enable_cd(self):
+        """Active le moteur de detection de conflits integre a BlueSky (ASAS/CD,
+        StateBased) avec zone 5 NM / 1000 ft et horizon 2 min."""
+        try:
+            for c in ("CDMETHOD ON", "ZONER 5", "ZONEDH 1000", "DTLOOK 120"):
+                bsk.cmd(c)
+            bsk.flush_commands()
+            self._cd_on = True
+        except Exception as e:
+            self._cd_on = False
+            _log.warning("activation CD BlueSky echouee (%s) : repli geometrique", e)
+
+    def _define_sector_fixes(self):
+        """Definit les fix du secteur (graphe S2) autour du centre Reims :
+        rend ADDWPT/'direct' operationnels et affiche les fix nommes au radar."""
+        if os.environ.get('ATC_SIMPLE_DEMO') == '1':
+            self._sector_fixes = []
+            return
+        try:
+            import graph_secteur
+            g = graph_secteur.SectorGraph()
+            fixes = {nid: tuple(n["pos_nm"]) for nid, n in g.nodes.items()}
+            bsk.define_waypoints(fixes, center_lat=CLAT, center_lon=CLON)
+            self._sector_fixes = [
+                {"x": xn - 50, "y": yn - 25, "name": nid,
+                 "type": g.nodes[nid].get("type", "fix")}
+                for nid, (xn, yn) in fixes.items()]
+        except Exception:
+            self._sector_fixes = []
+
+    def _update_snapshot(self, paused, speed):
+        acs = []
+        ground = []
+        if self.traffic:
+            sim_t = self.traffic.elapsed
+            dt = 0 if paused or self._ils_t is None else max(0, sim_t - self._ils_t)
+            self._ils_t = sim_t
+            def create(cs, actype, lat, lon, hdg, alt, speed_kt):
+                self._apply(dict(kind='create', cs=cs, type=actype, lat=lat, lon=lon,
+                                 hdg=hdg, alt_ft=alt, spd_kt=speed_kt))
+            ground = self.traffic.schedule(sim_t, create, bsk.cmd)
+            bsk.flush_commands()
+        for s in list(bsk.state()) + ground:
+            x, y = self.to_nm(s["lat"], s["lon"])
+            gs = s.get("tas_kt") or s.get("cas_kt") or 0
+            acs.append({"id": s["id"], "x": round(x, 3), "y": round(y, 3),
+                        "lat": s["lat"], "lon": s["lon"], "hdg": s["hdg"],
+                        "alt_ft": s["alt_ft"], "fl": int(round(s["alt_ft"] / 100)),
+                        "gs": int(round(gs)),
+                        "type": self._meta.get(s["id"], {}).get("type", s.get("type", "")),
+                        "conflict": False, "alert": ""})
+        self._enrich(acs)  # Use actual ground track/speed and vertical rate in the fallback.
+        if self.traffic:
+            for ac in acs:
+                if ac['id'] in self.traffic.flights:
+                    self.traffic.update(ac, dt, bsk.cmd)
+            bsk.flush_commands()
+            if self.traffic.status()['complete']:
+                self.pause()
+                paused = True
+        if self._ils:
+            sim_t = float(bsk.bs().sim.simt)
+            dt = 0 if paused or self._ils_t is None else max(0, sim_t - self._ils_t)
+            self._ils_t = sim_t
+            ac = next((a for a in acs if a['id'] == self._ils.callsign), None)
+            if ac:
+                for line in self._ils.update(ac, dt):
+                    bsk.cmd(line)
+                bsk.flush_commands()
+                if self._ils.phase in ('handoff_ready', 'approach_complete', 'complete', 'missed', 'missed_finished', 'missed_fix_altitude'):
+                    self.pause()
+                    paused = True
+        res = self._analyze_cd()                         # moteur BlueSky (CD&R)
+        engine = "bluesky"
+        if res is None:                                  # repli geometrie si CD inactif
+            res = self._analyze(acs)
+            engine = "geometry"
+        conflicts, predicted = res
+        los = {cs for pair in conflicts for cs in pair}
+        warn = {cs for it in predicted for cs in it["pair"]}
+        for a in acs:
+            if self.airport:
+                phase = self._ils.phase if self._ils and a['id'] == self._ils.callsign else a.get('phase')
+                if phase not in ('ready','rolling'):
+                    a['msaw'] = self.airport.msaw.evaluate(a, phase)
+                a['control_area'] = self.airport.control_areas.observe(a, handed_off=phase == 'complete')
+            a["conflict"] = a["id"] in los
+            a["alert"] = "los" if a["id"] in los else ("predicted" if a["id"] in warn else "")
+        with self._lock:
+            try:
+                t = float(bsk.bs().sim.simt)
+            except Exception:
+                t = self._snapshot.get("t", 0.0)
+            self._snapshot = {"t": round(self.traffic.elapsed if self.traffic else t, 1), "running": True, "paused": paused,
+                             "speed": speed, "aircraft": acs, "conflicts": conflicts,
+                             "ils": deepcopy(self._ils.status) if self._ils else None,
+                             "traffic": self.traffic.status() if self.traffic else None,
+                             "traffic_calls": list(self.traffic.calls) if self.traffic else [],
+                             "pilot_call": self._ils.pilot_call if self._ils else None,
+                             "airport_id": self.airport.ICAO if self.airport else None,
+                             "predicted": predicted, "cd_engine": engine,
+                             "wind": self._wind, "turbulence": self._turb,
+                             "capabilities": {"conflict_detection": engine, "routes": True,
+                                              "wind": True, "turbulence": True,
+                                              "weather_zones": "training_areas"},
+                             "zones": self._zones_payload()}
+
+    def _enrich(self, acs):
+        """Ajoute a chaque avion sa route FMS (en NM), la zone penetree, la
+        vitesse verticale et l'altitude selectionnee (strips / bloc radar)."""
+        for a in acs:
+            a["route"], a["actwp"], a["inzone"], a["trk"] = [], -1, "", a["hdg"]
+            a["vs_fpm"], a["sel_alt_ft"] = 0, None
+            a["cas_kt"], a["tas_kt"], a["lnav"], a["vnav"] = None, None, None, None
+            a["route_names"] = []
+        try:
+            traf = bsk.bs().traf
+            idx = {cs: i for i, cs in enumerate(getattr(traf, "id", []))}
+            for a in acs:
+                i = idx.get(a["id"])
+                if i is None:
+                    continue
+                for key, attr, factor in (("cas_kt", "cas", bsk.MS2KT), ("tas_kt", "tas", bsk.MS2KT)):
+                    values = getattr(traf, attr, ())
+                    if i < len(values):
+                        a[key] = int(round(float(values[i]) * factor))
+                for key, attr in (("lnav", "swlnav"), ("vnav", "swvnav")):
+                    values = getattr(traf, attr, ())
+                    if i < len(values):
+                        a[key] = bool(values[i])
+                try:                                     # vitesse SOL + route sol (effet du vent visible)
+                    a["gs"] = int(round(float(traf.gs[i]) * bsk.MS2KT))
+                    a["trk"] = round(float(traf.trk[i]), 1)
+                except Exception:
+                    pass
+                try:                                     # tendance verticale + niveau autorise
+                    a["vs_fpm"] = int(round(float(traf.vs[i]) * bsk.M2FT * 60.0))
+                    sel = float(traf.selalt[i]) * bsk.M2FT
+                    if sel >= 0:
+                        a["sel_alt_ft"] = int(round(sel))
+                except Exception:
+                    pass
+                if hasattr(traf, "ap") and i < len(traf.ap.route):
+                    r = traf.ap.route[i]
+                    if getattr(r, "nwp", 0) > 0:
+                        a["route"] = [[round(x, 2), round(y, 2)]
+                                      for x, y in (self.to_nm(la, lo) for la, lo in zip(r.wplat, r.wplon))]
+                        a["actwp"] = int(getattr(r, "iactwp", -1))
+                        a["route_names"] = list(getattr(r, "wpname", []))
+        except Exception:
+            pass
+        # Penetration de zone en geometrie NM (la fonction compilee kwikdist de
+        # BlueSky/areafilter.checkInside plante avec numpy 2.x).
+        for z in self._zones_payload():
+            for a in acs:
+                if z["shape"] == "CIRCLE":
+                    inside = math.hypot(a["x"] - z["cx"], a["y"] - z["cy"]) <= z["r"]
+                else:
+                    inside = _point_in_poly(a["x"], a["y"], z.get("points", []))
+                if inside:
+                    a["inzone"] = z["name"]
+
+    def _zones_payload(self):
+        """Zones converties en coordonnees plan (NM) pour le rendu radar."""
+        out = []
+        for name, z in self._zones.items():
+            c = z["coords"]
+            if z["shape"] == "CIRCLE":
+                cx, cy = self.to_nm(c[0], c[1])
+                out.append({"name": name, "type": z["type"], "shape": "CIRCLE",
+                            "cx": round(cx, 2), "cy": round(cy, 2), "r": c[2], "color": z["color"]})
+            else:
+                pts = [list(self.to_nm(c[i], c[i + 1])) for i in range(0, len(c) - 1, 2)]
+                out.append({"name": name, "type": z["type"], "shape": "POLY",
+                            "points": [[round(x, 2), round(y, 2)] for x, y in pts], "color": z["color"]})
+        return out
+
+    def _analyze_cd(self):
+        """Lit le moteur de detection de conflits de BlueSky (bs.traf.cd).
+        Renvoie (perte_de_separation, conflits_predits) ou None si la CD est OFF
+        (=> repli geometrique _analyze).
+        - lospairs : avions deja dans la zone protegee (vol trop proche) ;
+        - confpairs : conflit predit (CPA sous la separation) dans l'horizon.
+
+        NB : on s'appuie sur self._cd_on (positionne par _enable_cd) plutot que
+        sur type(cd).__name__ : bs().traf.cd est un Proxy (ReplaceableSingleton),
+        dont le nom de type ne vaut jamais 'ConflictDetection' -> l'ancien test
+        ne detectait jamais la CD desactivee et rendait le repli inatteignable."""
+        if not self._cd_on:                              # CD non activee => repli
+            return None
+        try:
+            cd = bsk.bs().traf.cd
+        except Exception:
+            return None
+        try:
+            from bluesky.tools.aero import nm as _NM
+        except Exception:
+            _NM = 1852.0
+        los_sets = {frozenset(p) for p in cd.lospairs if len(set(p)) == 2}
+        conf_sets = {frozenset(p) for p in cd.confpairs if len(set(p)) == 2}
+        info = {}
+        cp, tc, dca = list(cd.confpairs), cd.tcpa, cd.dcpa
+        for k, pr in enumerate(cp):
+            key = frozenset(pr)
+            if len(key) != 2:
+                continue
+            t = float(tc[k]) if k < len(tc) else 0.0
+            d = float(dca[k]) / _NM if k < len(dca) else 0.0
+            if key not in info or t < info[key][0]:
+                info[key] = (t, d)
+        current = [sorted(p) for p in los_sets]
+        predicted = []
+        for key in conf_sets:
+            if key in los_sets:
+                continue
+            t, d = info.get(key, (0.0, 0.0))
+            predicted.append({"pair": sorted(key), "t": int(round(t)), "d": round(d, 1)})
+        return current, predicted
+
+    @staticmethod
+    def _vel_nm_s(a):
+        """Ground velocity (NM/s); heading is only a legacy-data fallback."""
+        v = a["gs"] / 3600.0
+        h = math.radians(a.get("trk", a["hdg"]))
+        return v * math.sin(h), v * math.cos(h)        # x=est, y=nord
+
+    @classmethod
+    def _analyze(cls, acs):
+        """Renvoie (perte_de_separation_maintenant, conflits_predits).
+        - perte_de_separation : paires deja a < 5 NM et < 1000 ft ;
+        - conflit predit : point de rapprochement le plus proche (CPA) sous 5 NM
+          dans les 2 min, sur des trajectoires extrapolees lineairement."""
+        current, predicted = [], []
+        for i in range(len(acs)):
+            for j in range(i + 1, len(acs)):
+                a, b = acs[i], acs[j]
+                dz = a["alt_ft"] - b["alt_ft"]
+                vz = (a.get("vs_fpm", 0) - b.get("vs_fpm", 0)) / 60.0
+                dx, dy = a["x"] - b["x"], a["y"] - b["y"]
+                if math.hypot(dx, dy) < SEP_NM and abs(dz) < SEP_FT:
+                    current.append([a["id"], b["id"]])
+                    continue
+                avx, avy = cls._vel_nm_s(a)
+                bvx, bvy = cls._vel_nm_s(b)
+                rvx, rvy = avx - bvx, avy - bvy
+                vv = rvx * rvx + rvy * rvy
+                # Intersect the open horizontal/vertical loss-of-separation
+                # intervals with the lookahead. Looking only at current
+                # altitude or at a CPA inside the horizon misses real alerts.
+                lo, hi = 0.0, LOOKAHEAD_S
+                if abs(vz) < 1e-9:
+                    if abs(dz) >= SEP_FT:
+                        continue
+                else:
+                    z1, z2 = sorted(((-SEP_FT - dz) / vz, (SEP_FT - dz) / vz))
+                    lo, hi = max(lo, z1), min(hi, z2)
+                dot = dx * rvx + dy * rvy
+                if vv < 1e-9:
+                    if math.hypot(dx, dy) >= SEP_NM:
+                        continue
+                    cpa = lo
+                else:
+                    disc = dot * dot - vv * (dx * dx + dy * dy - SEP_NM * SEP_NM)
+                    if disc <= 0:
+                        continue
+                    root = math.sqrt(disc)
+                    lo, hi = max(lo, (-dot - root) / vv), min(hi, (-dot + root) / vv)
+                    cpa = -dot / vv
+                if lo >= hi:
+                    continue
+                t = max(lo, min(hi, cpa))
+                dcpa = math.hypot(dx + rvx * t, dy + rvy * t)
+                predicted.append({"pair": [a["id"], b["id"]],
+                                  "t": int(round(t)), "d": round(dcpa, 1)})
+        return current, predicted
+
+    def _compute_nav(self):
+        if self.airport:
+            return self.airport.nav()
+        import numpy as np
+        nav = bsk.bs().navdb
+        wpts, apts = [], []
+        if getattr(nav, "wplat", None) is not None:
+            wplat, wplon, wpid = np.asarray(nav.wplat), np.asarray(nav.wplon), list(nav.wpid)
+            m = (np.abs(wplat - CLAT) < 1.0) & (np.abs(wplon - CLON) < 1.5)
+            seen = set()
+            for i in np.where(m)[0]:
+                nm = str(wpid[i])
+                if len(nm) == 5 and nm.isalpha() and nm not in seen:
+                    seen.add(nm)
+                    x, y = self.to_nm(float(wplat[i]), float(wplon[i]))
+                    wpts.append({"x": round(x, 2), "y": round(y, 2), "name": nm})
+                if len(wpts) >= 26:
+                    break
+        if getattr(nav, "aptlat", None) is not None:
+            aptlat, aptlon, aptid = np.asarray(nav.aptlat), np.asarray(nav.aptlon), list(nav.aptid)
+            m = (np.abs(aptlat - CLAT) < 0.9) & (np.abs(aptlon - CLON) < 1.3)
+            for i in np.where(m)[0][:8]:
+                x, y = self.to_nm(float(aptlat[i]), float(aptlon[i]))
+                apts.append({"x": round(x, 2), "y": round(y, 2), "name": str(aptid[i])})
+        routes = set()
+        P = [(w["x"], w["y"]) for w in wpts]
+        for i, (xi, yi) in enumerate(P):
+            d = sorted(range(len(P)), key=lambda j: (P[j][0] - xi) ** 2 + (P[j][1] - yi) ** 2)
+            for j in d[1:3]:
+                if (P[j][0] - xi) ** 2 + (P[j][1] - yi) ** 2 < 45 ** 2:
+                    routes.add(tuple(sorted((i, j))))
+        return {"waypoints": wpts, "airports": apts, "routes": [list(r) for r in routes],
+                "fixes": self._sector_fixes, "sector": sector_polygon(),
+                "range_nm": RANGE_NM, "center": [CLAT, CLON]}

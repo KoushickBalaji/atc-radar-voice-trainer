@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "icao": "VOSM",
+  "reviewed": true,
+  "notes": [
+    "Training airspace membership only; not permission to enter or an operational jurisdiction model.",
+    "Extracted from official AAI AIP AD 2.17 and ENR 2.1 publications.",
+    "Pressure altitude is not supplied by the current simulation adapter; FL boundaries remain uncertain where relevant."
+  ],
+  "areas": [
+    {
+      "id": "ctr",
+      "name": "Salem CTR",
+      "kind": "CTR",
+      "classification": "D",
+      "hours": "HO",
+      "lower": {
+        "reference": "SFC"
+      },
+      "upper": {
+        "reference": "FL",
+        "value": 95
+      },
+      "excludes": [],
+      "source": {
+        "file": "Airport Layouts/Salem/AD 2.1VOSM.pdf",
+        "page": 14,
+        "section": "AD 2.17",
+        "effective_date": "2026-10-29",
+        "evidence": "AD 2.17: 17 AIR TRAFFIC SERVICE AIRSPACE 1 Airspace designation, geographical coordinates and lateral limits CTR: 1) ATZ: Circular area centered on 114652N 0780351E within a 4NM radius. Upper Limit : 4000 FT AMSL Class D airspace 2) CTR: Circular area of radius 15 NM centered at 114652N 0780351E Upper Limit : FL 95 Class D Airspace Frequency: HAL Bengaluru APP: 127.7 MHz SALEM TWR: 122.4 MHz,118.850 MHz (StandBy) | Vertical: FL 95 | Class: D | Hours: HO"
+      },
+      "shape": "circle",
+      "center": [
+        11.781111111111112,
+        78.06416666666667
+      ],
+      "radius_nm": 4.0
+    }
+  ]
+}
