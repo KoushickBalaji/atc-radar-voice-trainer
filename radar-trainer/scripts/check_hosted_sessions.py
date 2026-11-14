@@ -112,14 +112,16 @@ async def run(seconds, users=2):
                 assert [seen[i]['traffic']['id'] for i in range(users)] == ['level-changeovers-23'] + ['routine-23']*(users-1)
                 await client.delete('/api/session',headers={'X-ATC-Session':tokens[0]})
                 assert (await client.get('/api/state',headers={'X-ATC-Session':tokens[0]})).status_code == 410
-                await api(tokens[1], 'sim/pause', {})
+                if users > 1:
+                    await api(tokens[1], 'sim/pause', {})
                 replacement = await client.post('/api/session')
                 replacement.raise_for_status()
                 fresh = replacement.json()['token']
                 assert fresh not in tokens
                 tokens.append(fresh)
                 assert (await api(fresh,'state')).get('traffic') is None, 'Replacement inherited old traffic'
-                assert (await api(tokens[1],'state'))['traffic']['id'] == 'routine-23'
+                if users > 1:
+                    assert (await api(tokens[1],'state'))['traffic']['id'] == 'routine-23'
                 for r in readers:
                     r.cancel()
                 await asyncio.gather(*readers,return_exceptions=True)
@@ -129,7 +131,8 @@ async def run(seconds, users=2):
                     mean_cpu_percent_one_core=round(sum(cpu)/len(cpu),1), frames=frames,
                     checks=['separate processes','visitor over capacity rejected','missing/invalid tokens rejected',
                             'cross-origin allocation rejected','private routes blocked','independent scenario/speed/state streams',
-                            'no stream loss during soak','deleted token invalidated','fresh replacement','other session survives'],
+                            'no stream loss during soak','deleted token invalidated','fresh replacement']
+                           + (['other session survives'] if users > 1 else []),
                     limitations='Local OS, offline providers, not Linux container or hosted capacity proof.')
                 return report
             finally:
@@ -150,7 +153,7 @@ async def run(seconds, users=2):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--seconds',type=int,default=60)
-    parser.add_argument('--users',type=int,choices=range(2,6),default=2)
+    parser.add_argument('--users',type=int,choices=range(1,6),default=2)
     parser.add_argument('--output',type=Path)
     args = parser.parse_args()
     result = asyncio.run(run(args.seconds,args.users))

@@ -1,13 +1,13 @@
 # radar ATC feedback deployment
 
-Implemented 12 November 2026. **Default: two concurrent exercises.** No service has been provisioned, no code pushed, and no paid deployment made by this task. Mobile work is deferred.
+Render demo configuration: **one concurrent exercise on the Free instance**. The launcher default remains two for local development; the Blueprint explicitly sets `ATC_MAX_SESSIONS=1`. Mobile work is deferred.
 
 ## What is ready
 
 - One public gateway serves the built frontend and routes API/WebSocket traffic.
 - Each visitor gets a separate Python process containing the existing FastAPI/BlueSky simulator, radio state and private working directory. No aircraft/procedure configuration was changed.
 - A random capability lives in the browser tab's memory, not cookies or local storage. Two tabs get separate sessions. HTTP sends the capability in `X-ATC-Session`; WebSocket sends it as a subprotocol, not a URL query parameter. Worker ports bind to loopback and require a separate private key.
-- Slots are reserved before process startup. A third visitor gets a capacity message and Retry-After. Slots are released only after process-tree termination.
+- Slots are reserved before process startup. A visitor above the configured limit gets a capacity message and Retry-After (the second visitor on Render). Slots are released only after process-tree termination.
 - The gateway waits for actual initialized aircraft before reporting ready. Static navigation cache is copied into each private work directory to reduce startup time; no writable simulation state is shared.
 - Leaving deletes the worker. A dropped radar connection retires its capability permanently; the UI explains that the exercise ended and returns to the briefing. Enter simulator creates a fresh session. Queued/playing radio audio and microphone capture are cleaned up on exit.
 - Crashed/retired workers are reaped every two seconds. An allocated worker with no radar connection is reclaimed after 90 seconds without requests. There is no arbitrary time limit on a connected exercise.
@@ -49,18 +49,18 @@ The production frontend build and all 33 frontend unit tests passed. The backend
 - `Dockerfile`: multi-stage Node frontend build plus CPU-only Python runtime, with prebuilt navigation cache and an unprivileged runtime user.
 - `.dockerignore`: excludes local secrets, virtual environments and generated output from the image context.
 - `requirements-hosted.txt`: hosting dependencies, including the existing BlueSky version.
-- `render.yaml`: one Singapore web service, candidate **1 CPU / 2 GB** compute, two sessions, `/healthz`, and redeploy after GitHub checks pass.
-- Repository-root `.github/workflows/radar-preview.yml`: builds the Linux image and runs the two-user real-engine proof in a container limited to 1 CPU and 2 GB. It does not deploy or require provider credentials.
+- `render.yaml`: one Singapore web service, **Free** compute, one session, `/healthz`, and redeploy after GitHub checks pass.
+- Repository-root `.github/workflows/radar-preview.yml`: builds the Linux image and runs the one-user real-engine proof in a container limited to 0.1 CPU and 512 MB with swap disabled. It does not deploy or require provider credentials.
 
 The blueprint paths target the existing repository layout with `radar-trainer/` below the Git root. If publishing this folder as its own repository, change `dockerfilePath` to `./Dockerfile`, `dockerContext` to `.`, and relocate/adapt the workflow paths.
 
 ## Before creating the Render service
 
-1. Commit only the reviewed intended changes and push to GitHub. There are existing unrelated local edits; this task has not committed them.
-2. Run the supplied Linux container check successfully. Docker and a Linux distribution are unavailable on this workstation, so this check has been prepared but **not run** here. Do not treat the Dockerfile as a verified Linux deployment yet.
-3. Confirm the compute plan and cost. The blueprint's `1c-2g` is a candidate, not a purchase. The 512 MB free/small plan is below the measured two-user footprint. If the constrained Linux test fails, reduce to one session or revisit hosting size before paying.
-4. Connect the repository to Render, select `radar-trainer/render.yaml`, and supply `OPENAI_API_KEY` as a secret. Keep the replica count at one. Do not add the key to GitHub source or Docker build arguments.
-5. Verify real microphone recording and pilot audio over HTTPS from two browsers, including a full exercise, a forced disconnect, and one visitor resetting while the other continues. Then share the URL with SMEs.
+1. Push the reviewed deployment changes and wait for the Linux container check to pass. This workstation has no Docker, so the constrained check runs in GitHub Actions.
+2. Connect the repository to Render and select Blueprint path `radar-trainer/render.yaml` on `main`.
+3. Confirm the web service shows **Free**, one instance, and `ATC_MAX_SESSIONS=1`. Supply `OPENAI_API_KEY` as a secret; voice provider usage is separate from free hosting.
+4. Deploy and verify microphone recording and pilot audio over HTTPS through a full exercise. Open another browser while the first exercise is active: it should show capacity reached. Exit the first exercise and retry in the second browser.
+5. Free services sleep after 15 minutes without inbound traffic and take time to wake. A restart or deployment ends the current exercise. Passing the offline container check does not establish peak memory with real voice providers.
 
 Future pushes to the linked branch can redeploy after CI passes. Deployments end active exercises; avoid pushing during scheduled feedback sessions. No database, saved sessions, login flow, autoscaling or mobile redesign is required for this release.
 

@@ -1,4 +1,4 @@
-# PREPARATION ONLY. Review plan after measurement; creating this service incurs charges.
+# Free demo hosting, limited to one concurrent exercise.
 # For the D:\ATC GitHub backup, select radar-trainer/render.yaml in Blueprint setup.
 services:
   - type: web
@@ -6,7 +6,7 @@ services:
     runtime: docker
     dockerfilePath: ./radar-trainer/Dockerfile
     dockerContext: ./radar-trainer
-    plan: 1c-2g
+    plan: free
     region: singapore
     numInstances: 1
     healthCheckPath: /healthz
@@ -17,4 +17,4 @@ services:
       - key: ATC_APP_HOST
         value: 0.0.0.0
       - key: ATC_MAX_SESSIONS
-        value: "2"
+        value: "1"
