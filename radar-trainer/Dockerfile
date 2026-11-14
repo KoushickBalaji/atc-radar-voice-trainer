@@ -14,7 +14,8 @@ WORKDIR /app
 COPY requirements-hosted.txt ./
 RUN pip install --no-cache-dir -r requirements-hosted.txt
 # Bake static navigation data once; each visitor still gets its own writable copy.
-RUN python -c "import bluesky; bluesky.init(mode='sim', detached=True, workdir='/opt/atc-nav')"
+RUN mkdir -p /opt/atc-nav \
+    && python -c "import bluesky; bluesky.init(mode='sim', detached=True, workdir='/opt/atc-nav')"
 ENV ATC_NAV_CACHE=/opt/atc-nav/cache
 COPY src/ ./src/
 COPY data/ ./data/
