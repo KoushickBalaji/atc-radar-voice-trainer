@@ -8,7 +8,7 @@ Double-click `D:\ATC\Start-Radar-Trainer.cmd`, keep its window open, and visit h
 
 Choose an airport from the Airport selector (124 available; 73 have modeled ILS). Coimbatore (VOCB) is the worked example below. Switching airports resets and pauses the exercise; Reset keeps the selected airport. Click **Start / Resume** and **Enable microphone**. Once **Hold to talk** appears, hold **V** or the mic button while speaking; release to send. The radio keeps the last 200 ms of mic input locally so a word starting at the keypress is included. No audio is uploaded while idle. **Switch mic off** or leave the tab to release the microphone. Use headphones. Wait for processing to finish before the next transmission. **Reset exercise** returns to the initial aircraft and clears the display.
 
-The demo sends the same recording to two separate transcription calls. The first gets spelling hints from the trainer’s operator, phonetic alphabet and airport vocabulary. The second gets the radio context without the spelling list. Neither gets flight numbers, selected aircraft, expected values or the other transcript. Both transcripts must support the addressed aircraft and agree on the interpreted order before the simulator acts.
+The demo snapshots live simulator traffic when a recording reaches the voice handler. One transcription call receives spelling hints: current aircraft IDs and their spoken forms, operator names represented in that traffic, phonetic alphabet terms, and airport/fix vocabulary. The list refreshes for each transmission and is independent of screen zoom or aircraft selection. Hints are optional recognition context; an unlisted callsign must remain unlisted, and flight-number digits must not be changed to match the roster. Expected clearances and target values are excluded. The transcript must support the addressed aircraft and pass local command validation before the simulator acts.
 
 The sidebar generates instructions for the selected airport. For Coimbatore, try these separately:
 
@@ -32,9 +32,9 @@ This slice implements a bounded approach-control sequence: explicit spoken ILS c
 
 ## Recognition and guidance
 
-Each recording has two independent transcription/interpretation passes. If parsed commands disagree, identify an unknown aircraft, or contain unsupported actions, no command is sent. Silence is rejected before calling OpenAI. Concurrent transmissions are refused. Two agreeing passes can still share a recognition error; this is not a validated human speech benchmark.
+Each recording has one transcription call with live recognition context, followed by one interpretation step for a nonempty transcript. If parsed commands identify an unknown aircraft, contain unsupported actions, or fail local validation, no command is sent. Audio failing the signal-level check is rejected before calling OpenAI; an empty transcript is rejected without interpretation. Concurrent transmissions are refused. Recognition errors remain possible; this is not a validated human speech benchmark.
 
-The prompt includes curated AAI manual excerpts from the parent workspace, and preserves the raw transcripts separately from parsed numeric command values. It does not provide the expected sample answer to the recognizer. Turn direction is checked against BlueSky's shortest-turn behavior; unsupported forced long turns are rejected. Pilot readback preserves left/right and distinguishes feet from flight levels. The last 20 recordings and both interpretations remain in server memory for investigation, and are cleared on scenario reset/restart. User recordings are not automatically written to disk.
+The command interpreter uses one English capability schema with strict structured output, without the legacy French reference cards, regex hints or sector-graph prompt. Original transcripts, proposals and unresolved wording are retained separately from execution. Trainer feedback explains instruction inconsistencies, exercise restrictions and simulator limitations; it never executes its suggested correction. Existing procedure checks and pilot readbacks remain in place. The last 20 recordings, their recognition context, transcripts and interpretations remain in server memory for investigation, and are cleared on scenario reset/restart. User recordings are not automatically written to disk. See [the boundary design and archive](docs/COMMAND_BOUNDARY.md).
 
 ## Verification
 
@@ -79,7 +79,7 @@ Training settings (not official minima or aircraft operating limits):
 - Handoff readiness: at least 10 simulated seconds tracking both beams, within 0.12 NM laterally and 75 ft vertically, aligned within 5 degrees, descending, and at 160–180 kt. The simulation pauses before landing. A valid spoken tower handoff then completes the exercise.
 - Passing inside 3 NM without completion, going below 3,000 ft before glide-slope capture, or losing localizer tracking pauses the exercise as unsuccessful. Reset clears capture history and restores the aircraft.
 
-This is a simplified guidance controller using BlueSky heading/altitude/vertical-speed commands, not a radio-signal/autopilot certification model. The speed window and capture tolerances are chosen for this learning task, not claimed to be specified by the chart. The objective measures a successful ILS setup, not complete ATC competence or landing clearance. Pilot approach mode requires a spoken clearance naming the selected ILS runway. Clearance and handoff must each be separate, immediate transmissions.
+This is a simplified guidance controller using BlueSky heading/altitude/vertical-speed commands, not a radio-signal/autopilot certification model. The speed window and capture tolerances are chosen for this learning task, not claimed to be specified by the chart. The objective measures a successful ILS setup, not complete ATC competence or landing clearance. The pilot accepts the named ILS clearance below 5,000 ft AMSL or with an active descent assignment below that level. At localizer capture the pilot requests landing clearance. A runway-specific “cleared to land” lets the aircraft continue to the radar exercise endpoint. At Coimbatore, absent landing clearance or tower handoff, the existing 6 NM reminder and 2 NM go-around apply. During the published missed approach or its hold, a new heading releases the aircraft for vectors and a fresh ILS clearance. Clearance and handoff must each be separate, immediate transmissions.
 
 The updated paid integration test in `scripts/verify_openai_demo.py` uses all five voice examples above, accelerates simulation for verification only, asserts the success pause, and resets to normal speed afterward. Browser use stays at normal speed; expect several minutes from vectoring to capture.
 
@@ -356,7 +356,7 @@ operational frequency. Published hours, backup activation and multi-frequency
 assignments are not simulated. `scripts/extract_tower_channels.py` regenerates the
 file from cached AD 2.18 text without changing airport geometry or SMAC data.
 
-New procedure commands use the same OpenAI endpoint and two independent ASR passes.
+New procedure commands use the same OpenAI endpoint and a single transcription call with live recognition context.
 Their semantic results must agree before any action. Interpretation has no selected
 runway/frequency context; the existing callsign normalizer is reused. The simulator
 thread validates runway, channel, callsign and exercise stage before acknowledgement.

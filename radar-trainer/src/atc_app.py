@@ -46,7 +46,6 @@ import readback as RB
 import simple_demo
 import airport_profiles
 import airport_weather
-from concurrent.futures import ThreadPoolExecutor
 from collections import deque
 import hashlib
 import time
@@ -81,10 +80,10 @@ MGR = WSManager()
 async def _voice_pilot_call(call):
     voice = voices.voice_for_callsign(call['callsign'], AI.tts_pool)
     try:
-        wav = await asyncio.to_thread(AI.tts, call['text'], voice)
+        wav = await asyncio.to_thread(AI.tts, call['text'], voice, clear=True)
         event = dict(type='pilot_audio', id=call['id'], audio_b64=base64.b64encode(wav).decode('ascii'))
     except ai_client.ProviderError as exc:
-        event = dict(type='error', provider='tts', message=str(exc))
+        event = dict(type='pilot_audio', id=call['id'], tts_error=str(exc))
     snap = SIM.snapshot()
     if snap.get('pilot_call') == call or call in snap.get('traffic_calls', []):
         emit(event)
@@ -154,60 +153,63 @@ async def lifespan(app):
 app = FastAPI(title="ATC training app", lifespan=lifespan)
 
 
-# --- coeur : interpretation -> execution -> readback -------------------------
-_VERB_DESC = re.compile(r"\b(descend|descending|descent|descende[zr]|descendre)\b", re.I)
-_VERB_CLIMB = re.compile(r"\b(climb|climbing|monte[zr]|monter)\b", re.I)
-
-
-def _check_alt_coherence(text, orders, lines, rejected, cur_alt):
-    """Garde-fou semantique : si la phrase dit 'descend' (sans 'climb'), un ordre
-    ALT au-dessus du niveau actuel est incoherent (transcription tronquee ou
-    hallucination du LLM) -> rejete plutot qu'execute. Et symetriquement.
-
-    orders et lines sont PARALLELES (contrat AI.interpret, preserve par le
-    filtre indicatif inconnu) : on retire l'ordre ET sa ligne par position,
-    jamais par reconstruction de chaine (le type brut de o['value'] rendrait
-    la comparaison fragile : 32000.0 != '32000')."""
-    want_desc = _VERB_DESC.search(text) and not _VERB_CLIMB.search(text)
-    want_climb = _VERB_CLIMB.search(text) and not _VERB_DESC.search(text)
-    if not (want_desc or want_climb) or len(orders) != len(lines):
-        return orders, lines
-    kept, kept_lines = [], []
-    for o, ln in zip(orders, lines):
-        cur = cur_alt.get(o.get("callsign"))
-        if o.get("action") == "ALT" and cur is not None:
-            bad_up = want_desc and o["value"] > cur + 200
-            bad_down = want_climb and o["value"] < cur - 200
-            if bad_up or bad_down:
-                sens = "« descend »" if bad_up else "« climb »"
-                rejected.append(f"incohérence : {sens} entendu mais FL{int(o['value'] / 100):03d} "
-                                f"est {'au-dessus' if bad_up else 'au-dessous'} du niveau actuel "
-                                f"FL{int(cur / 100):03d} - ordre non exécuté")
-                continue
-        kept.append(o)
-        kept_lines.append(ln)
-    return kept, kept_lines
-
-
+# Command interpretation, trainer assessment, and simulator execution are separate.
 def process_instruction(text, interpreted=None):
+    from command_feedback import assess_instruction, attach_feedback
+    text = (text or '').strip()
+    result = interpreted if interpreted is not None else AI.interpret(text)
+    snapshot = SIM.snapshot()
+    feedback = assess_instruction(text, result, snapshot)
+    result = dict(result, feedback=feedback)
+    if any(item['blocking'] for item in feedback):
+        out = dict(transcript=text, orders=[], trafscript=[], readback_text='',
+                   rejected=[item['message'] for item in feedback if item['blocking']])
+    else:
+        out = _execute_instruction(text, result)
+    addresses = simple_demo.spoken_callsigns(text, snapshot['aircraft'])
+    out['addressed_callsigns'] = sorted(addresses) if len(addresses) == 1 else []
+    return attach_feedback(out, result, snapshot)
+
+
+def _execute_instruction(text, interpreted):
+    """Adapt assessed commands to existing simulator and exercise policies."""
     text = (text or "").strip()
     if not text:
         return {"transcript": "", "orders": [], "trafscript": [], "rejected": [], "readback_text": ""}
-    res = interpreted if interpreted is not None else AI.interpret(text)
+    res = interpreted
     orders, lines = res.get("orders", []), res.get("trafscript", [])
     rejected = list(res.get("rejected", []))
 
-    # Realisme radio : un indicatif absent du radar ne repond pas (et la
-    # commande n'est pas envoyee au simulateur).
+    # Recheck current simulation state immediately before dispatch.
     snap = SIM.snapshot()
+    from command_interpreter import CAPABILITIES
+    if not simple_demo.ENABLED and any(CAPABILITIES[o['action']].dispatch != 'stack' for o in orders):
+        return dict(transcript=text, orders=[], trafscript=[], readback_text='',
+                    rejected=['This procedure requires the airport training mode. No command was sent.'])
+    if any(o['action'] == 'ADDWPT' for o in orders):
+        nav = SIM.nav_static()
+        fixes = {point['name'] for group in ('fixes', 'waypoints', 'navaids') for point in nav.get(group, [])}
+        if any(o['action'] == 'ADDWPT' and o['wpt'] not in fixes for o in orders):
+            return dict(transcript=text, orders=[], trafscript=[], readback_text='',
+                        rejected=['The route waypoint is not in the active simulator navigation data. Check its identifier.'])
     if simple_demo.ENABLED:
         problem = simple_demo.validate(text, orders, snap['aircraft'], SIM.airport)
         if problem or rejected:
             return {'transcript': text, 'orders': [], 'trafscript': [],
                     'rejected': [problem] if problem else rejected, 'readback_text': ''}
         import approach_radio
+        if orders and orders[0].get('action') == 'REPORT':
+            ac = next(a for a in snap['aircraft'] if a['id'] == orders[0]['callsign'])
+            return dict(transcript=text, orders=orders, trafscript=[], rejected=[],
+                        readback_text=RB.pilot_report(ac, orders[0]['fields']))
         if orders and orders[0].get('action') in approach_radio.ACTIONS:
+            from ils_trainer import TOO_HIGH
+            from readback import callsign_telephony
             problem = SIM.procedure_command(orders[0])
+            if problem == TOO_HIGH:
+                return dict(transcript=text, orders=[], trafscript=[], rejected=[problem],
+                            pilot_callsign=orders[0]['callsign'],
+                            readback_text=f"{callsign_telephony(orders[0]['callsign'])}, {problem}")
             return dict(transcript=text, orders=[] if problem else orders, trafscript=[],
                         rejected=[problem] if problem else [],
                         readback_text='' if problem else approach_radio.readback(orders[0]))
@@ -229,15 +231,18 @@ def process_instruction(text, interpreted=None):
     unknown = sorted({o.get("callsign") for o in orders
                       if o.get("callsign") and o["callsign"] not in known})
     if unknown:
-        rejected += [f"{cs} : indicatif inconnu au radar (pas de réponse)" for cs in unknown]
+        rejected += [f"{cs}: callsign not on this radar; no command sent." for cs in unknown]
         orders = [o for o in orders if o.get("callsign") in known]
         lines = [ln for ln in lines if len(ln.split()) > 1 and ln.split()[1] in known]
 
     cur_alt = {a["id"]: a["alt_ft"] for a in snap["aircraft"]}
-    orders, lines = _check_alt_coherence(text, orders, lines, rejected, cur_alt)
 
     for line in lines:
-        SIM.enqueue(line)
+        if simple_demo.ENABLED and line.startswith('ALT '):
+            reference = 'flight_level' if re.search(r'\bflight\s+level\b|\bFL\s*\d', text, re.I) else 'altitude'
+            SIM.enqueue(line, level_reference=reference)
+        else:
+            SIM.enqueue(line)
     if EX.active:
         EX.note_command(text, len(lines), len(rejected))
     rb = RB.readback_text(orders, cur_alt)
@@ -256,10 +261,10 @@ def _synthesize_readback(out):
     out["tts_error"] = None
     if not out["readback_text"]:
         return out
-    cs = out["orders"][0].get("callsign", "") if out["orders"] else ""
+    cs = out["orders"][0].get("callsign", "") if out["orders"] else out.get("pilot_callsign", "")
     voice = voices.voice_for_callsign(cs, AI.tts_pool)
     try:
-        out["audio_b64"] = base64.b64encode(AI.tts(out["readback_text"], voice)).decode("ascii")
+        out["audio_b64"] = base64.b64encode(AI.tts(out["readback_text"], voice, clear=True)).decode("ascii")
     except ai_client.ProviderError as e:
         out["tts_error"] = str(e)
         emit({"type": "error", "provider": "tts", "message": str(e)})
@@ -267,8 +272,7 @@ def _synthesize_readback(out):
 
 
 def _handle_instruction(text, interpreted=None):
-    """Chemin commun /api/command et /api/voice : interpretation (API LLM) ->
-    execution sim -> readback texte + AUDIO. Erreur LLM -> 502 explicite."""
+    """Shared voice/text boundary: assessment, execution, feedback and pilot audio."""
     try:
         out = process_instruction(text, interpreted)
     except ai_client.ProviderError as e:
@@ -278,7 +282,11 @@ def _handle_instruction(text, interpreted=None):
     emit({"type": "exchange", "transcript": out["transcript"], "orders": out["orders"],
           "trafscript": out["trafscript"], "rejected": out["rejected"],
           "readback": out["readback_text"], "audio_b64": out["audio_b64"],
-          "tts_error": out["tts_error"]})
+          "tts_error": out["tts_error"], "feedback": out.get("feedback", []),
+          "proposed_orders": out.get("proposed_orders", []),
+          "proposals": out.get("proposals", []),
+          "execution_status": out.get("execution_status"),
+          "addressed_callsigns": out.get("addressed_callsigns", [])})
     return out
 
 
@@ -576,7 +584,8 @@ def voice(file: UploadFile = File(...)):
         return demo_voice(_read_upload(file))
     wav = _read_upload(file)
     try:
-        text = AI.asr(wav, ai_client.radio_keywords())
+        keywords = ai_client.radio_keywords(SIM.airport, SIM.snapshot()['aircraft'])
+        text = AI.asr(wav, keywords)
     except ai_client.ProviderError as e:
         emit({"type": "error", "provider": "stt", "message": str(e)})
         raise HTTPException(502, str(e)) from e
@@ -588,33 +597,20 @@ def demo_voice(wav):
     if not _radio_lock.acquire(blocking=False):
         raise HTTPException(409, 'Another transmission is being processed.')
     try:
-        import io
         import wave
         try:
             simple_demo.validate_audio(wav)
         except (wave.Error, EOFError, ValueError) as exc:
             raise HTTPException(400, str(exc)) from exc
         started = time.monotonic()
-        with ThreadPoolExecutor(max_workers=2) as pool:
-            first = pool.submit(AI.asr, wav, ai_client.radio_keywords(SIM.airport))
-            second = pool.submit(AI.asr, wav)
-            texts = [first.result(), second.result()]
-            interpretations = list(pool.map(AI.interpret, texts))
+        # Freeze the traffic vocabulary once for this transmission.
+        keywords = ai_client.radio_keywords(SIM.airport, SIM.snapshot()['aircraft'])
+        text = AI.asr(wav, keywords)
+        result = AI.interpret(text) if text.strip() else {'orders': [], 'rejected': []}
         _voice_evidence.append({'audio': wav, 'sha256': hashlib.sha256(wav).hexdigest(),
-                                'transcripts': texts, 'interpretations': interpretations})
-        # Compare semantic observations, never choose the one matching the scenario.
-        def signature(result):
-            return json.dumps(result.get('orders', []), sort_keys=True)
-        problems = [simple_demo.validate(t, r.get('orders', []), SIM.snapshot()['aircraft'], SIM.airport)
-                    for t, r in zip(texts, interpretations)]
-        if (signature(interpretations[0]) != signature(interpretations[1]) or
-                any(r.get('rejected') for r in interpretations) or any(problems)):
-            reason = next((p for p in problems if p), None) or 'Recognition disagreed. No action taken; transmit again if you wish.'
-            out = {'transcript': texts[0], 'orders': [], 'trafscript': [], 'rejected': [reason],
-                   'readback_text': '', 'audio_b64': None, 'tts_error': None}
-            emit({'type': 'exchange', **out, 'readback': ''})
-        else:
-            out = _handle_instruction(texts[0], interpretations[0])
+                                'recognition_keywords': keywords,
+                                'transcripts': [text], 'interpretations': [result]})
+        out = _handle_instruction(text, result)
         out['elapsed_s'] = round(time.monotonic() - started, 2)
         return out
     except ai_client.ProviderError as exc:

@@ -6,11 +6,12 @@ import AirportInfo from './components/AirportInfo';
 import WeatherStrip from './components/WeatherStrip';
 import { useSim } from './useSim';
 import { api } from './api';
+import { sessionFetch as fetch } from './session';
 import { DEFAULT_RADAR_OPTIONS } from './radar';
 import { mapMarkers, hiddenMarkerIds } from './mapMarkers';
 import type { NavData } from './types';
 
-export default function SimpleApp() {
+export default function SimpleApp({ onExit }: { onExit?: () => void } = {}) {
   const hub = useSim();
   const [nav, setNav] = useState<NavData>({ waypoints: [], airports: [], fixes: [], routes: [], sector: [], range_nm: 25, center: [0, 0] });
   const [airports, setAirports] = useState<{icao: string; name: string; mode?: string}[]>([]);
@@ -59,9 +60,9 @@ export default function SimpleApp() {
   const connected = hub.connection === 'connected' && hub.state.sim_alive !== false;
   return <div className="flex h-full min-h-dvh flex-col">
     <header className="flex flex-wrap items-center justify-between gap-3 border-b border-edge bg-panel px-5 py-4">
-      <div><h1 className="text-lg font-semibold">Voice radar trainer</h1><p className="text-sm text-mut">{profile?.name ?? 'Loading airport'} ({profile?.icao ?? '…'}) <button type="button" className="airport-info-trigger" aria-label="Airport and exercise information" aria-haspopup="dialog" onClick={() => setInfoOpen(true)}><Info size={16} aria-hidden="true" /></button> · {traffic ? traffic.title : 'one aircraft'} · OpenAI radio</p></div>
+      <div>{onExit && <button className="text-xs underline" onClick={onExit}>← Scenario selection</button>}<h1 className="text-lg font-semibold">radar ATC</h1><p className="text-sm text-mut">{profile?.name ?? 'Loading airport'} ({profile?.icao ?? '…'}) <button type="button" className="airport-info-trigger" aria-label="Airport and exercise information" aria-haspopup="dialog" onClick={() => setInfoOpen(true)}><Info size={16} aria-hidden="true" /></button> · {traffic ? traffic.title : 'one aircraft'} · OpenAI radio</p></div>
       <div className="flex items-center gap-3 text-sm">
-        <label className="text-xs">Airport
+        {!onExit && <label className="text-xs">Airport
           <select aria-label="Airport" className="ml-2 rounded border border-edge bg-panel p-2" value={profile?.icao ?? ''} disabled={!profile || working || !connected}
             onChange={e => { const icao = e.target.value; void act(async () => {
               const r = await fetch('/api/demo/airport', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({icao})});
@@ -71,8 +72,8 @@ export default function SimpleApp() {
             {!profile && <option value="">Loading…</option>}
             {airports.map(a => <option key={a.icao} value={a.icao}>{a.name} ({a.icao}){a.mode === 'vectoring' ? ' · no ILS' : ''}</option>)}
           </select>
-        </label>
-        {!!profile?.scenarios?.length && <label className="text-xs">Exercise
+        </label>}
+        {!onExit && !!profile?.scenarios?.length && <label className="text-xs">Exercise
           <select aria-label="Exercise" className="ml-2 rounded border border-edge bg-panel p-2"
             value={traffic?.id ?? ''} disabled={!connected || working}
             onChange={e => { const scenario_id = e.target.value; void act(async () => {
@@ -85,7 +86,7 @@ export default function SimpleApp() {
             {profile.scenarios.map(s => <option key={s.id} value={s.id}>{s.title}</option>)}
           </select>
         </label>}
-        <span role="status">{!connected ? 'Connecting…' : traffic ? (traffic.complete ? 'Exercise complete' : (hub.state.paused ? 'Paused · ' : '') + traffic.flights.filter(f => f.phase === 'complete').length + ' / ' + traffic.flights.length + ' handed off') : ils?.phase === 'missed_finished' ? 'Missed approach complete' : ils?.phase === 'missed_fix_altitude' ? 'Review altitude at the fix' : ils?.phase === 'complete' ? 'Tower handoff complete' : ils?.phase === 'missed' ? 'Approach tracking lost' : ils?.phase === 'handoff_ready' ? 'Paused — issue tower handoff' : hub.state.paused ? 'Paused — ready for practice' : 'Simulation running'}</span>
+        <span role="status">{!connected ? 'Connecting…' : traffic ? (traffic.complete ? 'Exercise complete' : (hub.state.paused ? 'Paused · ' : '') + traffic.flights.filter(f => f.phase === 'complete').length + ' / ' + traffic.flights.length + ' complete') : ils?.phase === 'missed_finished' ? 'Missed approach complete' : ils?.phase === 'missed_fix_altitude' ? 'Review altitude at the fix' : ils?.phase === 'complete' ? 'Approach exercise complete' : ils?.phase === 'missed' ? 'Approach tracking lost' : ils?.phase === 'handoff_ready' ? 'Paused — issue tower handoff' : hub.state.paused ? 'Paused — ready for practice' : 'Simulation running'}</span>
         <button className="rounded bg-acc px-4 py-2 text-white disabled:opacity-50" disabled={!connected || working || stagePaused}
           onClick={() => void act(hub.state.paused ? api.resume : api.pause)}>{hub.state.paused ? 'Start / Resume' : 'Pause'}</button>
         <button type="button" className={`rounded border px-3 py-2 disabled:opacity-50 ${hub.state.speed > 1 ? 'border-acc bg-acc text-white' : 'border-edge'}`}
@@ -196,6 +197,9 @@ export default function SimpleApp() {
             {ils?.along_nm != null && <p className="mt-2 font-mono text-xs">To threshold {ils.along_nm} NM · off final {Math.abs(ils.cross_nm ?? 0).toFixed(2)} NM<br/>Intercept {ils.intercept_deg}° · GS error {ils.glide_error_ft} ft<br/>Stable {ils.stable_s ?? 0}/{training?.stable_seconds ?? '—'} s</p>}
             <p className="mt-2">1. Clear ILS RWY{profile.approach.runway} by voice.<br/>2. Establish localizer and glide-slope tracking.<br/>3. {handover ? `Hand over to tower on the glide slope. The pilot asks at ${handover.request_nm} NM and goes around at ${handover.go_around_nm} NM if still awaiting handover.` : 'At the training pause, hand over to tower.'}</p>
             <p className="mt-2 text-xs text-mut">Say “{profile.examples[0]?.split(',')[0]}, cleared ILS approach runway {profile.approach.runway}.” Issue clearance separately from vectors.</p>
+            <p className="mt-2 text-xs">{profile.approach.intercept_alt_ft >= 5000
+              ? 'This profile’s intercept level is above the trainer’s 5,000 ft approach-clearance limit. Use it for vectoring practice.'
+              : <>At localizer capture, respond to the pilot with “{profile.examples[0]?.split(',')[0]}, runway {profile.approach.runway}, cleared to land.”</>}</p>
             {profile.tower ? <p className="mt-2 text-xs">Tower: {profile.tower.name} · {profile.tower.frequency_mhz} MHz. At handoff, say “{profile.examples[0]?.split(',')[0]}, contact tower {profile.tower.frequency_mhz.replace('.', ' decimal ')}.”</p> : <p>No verified tower channel: this exercise ends at stable tracking.</p>}
             <p className="mt-2 text-xs text-mut">Published fix references appear where configured. NM THR markers measure horizontal distance from the threshold; they are not published fixes or DME readings. Hiding markers affects display only.</p>
           </section> : profile && <section aria-label="Vectoring practice" className="rounded border border-edge p-3 text-sm" role="status">

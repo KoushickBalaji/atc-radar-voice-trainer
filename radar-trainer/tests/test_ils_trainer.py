@@ -13,14 +13,14 @@ def aircraft(along=9, cross=.05, heading=240, alt=3200, speed=180, vs=0):
     dict(alt=5000), dict(alt=2800), dict(speed=220), dict(along=-8), dict(cross=1)])
 def test_bad_intercepts_do_not_capture(change):
     trainer = ILSTrainer()
-    trainer.clear_approach()
+    trainer.clear_approach(3200)
     trainer.update(aircraft(**change), 1)
     assert trainer.phase not in ('localizer', 'glideslope', 'complete')
 
 
 def test_capture_from_below_then_stable_descent_completes():
     trainer = ILSTrainer()
-    trainer.clear_approach()
+    trainer.clear_approach(3200)
     assert trainer.update(aircraft(), 1)
     assert trainer.phase == 'localizer'
     # At the glide path intersection the level aircraft meets GS from below.
@@ -37,7 +37,7 @@ def test_capture_from_below_then_stable_descent_completes():
 
 def test_above_glide_slope_never_captures_and_pause_does_not_score():
     trainer = ILSTrainer()
-    trainer.clear_approach()
+    trainer.clear_approach(3200)
     trainer.update(aircraft(), 0)
     assert trainer.phase == 'armed'
     trainer.update(aircraft(), 1)
@@ -48,7 +48,7 @@ def test_above_glide_slope_never_captures_and_pause_does_not_score():
 
 def test_manual_vector_overrides_guidance():
     trainer = ILSTrainer()
-    trainer.clear_approach()
+    trainer.clear_approach(3200)
     trainer.update(aircraft(), 1)
     trainer.manual_command('HDG AFR123 180')
     assert trainer.phase == 'awaiting_clearance'
@@ -65,12 +65,16 @@ def test_nav_aids_and_reference_markers_are_not_outer_middle_beacons():
 @pytest.mark.parametrize('skip_request', [False, True])
 def test_configured_final_continues_and_flies_missed_approach(skip_request):
     trainer = ILSTrainer()
+    trainer.clear_approach(3200)
+    trainer.update(aircraft(), 1)
+    capture_call = trainer.pilot_call
+    assert 'request landing clearance' in capture_call['text']
     trainer.phase = 'glideslope'
     def fly(distance, dt=1):
         return trainer.update(aircraft(along=distance, heading=cb.COURSE, cross=0,
                                        alt=cb.glide_altitude(distance), vs=-900), dt)
     fly(6.2)
-    assert trainer.pilot_call is None
+    assert trainer.pilot_call is capture_call
     if not skip_request:
         fly(5.99)
         request = trainer.pilot_call

@@ -1,0 +1,18 @@
+{
+  "src/ai_client.py": "beeaf7a4e9102201e8f1910f632e0d3c0daeacc31af370c14b48044b9c6b3985",
+  "src/atc_llm.py": "5f6ce7e8cc4ad874ee5e1233e63dab1336404a9190c290ef64d9fe19297890a0",
+  "src/kb_oaci.py": "a3319ad0ae653b0d4c83fd492779c0ccde481c520dc8ae55fd82acd41e85658c",
+  "src/03_bluesky_connector.py": "e276cce76ed87102f12259541286d3cc35783d340f43db3a58517dbc42027e84",
+  "src/04_ner_extraction.py": "6c9ecf16fd55b25555b740c68fc9125e22025c27cfec23743df36d293cd2a57f",
+  "src/graph_secteur.py": "66328bc3eeefd5784f7fef3e5462539ca5c0ff860dd02642edc4c9bcde4373c8",
+  "src/secteur_graphe.json": "17fd0b5e2040a2810bd0da1d7862b864be1cede5cede110a6d2d32f692bf90a2",
+  "src/atc_callsign.py": "9dff2385d464b3ab002e536b0903b307aa707de1dee4446188ea88ed527783e9",
+  "src/atc_app.py": "274621b18d459a9f1ea9d270270e1b30791bb952f41e85157b32fe7e9dbb154b",
+  "src/simple_demo.py": "83076e5cb605cde270742d16b49f0e72d475b76ad06c7ae730b889bfa2a593a5",
+  "src/approach_radio.py": "b5dabe11af808b634cf30e9b4bdb56dc06bc35a1735a824d8fa05a773f149c84",
+  "tests/test_ai_client.py": "55cce3285bc942136d0cd9ff225f2b7a68259c65de51cabf2d68853e353e5616",
+  "tests/test_simple_demo.py": "0bb60c4a2186f4b433fe1d57e87ac63f48cd4f37001b09dcefcf4029ec565084",
+  "tests/test_atc_app.py": "5493651b27d40ae38a81bccc56f0cea22bcc076bd3bd891dad7299e19620b2c5",
+  "tests/test_approach_radio.py": "9d5de96441b45da11f02b6f40adf9dc47f11cd4164c378e25aec7becb473861f",
+  "tests/test_pilot_radio.py": "577627195671c0d8b7a5066ee6fa7fdb48efed17a4ddcbdb83d0b794a75b1d7a"
+}

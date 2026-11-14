@@ -1,0 +1,34 @@
+name: Radar preview container
+on:
+  push:
+    paths: ['radar-trainer/**', '.github/workflows/radar-preview.yml']
+  pull_request:
+    paths: ['radar-trainer/**', '.github/workflows/radar-preview.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  frontend-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: radar-trainer/frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: radar-trainer/frontend/package-lock.json
+      - run: npm ci
+      - run: npm test -- --no-file-parallelism
+  linux-session-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the deployment image
+        run: docker build -t radar-preview radar-trainer
+      - name: Verify two real engines within the candidate hosting limits
+        run: docker run --rm --cpus=1 --memory=2g --entrypoint python radar-preview scripts/check_hosted_sessions.py --users 2 --seconds 180

@@ -1,0 +1,59 @@
+{
+  "five_sessions": {
+    "passed": true,
+    "platform": "win32",
+    "users": 5,
+    "startup_seconds": 10.38,
+    "soak_seconds": 180,
+    "peak_total_rss_mb": 1453.5,
+    "simulation_speed": "1x for all five during soak",
+    "mean_cpu_percent_one_core": 151.9,
+    "frames": [
+      1559,
+      1583,
+      1580,
+      1572,
+      1574
+    ],
+    "checks": [
+      "five processes",
+      "sixth visitor rejected",
+      "missing/invalid tokens rejected",
+      "cross-origin allocation rejected",
+      "private routes blocked",
+      "independent scenario/speed/state streams",
+      "no stream loss during soak",
+      "deleted token invalidated",
+      "fresh replacement",
+      "other session survives"
+    ],
+    "limitations": "Local OS, offline providers, not Linux container or hosted capacity proof."
+  },
+  "two_sessions": {
+    "passed": true,
+    "platform": "win32",
+    "users": 2,
+    "startup_seconds": 27.94,
+    "soak_seconds": 180,
+    "peak_total_rss_mb": 626.4,
+    "simulation_speed": "1x for all sessions during soak",
+    "mean_cpu_percent_one_core": 54.0,
+    "frames": [
+      1528,
+      1618
+    ],
+    "checks": [
+      "separate processes",
+      "visitor over capacity rejected",
+      "missing/invalid tokens rejected",
+      "cross-origin allocation rejected",
+      "private routes blocked",
+      "independent scenario/speed/state streams",
+      "no stream loss during soak",
+      "deleted token invalidated",
+      "fresh replacement",
+      "other session survives"
+    ],
+    "limitations": "Local OS, offline providers, not Linux container or hosted capacity proof."
+  }
+}

@@ -40,7 +40,11 @@ def test_each_profile_loads_and_has_usable_exercise(code):
         return
     assert p.threshold['name'] == p.approach['runway']
     trainer = ILSTrainer(p)
-    trainer.clear_approach()
+    if p.exercise['command_alt_min_ft'] >= 5000:
+        assert 'too high for approach' in trainer.clear_approach(level)
+        return
+    trainer.manual_command(f"ALT {ac['callsign']} {level}")
+    assert trainer.clear_approach(ac['alt_ft']) is None
     def aircraft(along, alt, vs=0):
         x,y = p.approach_point(along)
         return dict(x=x,y=y,hdg=p.COURSE,trk=p.COURSE,alt_ft=alt,

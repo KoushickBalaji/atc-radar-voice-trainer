@@ -1,3 +1,4 @@
+from command_fixtures import reply
 import json
 from copy import deepcopy
 
@@ -74,7 +75,8 @@ def test_arm_waits_for_valid_handoff_and_preserves_overrides(monkeypatch,phase):
     assert not trainer.go_around_on_handoff and trainer.repeat_after_missed
     assert 'HDG AFR123 270' in trainer.update(ac,1)
     trainer.manual_command('HDG AFR123 300')
-    assert 'HDG AFR123 300.0' in trainer.update(ac,1)
+    assert trainer.phase == 'awaiting_clearance' and trainer.retry_ready
+    assert trainer.update(ac,1) == [] and not trainer.missed.overrides
 
 
 def test_repeat_returns_to_vectoring_without_teleporting_or_old_overrides():
@@ -88,6 +90,7 @@ def test_repeat_returns_to_vectoring_without_teleporting_or_old_overrides():
     ac=dict(id='AFR123',x=x,y=y-.2,hdg=0,trk=0,alt_ft=6300,cas_kt=180)
     trainer.update(ac,1)
     assert trainer.phase=='holding'
+    assert 'request vectors for another approach' in trainer.pilot_call['text']
     trainer.manual_command('HDG AFR123 090')
     assert trainer.phase=='awaiting_clearance' and trainer.retry_ready
     assert not trainer.missed.overrides and not trainer.go_around_on_handoff
@@ -96,7 +99,7 @@ def test_repeat_returns_to_vectoring_without_teleporting_or_old_overrides():
     trainer.update(sample(p,-1,6300),1)
     assert trainer.phase=='awaiting_clearance'
     assert 'another attempt' in trainer.status['message']
-    trainer.clear_approach()
+    trainer.clear_approach(3200)
     trainer.update(sample(p,9,3200),1)
     assert trainer.phase=='localizer'
     assert not ILSTrainer(p).go_around_on_handoff
@@ -115,7 +118,7 @@ def test_cannot_arm_after_attempt_ends_or_during_go_around(phase):
 
 def test_voice_conditional_requires_explicit_scope_and_one_assignment():
     order=dict(action='MISSED_INSTRUCTION',callsign='AFR123',axis='HDG',value=270)
-    parse=lambda text: approach_radio.interpret(text,lambda _:json.dumps([order]))
+    parse=lambda text: approach_radio.interpret(text,lambda messages, **kwargs: reply(messages, [order]))
     text='Air France one two three, on missed approach fly heading two seven zero'
     assert parse(text)['orders']==[order]
     assert parse('Air France one two three fly heading two seven zero')['rejected']
@@ -131,7 +134,7 @@ def test_voice_conditional_requires_explicit_scope_and_one_assignment():
 def test_alternative_scopes_reserve_heading_090(scope):
     text = f'Air France one two three, fly heading zero nine zero {scope}'
     order = dict(callsign='AFR123',action='MISSED_INSTRUCTION',axis='HDG',value=90)
-    assert approach_radio.interpret(text,lambda _:json.dumps([order]))['orders'] == [order]
+    assert approach_radio.interpret(text,lambda messages, **kwargs: reply(messages, [order]))['orders'] == [order]
     assert simple_demo.validate(text,[order],[{'id':'AFR123'}],get_profile('VOCB')) is None
     assert 'zero niner zero' in approach_radio.readback(order)
 

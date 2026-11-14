@@ -4,6 +4,7 @@
 *.gif binary
 *.jpg binary
 *.jpeg binary
+*.webp binary
 *.wav binary
 *.safetensors binary
 *.bin binary

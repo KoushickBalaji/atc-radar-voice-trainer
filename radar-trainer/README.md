@@ -77,8 +77,8 @@ same contract, typically reached through an SSH tunnel to the GPU cluster.
 
 The prompt engineering stays **client-side** (ICAO knowledge base inlined in the system prompt,
 NER hints, sector graph) and every LLM output goes through the **deterministic safety validation**
-(bounds, known waypoints) - identical whatever the provider. The VHF radio degradation is also
-applied client-side, so the pilot voice sounds like a real radio with any TTS backend.
+(bounds, known waypoints) - identical whatever the provider. The browser applies a subtle
+radio effect to pilot speech from any TTS backend; each user can turn it off in the radio panel.
 
 ## Key results
 
@@ -253,7 +253,8 @@ The AI backend is **API-first, single mode** (configured in `.env`):
   re-test. Any provider error is **loudly visible** (UI log + HTTP 502) - never silent.
 - **Every readback is spoken** through the TTS API, for typed *and* spoken clearances, and **each
   aircraft keeps its own stable voice** (deterministic callsign hash over the `ATC_TTS_VOICES`
-  pool). The VHF radio degradation is applied client-side, whatever the TTS provider.
+  pool). The browser adds light hiss and separated squelch sounds to pilot calls and readbacks,
+  with an on/off switch that resets to on for each visit.
 
 Workflow: the instructor types a situation (e.g. `three A320 from the north at FL300 heading 180, 8
 miles apart` or `trois A320 venant du nord au niveau 300`) or loads a saved scenario from

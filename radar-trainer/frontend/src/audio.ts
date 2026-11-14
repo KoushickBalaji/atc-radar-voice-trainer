@@ -1,20 +1,109 @@
 /** Audio : capture micro WAV mono 16 kHz (envoyee a l'API STT via /api/voice)
  *  et lecture des WAV de collationnement renvoyes par l'API TTS. */
 
-export async function playB64Wav(b64: string) {
+const radioStops = new Set<() => void>();
+export function stopRadioPlayback() { for (const stop of radioStops) stop(); }
+
+/** The provider WAV is kept clear. Radio colour is a per-browser playback choice. */
+export function pilotWavBytes(b64: string, radioNoise: boolean): Uint8Array {
   const bin = atob(b64);
   const arr = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+  if (!radioNoise) return arr;
+  try { return radioWav(arr); }
+  catch (error) { console.warn('Radio effect unavailable; playing clear pilot audio.', error); return arr; }
+}
+
+const SQUELCH_MS = 65;
+const SPEECH_GAP_MS = 120;
+const SQUELCH_GAIN = 10; // +20 dB from the original 0.035 / 0.026 levels
+const HISS_GAIN = Math.pow(10, 10 / 20); // +10 dB from the original 0.0045 level
+
+function radioWav(bytes: Uint8Array): Uint8Array {
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  if (bytes.length < 44 || view.getUint32(0, false) !== 0x52494646 || view.getUint32(8, false) !== 0x57415645)
+    throw new Error('Expected RIFF WAV');
+  let format = 0, channels = 0, rate = 0, bits = 0, dataAt = 0, dataSize = 0;
+  for (let at = 12; at + 8 <= bytes.length;) {
+    const size = view.getUint32(at + 4, true);
+    const id = view.getUint32(at, false);
+    // Streaming WAV responses (including OpenAI TTS) cannot know the RIFF/data
+    // sizes up front and use 0xFFFFFFFF. The received byte count is definitive.
+    if (id === 0x64617461 && size === 0xffffffff) {
+      dataAt = at + 8;
+      dataSize = bytes.length - dataAt;
+      break;
+    }
+    const end = at + 8 + size;
+    if (end > bytes.length) throw new Error('Truncated WAV chunk');
+    if (id === 0x666d7420) {
+      if (size < 16) throw new Error('Invalid WAV format');
+      format = view.getUint16(at + 8, true);
+      channels = view.getUint16(at + 10, true);
+      rate = view.getUint32(at + 12, true);
+      bits = view.getUint16(at + 22, true);
+    } else if (id === 0x64617461) { dataAt = at + 8; dataSize = size; }
+    at = end + (size & 1);
+  }
+  if (!rate || !channels || !dataSize || !((format === 1 && [8, 16, 24, 32].includes(bits)) || (format === 3 && bits === 32)))
+    throw new Error('Unsupported WAV encoding');
+  const width = bits / 8;
+  const frames = Math.floor(dataSize / (width * channels));
+  const opener = Math.round(rate * SQUELCH_MS / 1000);
+  const gap = Math.round(rate * SPEECH_GAP_MS / 1000);
+  const total = opener * 2 + gap * 2 + frames;
+  const out = new Uint8Array(44 + total * 2);
+  const wav = new DataView(out.buffer);
+  const tag = (at: number, value: string) => { for (let i = 0; i < 4; i++) wav.setUint8(at + i, value.charCodeAt(i)); };
+  tag(0, 'RIFF'); wav.setUint32(4, out.length - 8, true); tag(8, 'WAVE'); tag(12, 'fmt ');
+  wav.setUint32(16, 16, true); wav.setUint16(20, 1, true); wav.setUint16(22, 1, true);
+  wav.setUint32(24, rate, true); wav.setUint32(28, rate * 2, true);
+  wav.setUint16(32, 2, true); wav.setUint16(34, 16, true); tag(36, 'data'); wav.setUint32(40, total * 2, true);
+  const put = (i: number, sample: number) => wav.setInt16(44 + i * 2, Math.round(Math.max(-1, Math.min(1, sample)) * 32767), true);
+  let seed = 0x9e3779b9;
+  const noise = () => { seed ^= seed << 13; seed ^= seed >>> 17; seed ^= seed << 5; return (seed >>> 0) / 0x80000000 - 1; };
+  for (let i = 0; i < opener; i++) {
+    const envelope = Math.sin(Math.PI * i / opener);
+    put(i, noise() * 0.035 * SQUELCH_GAIN * envelope);
+    put(total - opener + i, noise() * 0.026 * SQUELCH_GAIN * envelope);
+  }
+  const hpA = Math.exp(-2 * Math.PI * 300 / rate);
+  const lpA = 1 - Math.exp(-2 * Math.PI * Math.min(3400, rate * 0.4) / rate);
+  let hp = 0, prev = 0, lp = 0;
+  for (let i = 0; i < frames; i++) {
+    let sample = 0;
+    for (let c = 0; c < channels; c++) {
+      const at = dataAt + (i * channels + c) * width;
+      if (format === 3) sample += view.getFloat32(at, true);
+      else if (bits === 8) sample += (view.getUint8(at) - 128) / 128;
+      else if (bits === 16) sample += view.getInt16(at, true) / 32768;
+      else if (bits === 24) sample += ((view.getUint8(at + 2) << 24) | (view.getUint8(at + 1) << 16) | (view.getUint8(at) << 8)) / 2147483648;
+      else sample += view.getInt32(at, true) / 2147483648;
+    }
+    sample /= channels;
+    hp = hpA * (hp + sample - prev); prev = sample;
+    lp += lpA * (hp - lp);
+    put(opener + gap + i, lp * 1.08 + noise() * 0.0045 * HISS_GAIN);
+  }
+  return out;
+}
+
+export async function playB64Wav(b64: string, onPlaying?: () => void, radioNoise = true) {
+  const arr = pilotWavBytes(b64, radioNoise);
   const url = URL.createObjectURL(new Blob([arr], { type: "audio/wav" }));
   // URL blob revoquee apres lecture (sinon fuite memoire cumulative : un blob
   // par collationnement TTS sur toute la session). revoke est idempotent.
   const audio = new Audio(url);
+  if (onPlaying) audio.addEventListener("playing", onPlaying, { once: true });
+  let stop = () => {};
   const ended = new Promise<void>((resolve, reject) => {
     audio.onended = () => resolve();
     audio.onerror = () => reject(new Error('Radio audio playback failed'));
+    stop = () => { audio.pause(); reject(new Error('Exercise ended')); };
   });
+  radioStops.add(stop);
   // Lecture bloquee (politique autoplay...) : jamais totalement silencieux.
-  try { await Promise.all([audio.play(), ended]); } finally { URL.revokeObjectURL(url); }
+  try { await Promise.all([audio.play(), ended]); } finally { radioStops.delete(stop); URL.revokeObjectURL(url); }
 }
 
 /* ----- capture micro -> WAV mono 16 kHz (envoye a /api/voice) ---------------- */
@@ -78,8 +167,9 @@ export class RadioMic {
   private disposed = false;
   private rejectPending?: (e: Error) => void;
   private onClip?: (samples: Float32Array | null) => void;
+  private captureGeneration = 0;
 
-  async arm(onLost: (message: string) => void) {
+  async arm(onLost: (message: string) => void, onInterrupted: () => void = () => {}) {
     try {
       // Unlock audio inside the user's gesture, before the permission dialog.
       const ctx = this.ctx = new AudioContext();
@@ -92,8 +182,12 @@ export class RadioMic {
       const [stream] = await Promise.all([streamPromise, resumed, ctx.audioWorklet.addModule('/radio-capture.worklet.js')]);
       if (this.disposed) throw new Error('Mic closed');
       const lost = () => { if (!this.disposed) { this.close(); onLost('Microphone interrupted. Enable it again.'); } };
-      stream.getAudioTracks().forEach(t => { t.onended = lost; t.onmute = lost; });
-      ctx.onstatechange = () => { if (ctx.state !== 'running') lost(); };
+      const interrupt = () => { this.cancel(); onInterrupted(); };
+      stream.getAudioTracks().forEach(t => { t.onended = lost; t.onmute = interrupt; });
+      ctx.onstatechange = () => {
+        if (ctx.state === 'closed') lost();
+        else if (ctx.state !== 'running') interrupt();
+      };
       const node = this.node = new AudioWorkletNode(ctx, 'radio-capture', { channelCount: 1, channelCountMode: 'explicit' });
       node.onprocessorerror = lost;
       await new Promise<void>((resolve, reject) => {
@@ -108,7 +202,20 @@ export class RadioMic {
       });
     } catch (e) { this.close(); throw e; }
   }
-  begin() { this.node!.port.postMessage('begin'); }
+  async begin() {
+    const generation = this.captureGeneration;
+    await this.ctx!.resume();
+    if (this.disposed || generation !== this.captureGeneration) return;
+    if (this.stream?.getAudioTracks().some(t => t.muted || t.readyState === 'ended'))
+      throw new Error('Microphone is temporarily unavailable. Try again when it resumes.');
+    this.node!.port.postMessage('begin');
+  }
+  cancel() {
+    this.captureGeneration++;
+    this.node?.port.postMessage('cancel');
+    this.rejectPending?.(new Error('Transmission interrupted; no audio sent.'));
+    this.rejectPending = this.onClip = undefined;
+  }
   async finish(): Promise<Blob | null> {
     const rate = this.ctx!.sampleRate;
     const samples = await new Promise<Float32Array>((resolve, reject) => {

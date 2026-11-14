@@ -18,7 +18,7 @@ def test_shared_engine_uses_selected_airport(icao,level,heading,runway,length):
         x,y=p.approach_point(along)
         return dict(x=x,y=y,hdg=heading,trk=heading,alt_ft=alt,cas_kt=180,gs=190,vs_fpm=vs)
     trainer=ILSTrainer(p)
-    trainer.clear_approach()
+    trainer.clear_approach(3200)
     trainer.update(aircraft(9,level),1)
     assert trainer.phase == 'localizer'
     along=(level-p.threshold['elevation_ft']-p.RDH_FT)/(p.FT_PER_NM*math.tan(math.radians(p.GLIDE_ANGLE)))
@@ -53,7 +53,7 @@ def test_unknown_profile_cannot_resolve_arbitrary_path():
 def test_manual_override_preserves_selected_profile():
     p=get_profile('VOML')
     trainer=ILSTrainer(p)
-    trainer.clear_approach()
+    trainer.clear_approach(3200)
     trainer.phase='localizer'
     trainer.manual_command('HDG AFR123 270')
     assert trainer.phase=='awaiting_clearance' and trainer.airport is p

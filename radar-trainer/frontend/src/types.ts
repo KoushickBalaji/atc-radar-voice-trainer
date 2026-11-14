@@ -124,6 +124,10 @@ export interface Providers { stt: boolean; llm: boolean; tts: boolean }
 export interface Order { callsign: string; action: string; value?: number; wpt?: string }
 
 export interface Exchange {
+  feedback?: { code: string; category: 'system' | 'interpretation' | 'instruction' | 'exercise' | 'capability'; blocking: boolean; message: string; evidence: Record<string, unknown> }[];
+  proposed_orders?: Order[];
+  execution_status?: 'blocked' | 'queued' | 'handled';
+  addressed_callsigns?: string[];
   transcript: string;
   orders: Order[];
   trafscript: string[];

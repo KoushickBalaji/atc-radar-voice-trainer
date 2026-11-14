@@ -44,7 +44,7 @@ def test_silent_audio_rejected_before_asr():
         demo.validate_audio(buf.getvalue())
 
 
-def test_demo_does_not_execute_hinted_flight_when_verifier_misheard_it(monkeypatch):
+def test_demo_rejects_misheard_callsign_even_when_interpreter_guesses_known_aircraft(monkeypatch):
     import atc_app as app
     from airport_profiles import get_profile
     from types import SimpleNamespace
@@ -55,17 +55,106 @@ def test_demo_does_not_execute_hinted_flight_when_verifier_misheard_it(monkeypat
     original = wav.getvalue()
     sim = SimpleNamespace(snapshot=lambda: {'aircraft': AIRCRAFT}, airport=get_profile('VOCB'))
     monkeypatch.setattr(app, 'SIM', sim)
+    contexts = []
     def recognize(data, keywords=()):
         assert data == original
-        return ('Air France' if keywords else 'Yeah friends') + ' one two three turn right heading 270'
+        contexts.append(list(keywords))
+        return 'Yeah friends one two three turn right heading 270'
     monkeypatch.setattr(app.AI, 'asr', recognize)
-    # Even if the interpreter guesses the same in-sector aircraft twice.
+    # The transcript must support the aircraft even if the interpreter guesses it.
     monkeypatch.setattr(app.AI, 'interpret', lambda _: {
         'orders': [dict(callsign='AFR123', action='HDG', value=270)]})
-    monkeypatch.setattr(app, '_handle_instruction', lambda *_: pytest.fail('must not execute'))
+    monkeypatch.setattr(sim, 'enqueue', lambda *_: pytest.fail('must not execute'), raising=False)
     monkeypatch.setattr(app, 'emit', lambda _: None)
     evidence = []
     monkeypatch.setattr(app, '_voice_evidence', evidence)
     out = app.demo_voice(original)
+    assert len(contexts) == 1
+    assert contexts[0] == evidence[0]['recognition_keywords']
+    assert 'air france one two three' in contexts[0]
     assert out['orders'] == [] and 'Callsign unclear' in out['rejected'][0]
-    assert evidence[0]['transcripts'][1].startswith('Yeah friends')
+    assert evidence[0]['transcripts'] == ['Yeah friends one two three turn right heading 270']
+    assert out['addressed_callsigns'] == []
+    monkeypatch.setattr(app.AI, 'asr', lambda *_: 'Air France one two three turn right heading 270')
+    monkeypatch.setattr(app.AI, 'interpret', lambda _: {'orders': []})
+    out = app.demo_voice(original)
+    assert out['addressed_callsigns'] == ['AFR123']
+    assert out['orders'] == [] and out['trafscript'] == []
+
+
+def test_demo_refreshes_context_per_transmission_and_skips_empty_interpretation(monkeypatch):
+    import atc_app as app
+    from airport_profiles import get_profile
+    from types import SimpleNamespace
+    traffic = [{'id': 'AFR123'}]
+    sim = SimpleNamespace(snapshot=lambda: {'aircraft': list(traffic)}, airport=get_profile('VOCB'))
+    monkeypatch.setattr(app, 'SIM', sim)
+    monkeypatch.setattr(app.simple_demo, 'validate_audio', lambda _: None)
+    monkeypatch.setattr(app.AI, 'interpret', lambda _: pytest.fail('empty transcript must not be interpreted'))
+    monkeypatch.setattr(app, 'emit', lambda _: None)
+    monkeypatch.setattr(app, '_voice_evidence', [])
+    contexts = []
+    def recognize(data, keywords=()):
+        contexts.append(list(keywords))
+        traffic[:] = [{'id': 'BAW456'}]
+        return ''
+    monkeypatch.setattr(app.AI, 'asr', recognize)
+    app.demo_voice(b'audio one')
+    app.demo_voice(b'audio two')
+    assert len(contexts) == 2
+    assert 'AFR123' in contexts[0] and 'BAW456' not in contexts[0]
+    assert 'BAW456' in contexts[1] and 'AFR123' not in contexts[1]
+
+
+def test_demo_upload_transcribes_and_interprets_once_before_dispatch(monkeypatch):
+    import atc_app as app
+    from airport_profiles import get_profile
+    from types import SimpleNamespace
+    calls = []
+    queued = []
+    aircraft = [dict(id='AFR123', hdg=240, alt_ft=5000)]
+    monkeypatch.setattr(app, 'SIM', SimpleNamespace(
+        airport=get_profile('VOCB'), snapshot=lambda: {'aircraft': aircraft}, enqueue=queued.append))
+    monkeypatch.setattr(app.simple_demo, 'ENABLED', True)
+    monkeypatch.setattr(app.simple_demo, 'validate_audio', lambda _: None)
+    monkeypatch.setattr(app, 'EX', SimpleNamespace(active=False))
+    monkeypatch.setattr(app, 'emit', lambda _: None)
+    monkeypatch.setattr(app, '_synthesize_readback',
+                        lambda out: dict(out, audio_b64=None, tts_error=None))
+    transcript = 'Air France one two three turn right heading two seven zero'
+    def recognize(wav, keywords):
+        calls.append('asr')
+        assert wav == b'audio' and 'air france one two three' in keywords
+        return transcript
+    def interpret(text):
+        calls.append('interpret')
+        assert text == transcript
+        return dict(orders=[dict(callsign='AFR123', action='HDG', value=270)],
+                    trafscript=['HDG AFR123 270'], rejected=[])
+    monkeypatch.setattr(app.AI, 'asr', recognize)
+    monkeypatch.setattr(app.AI, 'interpret', interpret)
+    out = app.voice(SimpleNamespace(file=io.BytesIO(b'audio')))
+    assert calls == ['asr', 'interpret']
+    assert queued == ['HDG AFR123 270']
+    assert out['orders'][0]['value'] == 270
+    assert 'two seven zero' in out['readback_text']
+
+
+def test_voice_upload_passes_live_context_to_recognition(monkeypatch):
+    import atc_app as app
+    from types import SimpleNamespace
+    monkeypatch.setattr(app.simple_demo, 'ENABLED', False)
+    monkeypatch.setattr(app, 'SIM', SimpleNamespace(
+        airport=None, snapshot=lambda: {'aircraft': [{'id': 'AFR123'}]}))
+    def recognize(wav, keywords):
+        assert wav == b'uploaded audio'
+        assert 'AFR123' in keywords and 'air france one two three' in keywords
+        return 'Air France one two four'
+    monkeypatch.setattr(app.AI, 'asr', recognize)
+    monkeypatch.setattr(app, '_handle_instruction', lambda text: {'transcript': text})
+    result = app.voice(SimpleNamespace(file=io.BytesIO(b'uploaded audio')))
+    assert result['transcript'] == 'Air France one two four'
+
+
+# The removed heading shortcut is archived. All commands now exercise the same
+# schema boundary; evidence and number preservation are covered in test_command_boundary.

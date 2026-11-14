@@ -4,6 +4,7 @@ import math
 from pathlib import Path
 
 DATA = Path(__file__).resolve().parents[1] / 'data' / 'holds'
+TERMINAL_SEPARATION_FT = 1000  # AAI MATS Part 1, 5.4.1 (below FL290)
 
 
 def load_patterns(airport):
@@ -96,7 +97,12 @@ class HoldingFlight:
             turning_out = self.phase == 'turn outbound'
             destination = (outbound if turning_out else inbound) - drift
             direction = self.direction
-            if self.entry_leg and turning_out:
+            if self.entry_leg and self.entry == 'parallel':
+                # ICAO Doc 8168 Vol I, II-6, 2.2.4 (mirrored for left holds):
+                # turn outbound opposite the circuit direction, then return
+                # toward the holding side. Resume circuit turns at the fix.
+                direction = -self.direction
+            elif self.entry_leg and turning_out:
                 direction = 1 if delta(destination-ac['hdg']) >= 0 else -1
             remaining = (direction * (destination-ac['hdg'])) % 360
             if min(remaining, 360-remaining) < 7:

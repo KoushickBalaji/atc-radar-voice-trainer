@@ -7,6 +7,7 @@ import { drawScope, drawWindArrow, sx, sy, toNm, type View, type RadarOptions } 
 
 const TRAIL_LEN = 14;
 const ZOOM_STEP = 1.18;
+const INITIAL_ZOOM = ZOOM_STEP ** 3;
 const MIN_ZOOM = 0.4;
 const MAX_ZOOM = 12;
 const clampZoom = (zoom: number) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom));
@@ -27,7 +28,7 @@ export default function RadarCanvas({
   stateRef, nav, selected, onSelect, placeMode, onPlace, options, centerOn,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const viewRef = useRef({ panX: 0, panY: 0, zoom: 1 });
+  const viewRef = useRef({ panX: 0, panY: 0, zoom: INITIAL_ZOOM });
   const zoomBy = (factor: number) => {
     viewRef.current.zoom = clampZoom(viewRef.current.zoom * factor);
   };
@@ -64,7 +65,10 @@ export default function RadarCanvas({
     };
 
     const resize = () => {
-      const r = canvas.parentElement!.getBoundingClientRect();
+      // A queued observer callback can run after React detaches the canvas.
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      const r = parent.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
       canvas.width = Math.floor(r.width * dpr);
       canvas.height = Math.floor(r.height * dpr);
@@ -169,7 +173,7 @@ export default function RadarCanvas({
       }
       propsRef.current.onSelect(best ? best.id : null);
     };
-    const onDbl = () => { viewRef.current = { panX: 0, panY: 0, zoom: 1 }; };
+    const onDbl = () => { viewRef.current = { panX: 0, panY: 0, zoom: INITIAL_ZOOM }; };
     const onCancel = () => { drag = null; };
     const onKey = (e: KeyboardEvent) => {
       const v = viewRef.current;

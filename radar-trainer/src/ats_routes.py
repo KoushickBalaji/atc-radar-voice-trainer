@@ -87,4 +87,5 @@ class AirportRoutes:
         names = branch['fixes'] + [branch['outside']]
         return dict(x=inner[0] + dx*fraction, y=inner[1] + dy*fraction,
                     heading=math.degrees(math.atan2(-dx, -dy)) % 360,
-                    inbound=list(reversed(names[:index+1])), outside=names[index+1])
+                    inbound=list(reversed(names[:index+1])), outside=names[index+1],
+                    remaining_nm=offset + sum(math.dist(a, b) for a, b in zip(points[:index], points[1:])))

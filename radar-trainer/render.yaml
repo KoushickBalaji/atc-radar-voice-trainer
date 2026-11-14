@@ -1,0 +1,20 @@
+# PREPARATION ONLY. Review plan after measurement; creating this service incurs charges.
+# For the D:\ATC GitHub backup, select radar-trainer/render.yaml in Blueprint setup.
+services:
+  - type: web
+    name: radar-atc-preview
+    runtime: docker
+    dockerfilePath: ./radar-trainer/Dockerfile
+    dockerContext: ./radar-trainer
+    plan: 1c-2g
+    region: singapore
+    numInstances: 1
+    healthCheckPath: /healthz
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: ATC_APP_HOST
+        value: 0.0.0.0
+      - key: ATC_MAX_SESSIONS
+        value: "2"

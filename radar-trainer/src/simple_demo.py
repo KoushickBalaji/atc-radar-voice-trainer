@@ -53,27 +53,63 @@ def guidance():
                      for p in ('12.5.1', '12.14', '12.17.1.3', '12.16.1.1', '12.16.1.2')))
 
 
+def spoken_callsigns(text, aircraft):
+    from atc_callsign import DIGI, PHON, normalize_callsign
+    tokens = re.findall(r'[a-z0-9]+', text.lower())
+    known = {a['id'] for a in aircraft}
+    # Never accept a known flight as a prefix of a longer spoken identifier.
+    return {normalize_callsign(' '.join(tokens[i:j])) for i in range(len(tokens))
+            for j in range(i+1, min(i+12,len(tokens))+1)
+            if j == len(tokens) or not (tokens[j] in DIGI or tokens[j] in PHON
+                                        or tokens[j].isdigit())} & known
+
+
 def validate(text, orders, aircraft, airport=None):
     """Do not silently drop unsupported meaning or force the wrong turn."""
     from approach_radio import ACTIONS
     if orders:
-        from atc_callsign import DIGI, PHON, normalize_callsign
-        tokens = re.findall(r'[a-z0-9]+', text.lower())
-        known = {a['id'] for a in aircraft}
-        # Never accept a known flight as a prefix of a longer spoken identifier.
-        spoken = {normalize_callsign(' '.join(tokens[i:j])) for i in range(len(tokens))
-                  for j in range(i+1, min(i+12,len(tokens))+1)
-                  if j == len(tokens) or not (tokens[j] in DIGI or tokens[j] in PHON
-                                              or tokens[j].isdigit())} & known
+        spoken = spoken_callsigns(text, aircraft)
         if spoken != {orders[0].get('callsign')}:
             return 'Callsign unclear. Address one aircraft and transmit again.'
     if any(o.get('action') in ACTIONS for o in orders):
         if len(orders) != 1:
             return 'Issue approach clearance or tower handoff as a separate transmission.'
         action = orders[0]['action']
-        if action in ('TAKEOFF','CONTACT_UNIT'):
+        from approach_radio import RADIO_ACTIONS
+        if action in RADIO_ACTIONS:
+            if re.search(r'\b(not|negative|cancel|correction|after|until|when|if|reaching|passing|established|then)\b', text, re.I):
+                return 'Issue a standalone immediate radio request or instruction.'
+            ac = next((a for a in aircraft if a['id'] == orders[0]['callsign']), None)
+            if ac is None or ac.get('phase') in ('scheduled', 'complete', 'inbound'):
+                return 'This aircraft is not on your frequency.'
+            if action == 'RUNWAY_HEADING':
+                from atc_callsign import normalize_callsign
+                match = re.fullmatch(r'(.+?)[, ]+(?:(?:fly|maintain|continue)\s+)?(?:runway\s+heading|heading\s+runway)[.!]?', text.strip(), re.I)
+                if not match or normalize_callsign(match[1].strip(' ,')) != orders[0]['callsign']:
+                    return 'Issue a standalone runway heading instruction.'
+                if not airport:
+                    return 'No active runway is configured.'
+                return None
+            # Acknowledgements must never hide a dropped clearance or unsupported action.
+            if action == 'ACK':
+                from atc_callsign import normalize_callsign
+                pattern = {'standby':r'stand\s*by', 'radar_identified':r'radar\s+identified',
+                           'continue_present_heading':r'continue\s+present\s+heading'}[orders[0]['kind']]
+                remainder, count = re.subn(pattern, '', text, flags=re.I)
+                if count != 1 or normalize_callsign(remainder.strip(' ,.!')) != orders[0]['callsign']:
+                    return 'Unsupported or combined acknowledgement instruction.'
+            if action == 'REPORT' and re.search(r'\b(climb|descend|turn|maintain|reduce|increase|contact)\b|\bcleared\s+(?:to|for)\b', text, re.I):
+                return 'Separate data requests from flight instructions.'
+            if action in ('SQUAWK', 'QNH', 'DIRECT'):
+                blocked = r'\b(and|then|heading|climb|descend|speed|contact|runway|transition|report|say|confirm)\b'
+                if re.search(blocked, text, re.I):
+                    return 'Issue a standalone radio assignment.'
+            return None
+        if action in ('TAKEOFF','CONTACT_UNIT','CLEAR_LAND'):
             if len(orders) != 1 or re.search(r'\b(not|negative|cancel|correction|after|until|when|if|behind|and|then|line up|hold|climb|descend|maintain|squawk)\b', text, re.I):
                 return 'Issue an unconditional standalone clearance.'
+            if action == 'CLEAR_LAND' and not re.search(r'\bcleared to land\b', text, re.I):
+                return 'An explicit landing clearance is required.'
             if action == 'TAKEOFF' and not re.search(r'\bcleared\s+for\s+take[ -]?off\b', text, re.I):
                 return 'An explicit takeoff clearance is required.'
             if not any(a['id'] == orders[0]['callsign'] for a in aircraft):

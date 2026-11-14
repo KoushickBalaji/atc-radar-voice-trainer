@@ -22,6 +22,7 @@ import threading
 import os
 from airport_profiles import get_profile
 from ils_trainer import ILSTrainer
+from holding import TERMINAL_SEPARATION_FT as SEP_FT
 from traffic_scenario import TrafficRun, catalogue
 from collections import deque
 from copy import deepcopy
@@ -38,7 +39,6 @@ if os.environ.get('ATC_SIMPLE_DEMO') == '1':
 RANGE_NM = 70
 COSLAT = math.cos(math.radians(CLAT))
 SEP_NM = 5.0            # separation reglementaire (cf. secteur_graphe.json)
-SEP_FT = 1000.0         # separation verticale
 LOOKAHEAD_S = 120.0     # horizon de prediction de conflit (STCA ~ 2 min)
 
 
@@ -87,6 +87,7 @@ class SimManager:
         self._thread = None
         self._nav = None
         self._meta = {}        # callsign -> {"type": str}
+        self._radio_calls = []
         self._sector_fixes = []
         self._wind = None      # {"dir": deg, "spd": kt, "alt": ft|None}
         self._turb = 0.0       # intensite de turbulence (m/s)
@@ -117,10 +118,10 @@ class SimManager:
             self._thread.join(timeout=2.0)
 
     # --- API appelee depuis les threads HTTP (non bloquante) -----------------
-    def enqueue(self, trafscript_line):
+    def enqueue(self, trafscript_line, level_reference=None):
         """Depose une ligne TrafScript (ex. 'HDG AFR1234 270') a appliquer."""
         if trafscript_line:
-            self._cmd_q.put({"kind": "cmd", "line": str(trafscript_line)})
+            self._cmd_q.put({"kind": "cmd", "line": str(trafscript_line), 'level_reference': level_reference})
 
     def select_airport(self, icao, scenario_id=None):
         profile = get_profile(icao)
@@ -303,6 +304,60 @@ class SimManager:
         if kind == 'procedure':
             import approach_radio
             order = item['order']
+            if order['action'] in approach_radio.RADIO_ACTIONS:
+                cs = order['callsign']
+                ac = next((a for a in self.snapshot()['aircraft'] if a['id'] == cs), None)
+                if ac is None or ac.get('phase') in ('scheduled', 'inbound', 'complete'):
+                    item['rejected'] = 'This aircraft is not on your frequency.'
+                    return
+                meta = self._meta.setdefault(cs, {})
+                action = order['action']
+                if action == 'RUNWAY_HEADING':
+                    if not self.airport:
+                        item['rejected'] = 'No active runway is configured.'
+                        return
+                    flight = self.traffic.flights.get(cs) if self.traffic else None
+                    runway = self.traffic.runway(flight) if getattr(flight, 'role', None) == 'departure' else self.airport.threshold
+                    heading = runway.get('bearing_true')
+                    if heading is None or not math.isfinite(heading):
+                        item['rejected'] = 'Runway heading is unavailable.'
+                        return
+                    if ac.get('phase') in ('ready', 'rolling'):
+                        if getattr(flight, 'role', None) != 'departure':
+                            item['rejected'] = 'No departure runway is assigned.'
+                            return
+                        self.traffic.flights[cs] = flight.model_copy(update={'departure_heading': heading})
+                    else:
+                        self._apply(dict(kind='cmd', line=f'HDG {cs} {heading}'))
+                elif action == 'DIRECT':
+                    fixes = getattr(getattr(self.airport, 'ats_routes', None), 'fixes', {})
+                    if order['fix'] not in fixes:
+                        item['rejected'] = 'No verified route fix with this identifier at this airport.'
+                        return
+                    if ac.get('phase') in ('ready', 'rolling'):
+                        item['rejected'] = 'Direct routing requires an airborne aircraft.'
+                        return
+                    lat, lon = fixes[order['fix']]
+                    trainer = self.traffic.approaches.get(cs) if self.traffic else self._ils
+                    if self.traffic:
+                        self.traffic.accept_vector(cs, ['HDG', cs, str(ac['hdg'])])
+                    if trainer:
+                        trainer.manual_command(f'HDG {cs} {ac["hdg"]}')
+                    bsk.cmd(f'DELRTE {cs}')
+                    bsk.cmd(f'ADDWPT {cs} {lat:.7f},{lon:.7f}')
+                    bsk.cmd(f'LNAV {cs} ON')
+                    bsk.flush_commands()
+                    meta['direct_fix'] = order['fix']
+                elif action in ('SQUAWK', 'QNH'):
+                    meta[action.lower()] = order['value']
+                elif action == 'ACK' and order['kind'] == 'continue_present_heading':
+                    if ac.get('phase') in ('ready', 'rolling'):
+                        item['rejected'] = 'Heading instruction requires an airborne aircraft.'
+                        return
+                    self._apply(dict(kind='cmd', line=f'HDG {cs} {ac["hdg"]}'))
+                item['rejected'] = None
+                self._update_snapshot(self._paused, self._speed)
+                return
             if self.traffic:
                 item['rejected'] = self.traffic.procedure(order, self.traffic.elapsed, self.snapshot()['aircraft'])
                 if not item['rejected']:
@@ -360,7 +415,7 @@ class SimManager:
                         item['rejected'] = f"Assign a holding altitude between {pattern['minimum_ft']} and 18000 feet."
                         return
                     if self._ils.hold and self._ils.hold.pattern == pattern:
-                        self._ils.hold.altitude = altitude
+                        self._ils.assigned_altitude = self._ils.hold.altitude = altitude
                         self._ils.hold.expected = order['expected']
                     else:
                         self._ils.start_hold(pattern, altitude, order['expected'])
@@ -373,7 +428,12 @@ class SimManager:
                         return
                     self._ils.missed.assign(order['axis'],order['value'],conditional=True)
                 elif order['action'] == 'CLEAR_ILS':
-                    self._ils.clear_approach()
+                    altitude = next((a['alt_ft'] for a in bsk.state() if a['id'] == self._ils.callsign), None)
+                    item['rejected'] = self._ils.clear_approach(altitude)
+                    if item['rejected']:
+                        return
+                elif order['action'] == 'CLEAR_LAND':
+                    self._ils.clear_landing()
                 else:
                     if self._ils.go_around_on_handoff:
                         self._ils.start_go_around()
@@ -397,10 +457,18 @@ class SimManager:
                 self._apply(dict(ac, kind='create', cs=ac['callsign']))
             self._update_snapshot(True, self._speed)
         elif kind == "cmd":
+            fields = item['line'].split()
+            if len(fields) >= 3 and fields[1] in self._meta:
+                if fields[0].upper() == 'ALT' and item.get('level_reference'):
+                    self._meta[fields[1]]['level_reference'] = item['level_reference']
+                if fields[0].upper() == 'SPD':
+                    self._meta[fields[1]]['assigned_speed'] = round(float(fields[2]))
+                elif fields[0].upper() in ('HDG', 'ADDWPT'):
+                    self._meta[fields[1]].pop('direct_fix', None)
             if self.traffic:
                 fields = item['line'].split()
                 cs = fields[1] if len(fields) > 1 else None
-                if not self.traffic.accept_vector(cs):
+                if not self.traffic.accept_vector(cs, fields):
                     return
                 trainer = self.traffic.approaches.get(cs)
                 if trainer:
@@ -410,11 +478,17 @@ class SimManager:
             bsk.cmd(item["line"])
             bsk.flush_commands()
         elif kind == "create":
-            if item["cs"] in self._meta:
+            if item["cs"] in self._meta and any(a['id'] == item['cs'] for a in bsk.state()):
                 return                              # indicatif deja present -> on ignore
             bsk.create(item["cs"], item["type"], item["lat"], item["lon"],
                        item["hdg"], item["alt_ft"], item["spd_kt"])
-            self._meta[item["cs"]] = {"type": item["type"]}
+            self._meta.setdefault(item["cs"], {})['type'] = item['type']
+            if self.traffic:
+                flight = self.traffic.flights.get(item['cs'])
+                if getattr(flight, 'contact_fl', None) or getattr(flight, 'transfer_fl', None):
+                    self._meta[item['cs']]['level_reference'] = 'flight_level'
+                if getattr(flight, 'role', None) == 'arrival':
+                    self._meta[item['cs']]['assigned_speed'] = round(flight.speed_kt)
         elif kind == "wind":
             self._apply_wind(item["dir"], item["spd"], item["alt"])
         elif kind == "turb":
@@ -434,6 +508,7 @@ class SimManager:
                 bsk.cmd(f"DEL {s['id']}")
             bsk.flush_commands()
             self._meta.clear()
+            self._radio_calls.clear()
             self._clear_zones()
             self._apply_wind(None, None, None)
             self._apply_turb(0.0)
@@ -536,10 +611,28 @@ class SimManager:
                         "type": self._meta.get(s["id"], {}).get("type", s.get("type", "")),
                         "conflict": False, "alert": ""})
         self._enrich(acs)  # Use actual ground track/speed and vertical rate in the fallback.
+        for ac in acs:
+            meta = self._meta.get(ac['id'], {})
+            ac.update({k:v for k,v in meta.items() if k in ('squawk','qnh','assigned_speed','level_reference')})
+            ac['position_reference'] = self.airport.NAME if self.airport else 'sector centre'
+            if meta.get('direct_fix'):
+                ac['route_names'], ac['actwp'] = [meta['direct_fix']], 0
+            if not self.traffic and not meta.get('initial_contact'):
+                from uuid import uuid4
+                from readback import pilot_report
+                station = self.airport.NAME + ' Approach' if self.airport else 'Control'
+                self._radio_calls.append(dict(id=uuid4().hex, callsign=ac['id'],
+                    text=pilot_report(ac, ['position', 'level', 'cleared_level'], station)))
+                meta['initial_contact'] = True
         if self.traffic:
-            for ac in acs:
-                if ac['id'] in self.traffic.flights:
+            for ac in acs.copy():
+                cs = ac['id']
+                if cs in self.traffic.flights:
                     self.traffic.update(ac, dt, bsk.cmd)
+                    if self.traffic.phase[cs] == 'complete':
+                        bsk.cmd(f'DEL {cs}')
+                        self._meta.pop(cs, None)
+                        acs.remove(ac)
             bsk.flush_commands()
             if self.traffic.status()['complete']:
                 self.pause()
@@ -581,7 +674,9 @@ class SimManager:
                              "speed": speed, "aircraft": acs, "conflicts": conflicts,
                              "ils": deepcopy(self._ils.status) if self._ils else None,
                              "traffic": self.traffic.status() if self.traffic else None,
-                             "traffic_calls": list(self.traffic.calls) if self.traffic else [],
+                             # Populate the paused radar at t=0, but release its opening
+                             # calls only after Start / Resume advances the scenario clock.
+                             "traffic_calls": (list(self.traffic.calls) if self.traffic.elapsed > 0 else []) if self.traffic else list(self._radio_calls),
                              "pilot_call": self._ils.pilot_call if self._ils else None,
                              "airport_id": self.airport.ICAO if self.airport else None,
                              "predicted": predicted, "cd_engine": engine,

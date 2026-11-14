@@ -4,6 +4,7 @@ test('PTT captures onset audio before keydown, uploads once per release, and rel
   const uploads: Buffer[] = [];
   await page.route('**/api/**', async route => {
     const path = new URL(route.request().url()).pathname;
+    if (path === '/api/session') { await route.fulfill({ status: 404, json: {} }); return; }
     if (path === '/api/voice') {
       const multipart = route.request().postDataBuffer()!;
       const i = multipart.indexOf('RIFF');
@@ -11,6 +12,7 @@ test('PTT captures onset audio before keydown, uploads once per release, and rel
       uploads.push(multipart.subarray(i, i + 8 + multipart.readUInt32LE(i + 4)));
     }
     await route.fulfill({ json: path.includes('health') ? { providers: { stt: true } }
+      : path === '/api/demo/airport' ? { airport: { icao: 'VOCB' } }
       : path === '/api/demo' ? { airports: [] }
       : path === '/api/nav' ? { waypoints: [], airports: [], fixes: [], routes: [], sector: [], range_nm: 25, center: [0,0] } : {} });
   });
@@ -39,6 +41,9 @@ test('PTT captures onset audio before keydown, uploads once per release, and rel
     };
   });
   await page.goto('/');
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
+  await page.getByRole('button', { name: 'Select scenario', exact: true }).click();
+  await page.getByRole('button', { name: 'Enter simulator' }).click();
   await page.getByRole('button', { name: 'Enable microphone' }).click();
   const ready = page.getByRole('button', { name: 'Hold to talk · V' });
   await expect(ready).toBeVisible();
@@ -67,7 +72,14 @@ test('PTT captures onset audio before keydown, uploads once per release, and rel
   await page.keyboard.down('v');
   await page.evaluate(() => window.dispatchEvent(new Event('blur')));
   await page.keyboard.up('v');
-  await expect(page.getByRole('button', { name: 'Enable microphone' })).toBeVisible();
+  await expect(ready).toBeVisible();
   expect(uploads).toHaveLength(2);
+  expect(await page.evaluate(() => [(window as any).opens, (window as any).track.readyState])).toEqual([2, 'live']);
+  await page.keyboard.down('v');
+  await page.waitForTimeout(200);
+  await page.keyboard.up('v');
+  await expect(ready).toBeVisible();
+  expect(uploads).toHaveLength(3);
+  await page.getByRole('button', { name: 'Switch mic off' }).click();
   expect(await page.evaluate(() => (window as any).track.readyState)).toBe('ended');
 });

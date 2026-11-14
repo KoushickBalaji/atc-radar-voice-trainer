@@ -6,6 +6,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Mic } from "lucide-react";
 import { api } from "../api";
 import { RadioMic } from "../audio";
+import { acquireMicrophone, useFrequencyBusy } from '../radioChannel';
+import PilotReplay from './PilotReplay';
 import { type SimHub } from "../useSim";
 
 
@@ -16,12 +18,23 @@ export default function RadioPanel({ hub, compact = false }: { hub: SimHub; pref
   const phaseRef = useRef<Phase>('off');
   const change = useCallback((next: Phase) => { phaseRef.current = next; renderPhase(next); }, []);
   const mic = useRef<RadioMic | null>(null);
+  const frequencyBusy = useFrequencyBusy();
+  const releaseFrequency = useRef<(() => void) | null>(null);
+  const release = useCallback(() => { releaseFrequency.current?.(); releaseFrequency.current = null; }, []);
   const off = useCallback(() => {
     const current = mic.current;
     mic.current = null;
     current?.close();
+    release();
     change('off');
-  }, [change]);
+  }, [change, release]);
+  const cancelTalk = useCallback(() => {
+    if (phaseRef.current === 'talking') {
+      mic.current?.cancel();
+      release();
+      change('ready');
+    }
+  }, [change, release]);
   const available = hub.connection === 'connected' && hub.state.sim_alive !== false && hub.providers.stt;
   useEffect(() => {
     if (!available) off();
@@ -31,8 +44,15 @@ export default function RadioPanel({ hub, compact = false }: { hub: SimHub; pref
   const startTalk = useCallback(async () => {
     if (!available) return;
     if (phaseRef.current === 'ready') {
-      mic.current!.begin();
+      const unlock = acquireMicrophone();
+      if (!unlock) return;
+      releaseFrequency.current = unlock;
+      const session = mic.current!;
       change('talking');
+      try { await session.begin(); }
+      catch (e) {
+        if (mic.current === session) { release(); change('ready'); pushLog('rej', `${e}`); }
+      }
     } else if (phaseRef.current === 'off') {
       // First gesture is setup only: don't claim to record through a permission prompt.
       change('arming');
@@ -40,18 +60,19 @@ export default function RadioPanel({ hub, compact = false }: { hub: SimHub; pref
       try {
         await session.arm(message => {
           if (mic.current === session) { off(); pushLog('rej', message); }
-        });
+        }, cancelTalk);
         if (mic.current === session) change('ready');
       } catch (e) {
         if (mic.current === session) { off(); pushLog('rej', `Microphone unavailable: ${e}`); }
       }
     }
-  }, [available, change, off, pushLog]);
+  }, [available, change, off, pushLog, cancelTalk, release]);
 
   const stopTalk = useCallback(async () => {
     const session = mic.current;
     if (!session || phaseRef.current !== 'talking') return;
     change('busy');
+    release();
     try {
       const wav = await session.finish();
       if (wav && mic.current === session) await api.voice(wav);
@@ -60,7 +81,7 @@ export default function RadioPanel({ hub, compact = false }: { hub: SimHub; pref
     } finally {
       if (mic.current === session) change('ready');
     }
-  }, [change, pushLog]);
+  }, [change, pushLog, release]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -73,8 +94,8 @@ export default function RadioPanel({ hub, compact = false }: { hub: SimHub; pref
     const up = (e: KeyboardEvent) => {
       if (e.code === 'KeyV' && phaseRef.current === 'talking') { e.preventDefault(); void stopTalk(); }
     };
-    const onBlur = () => { if (phaseRef.current !== 'arming') off(); };
-    const onVisibility = () => { if (document.hidden) off(); };
+    const onBlur = cancelTalk;
+    const onVisibility = () => { if (document.hidden) cancelTalk(); };
     window.addEventListener('keydown', down);
     window.addEventListener('keyup', up);
     window.addEventListener('blur', onBlur);
@@ -87,10 +108,10 @@ export default function RadioPanel({ hub, compact = false }: { hub: SimHub; pref
       window.removeEventListener('pagehide', off);
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [startTalk, stopTalk, off]);
+  }, [startTalk, stopTalk, off, cancelTalk]);
 
   const talking = phase === 'talking';
-  const label = { off: 'Enable microphone', arming: 'Preparing microphone…', ready: 'Hold to talk · V',
+  const label = { off: 'Enable microphone', arming: 'Preparing microphone…', ready: frequencyBusy ? 'Frequency busy · wait to transmit' : 'Hold to talk · V',
     talking: 'LISTENING…', busy: 'PROCESSING…' }[phase];
   const m = hub.lastExchange;
   return (
@@ -102,25 +123,30 @@ export default function RadioPanel({ hub, compact = false }: { hub: SimHub; pref
         aria-label={label}
         onPointerDown={(e) => { if (e.button === 0) { e.currentTarget.setPointerCapture(e.pointerId); void startTalk(); } }}
         onPointerUp={() => void stopTalk()}
-        onPointerCancel={off}
+        onPointerCancel={cancelTalk}
         onKeyDown={(e) => { if ((e.key === " " || e.key === "Enter") && !e.repeat) { e.preventDefault(); void startTalk(); } }}
         onKeyUp={(e) => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); void stopTalk(); } }}
-        onBlur={() => { if (phaseRef.current === 'talking') off(); }}
+        onBlur={cancelTalk}
         aria-live="polite"
         className={`${compact ? "hud-ptt " : ""}flex w-full select-none items-center justify-center gap-1.5 rounded-lg
           border px-4 py-3 text-[13px] font-medium transition-colors disabled:opacity-50 ${talking
             ? "border-dang bg-dang text-white"
             : "border-edge bg-panel2 text-mut"}`}
-        title="Enable the mic once, then hold V to talk. The mic stays ready until switched off."
+        title="Enable the mic once, then hold V to talk. When the frequency is busy, wait and press again."
       >
         <Mic size={15} className={talking ? "inline" : "inline opacity-70"} />
         {label}
       </button>
 
+      <label className="mt-2 flex items-center gap-2 text-xs text-mut">
+        <input type="checkbox" role="switch" aria-label="Pilot radio effect" checked={hub.radioNoise}
+          onChange={e => hub.setRadioNoise(e.target.checked)} />
+        Radio effect {hub.radioNoise ? 'on' : 'off'}
+      </label>
       {phase !== "off" && <button type="button" className="text-xs text-mut underline" onClick={off}>Switch mic off</button>}
       {!compact && <p className="mt-2 text-xs text-mut">Voice only. Release to send automatically. Pilot voices are AI-generated. Audio is processed by OpenAI.</p>}
       {!compact && m?.tts_error && <p role="alert" className="text-dang">Pilot audio failed: {m.tts_error}</p>}
-      {!compact && m?.audio_b64 && <audio aria-label="Replay pilot readback" controls src={`data:audio/wav;base64,${m.audio_b64}`} className="mt-2 w-full" />}
+      {!compact && m?.audio_b64 && <div className="mt-2 w-full"><PilotReplay audio={m.audio_b64} radioNoise={hub.radioNoise} /></div>}
       {!compact && m && (
         <div className="mt-2 space-y-0.5 text-[12.5px] leading-snug">
           <div className="text-rdr">📡 « {m.transcript} »</div>

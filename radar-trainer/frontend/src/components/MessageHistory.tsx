@@ -1,4 +1,5 @@
 import type { SimHub } from '../useSim';
+import PilotReplay from './PilotReplay';
 
 const labels = { tx: 'You transmitted', pilot: 'Pilot readback', cmd: 'Command accepted', rej: 'Rejected / error', warn: 'Warning', ok: 'Confirmed', info: 'Information' };
 
@@ -19,14 +20,18 @@ export default function MessageHistory({ hub, selected }: { hub: SimHub; selecte
         const latest = l.id === latestExchange ? hub.lastExchange : null;
         const rejected = !!m.rejected?.length;
         return <article key={l.id} aria-label={`Exchange ${l.callsigns?.join(', ') || 'Unassigned'} at ${l.t}`} className={`hud-message hud-exchange ${rejected ? 'hud-message-rej' : 'hud-message-tx'}`}>
-          <div><strong>{l.callsigns?.join(' / ') || 'Unassigned · callsign not identified'}</strong><time>{l.t}</time></div>
+          <div><strong>{l.callsigns?.join(' / ') || 'Unassigned · command not accepted'}</strong><time>{l.t}</time></div>
           <section><h3>You transmitted</h3><p>{m.transcript || 'No speech transcribed.'}</p></section>
           {m.trafscript?.map((line, i) => <section key={i}><h3>Command accepted</h3><p>{line}</p></section>)}
-          {m.rejected?.map((reason, i) => <section className="hud-exchange-rejection" key={i}><h3>Rejected</h3><p>{reason}</p></section>)}
-          {!m.trafscript?.length && !rejected && !m.readback && <section className="hud-exchange-rejection"><h3>Feedback</h3><p>No command recognized.</p></section>}
+          {m.feedback?.length ? m.feedback.map((item, i) => <section className="hud-exchange-rejection" key={i}>
+            <h3>Trainer feedback{item.category === 'capability' ? ' · Simulator limitation' : item.category === 'system' ? ' · System issue' : ''}</h3>
+            <p>{item.message}</p>
+            {Array.isArray(item.evidence.phrases) && <p>Wording to review: {item.evidence.phrases.map(String).join(' / ')}</p>}
+          </section>) : m.rejected?.map((reason, i) => <section className="hud-exchange-rejection" key={i}><h3>Not executed</h3><p>{reason}</p></section>)}
+          {!m.orders?.length && !m.trafscript?.length && !rejected && !m.readback && <section className="hud-exchange-rejection"><h3>Feedback</h3><p>No command recognized.</p></section>}
           {m.readback && <section><h3>Pilot readback</h3><p>{m.readback}</p></section>}
           {m.tts_error && <p className="hud-exchange-rejection">Pilot audio failed: {m.tts_error}</p>}
-          {latest?.audio_b64 && <audio aria-label="Replay pilot readback" controls src={`data:audio/wav;base64,${latest.audio_b64}`} />}
+          {latest?.audio_b64 && <PilotReplay audio={latest.audio_b64} radioNoise={hub.radioNoise} />}
         </article>;
       })}
     </div>

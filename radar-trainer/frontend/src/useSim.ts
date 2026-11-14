@@ -5,7 +5,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Exchange, ExerciseReport, ExerciseScore, LogEntry, Providers, SimState } from "./types";
 import { api } from "./api";
-import { playB64Wav } from "./audio";
+import { playB64Wav, stopRadioPlayback } from "./audio";
+import { queueRadio, resetRadioChannel } from './radioChannel';
+import { expireSession, hasSession, socketProtocols } from './session';
 
 const EMPTY: SimState = {
   t: 0, running: false, paused: false, speed: 1,
@@ -25,6 +27,8 @@ export interface SimHub {
   report: ExerciseReport | null;
   exerciseLive: { elapsed_s: number; remaining_s: number; score: ExerciseScore } | null;
   exerciseActive: boolean;
+  radioNoise: boolean;
+  setRadioNoise: (enabled: boolean) => void;
   pushLog: (kind: LogEntry["kind"], text: string) => void;
   clearLog: () => void;
   refreshHealth: () => Promise<void>;
@@ -41,6 +45,37 @@ export function useSim(): SimHub {
   const [lastExchange, setLastExchange] = useState<Exchange | null>(null);
   const [report, setReport] = useState<ExerciseReport | null>(null);
   const endedCb = useRef<() => void>(() => undefined);
+  const radioGeneration = useRef(0);
+  const [radioNoise, setRadioNoiseState] = useState(true);
+  const radioNoiseRef = useRef(true);
+  const setRadioNoise = useCallback((enabled: boolean) => {
+    radioNoiseRef.current = enabled;
+    setRadioNoiseState(enabled);
+  }, []);
+
+  const separationAlarm = connection === "connected" && state.sim_alive !== false &&
+    !state.paused && state.conflicts.length > 0;
+  useEffect(() => {
+    if (!separationAlarm) return;
+    const alarm = new Audio("/separation-alarm.wav");
+    alarm.loop = true;
+    let active = true;
+    const play = () => {
+      void alarm.play().catch((error: DOMException) => {
+        if (active && error.name === "NotAllowedError") {
+          window.addEventListener("click", play, { once: true });
+          window.addEventListener("keydown", play, { once: true });
+        }
+      });
+    };
+    play();
+    return () => {
+      active = false;
+      alarm.pause();
+      window.removeEventListener("click", play);
+      window.removeEventListener("keydown", play);
+    };
+  }, [separationAlarm]);
 
   const pushLog = useCallback((kind: LogEntry["kind"], text: string, context: Partial<Pick<LogEntry, "exchangeId" | "exchange" | "callsigns">> = {}) => {
     setLog((l) => [...l.slice(-249), { id: ++logSeq, t: now(), kind, text, ...context }]);
@@ -70,12 +105,21 @@ export function useSim(): SimHub {
     let invalidReported = false;
     let lastError = "";
 
-    let radioPlayback: Promise<void> | null = null;
-    const playRadio = (audio: string, warning: string, current = () => true) => {
-      const play = async () => { if (current()) await playB64Wav(audio); };
-      const tail = (radioPlayback ? radioPlayback.then(play) : play()).catch(() => pushLog("warn", warning));
-      radioPlayback = tail;
-      void tail.then(() => { if (radioPlayback === tail) radioPlayback = null; });
+    const playRadio = (audio: string, showText: () => void, warning: string, current = () => true) => {
+      const generation = radioGeneration.current;
+      const active = () => !closed && generation === radioGeneration.current && current();
+      const play = async () => {
+        if (!active()) return;
+        let shown = false;
+        const reveal = () => {
+          if (!shown && active()) { shown = true; showText(); }
+        };
+        try { await playB64Wav(audio, reveal, radioNoiseRef.current); }
+        catch {
+          if (active()) { pushLog("warn", warning); reveal(); }
+        }
+      };
+      void queueRadio(play, active);
     };
 
     const handle = (msg: Record<string, unknown>) => {
@@ -90,14 +134,7 @@ export function useSim(): SimHub {
           lastStateAt = performance.now();
           setConnection("connected");
           // Older servers omit predictions in the first frame during BlueSky startup.
-          const previousTrafficCalls = new Set(stateRef.current.traffic_calls?.map(c => c.id));
-          const previousCall = stateRef.current.pilot_call;
           stateRef.current = { ...EMPTY, ...msg, predicted: msg.predicted ?? [] } as SimState;
-          for (const c of stateRef.current.traffic_calls ?? []) {
-            if (!previousTrafficCalls.has(c.id)) pushLog("pilot", c.text, {callsigns:[c.callsign]});
-          }
-          const call = stateRef.current.pilot_call;
-          if (call && call.id !== previousCall?.id) pushLog("pilot", call.text, {callsigns: [call.callsign]});
           const error = JSON.stringify([msg.last_error, msg.command_errors]);
           if (error !== lastError) {
             lastError = error;
@@ -120,29 +157,48 @@ export function useSim(): SimHub {
           }
           break;
         }
-        case "pilot_audio":
-          if ((stateRef.current.pilot_call?.id === msg.id || stateRef.current.traffic_calls?.some(c => c.id === msg.id)) && typeof msg.audio_b64 === "string") {
-            playRadio(msg.audio_b64, "Pilot audio playback blocked. Allow sound in your browser.",
-              () => stateRef.current.pilot_call?.id === msg.id || !!stateRef.current.traffic_calls?.some(c => c.id === msg.id));
+        case "pilot_audio": {
+          const findCall = () => stateRef.current.pilot_call?.id === msg.id
+            ? stateRef.current.pilot_call : stateRef.current.traffic_calls?.find(c => c.id === msg.id);
+          const call = findCall();
+          if (call) {
+            const show = () => pushLog("pilot", call.text, {callsigns: [call.callsign]});
+            if (typeof msg.audio_b64 === "string") {
+              playRadio(msg.audio_b64, show, "Pilot audio playback failed. Showing the transmission as text.", () => !!findCall());
+            } else if (msg.tts_error) {
+              pushLog("warn", `Pilot audio failed: ${msg.tts_error}`);
+              show();
+            }
           }
           break;
+        }
         case "exchange": {
           const m = msg as unknown as Exchange & { readback: string };
-          setLastExchange(m);
+          const pending = m.audio_b64 ? { ...m, readback: "", audio_b64: null } : m;
+          setLastExchange(pending);
           const exchangeId = ++logSeq;
-          const callsigns = [...new Set((m.orders ?? []).map(o => o.callsign).filter(Boolean))];
+          const callsigns = [...new Set([...((m.orders ?? []).map(o => o.callsign)),
+            ...(m.addressed_callsigns ?? [])].filter(Boolean))];
           // Preserve the event boundary, not adjacency or timestamps, for grouping.
           // Audio remains on lastExchange rather than accumulating in history.
-          const { audio_b64: _audio, ...exchange } = m;
+          const { audio_b64: _audio, ...exchange } = pending;
           pushLog("tx", `📡 ${m.transcript}`, { exchangeId, exchange, callsigns });
           (m.trafscript ?? []).forEach((l) => pushLog("cmd", `→ ${l}`, { exchangeId }));
-          if (m.readback) pushLog("pilot", `🔊 ${m.readback}`, { exchangeId });
+          const showReadback = () => {
+            if (m.audio_b64) {
+              setLastExchange(latest => latest === pending ? m : latest);
+              setLog(entries => entries.map(entry => entry.exchange && entry.exchangeId === exchangeId
+                ? { ...entry, exchange: { ...entry.exchange, readback: m.readback } } : entry));
+            }
+            if (m.readback) pushLog("pilot", `🔊 ${m.readback}`, { exchangeId });
+          };
           (m.rejected ?? []).forEach((r) => pushLog("rej", `⊘ ${r}`, { exchangeId }));
-          if (!m.orders?.length && !m.trafscript?.length && !m.rejected?.length) pushLog("rej", "⊘ aucun ordre reconnu", { exchangeId });
+          if (!m.orders?.length && !m.trafscript?.length && !m.rejected?.length) pushLog("rej", "⊘ No command recognized", { exchangeId });
           // Reponse vocale systematique : l'audio du collationnement (API TTS)
           // est joue ICI, chemin unique pour les commandes tapees et vocales.
           // (un echec TTS est deja journalise par l'event "error" du backend)
-          if (m.audio_b64) playRadio(m.audio_b64, "Audio playback blocked. Use the replay control or allow sound in your browser.");
+          if (m.audio_b64) playRadio(m.audio_b64, showReadback, "Audio playback failed. Use the replay control or allow sound in your browser.");
+          else showReadback();
           break;
         }
         case "situation":
@@ -177,7 +233,7 @@ export function useSim(): SimHub {
     const connect = () => {
       if (closed) return;
       lastStateAt = performance.now();
-      ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws`);
+      ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws`, socketProtocols());
       // (re)connexion : re-tester les fournisseurs (couvre un health initial
       // rate ou un provider demarre apres l'application)
       ws.onopen = () => {
@@ -193,19 +249,24 @@ export function useSim(): SimHub {
       ws.onclose = () => {
         if (!closed) {
           setConnection("disconnected");
+          if (hasSession()) { expireSession(); return; }
           reconnect = window.setTimeout(connect, 1500);
         }
       };
     };
-    connect();
+    // Avoid opening an abandoned socket during React's development effect probe.
+    if (hasSession()) reconnect = window.setTimeout(connect, 0);
+    else connect();
     const watchdog = window.setInterval(() => {
-      if (performance.now() - lastStateAt > 5000 && ws?.readyState === WebSocket.OPEN) {
+      if (performance.now() - lastStateAt > 15000 && ws?.readyState === WebSocket.OPEN) {
         setConnection("disconnected");
         ws.close();
       }
     }, 1000);
     return () => {
       closed = true;
+      stopRadioPlayback();
+      resetRadioChannel();
       window.clearTimeout(reconnect);
       window.clearInterval(watchdog);
       if (trailing !== null) window.clearTimeout(trailing);
@@ -217,12 +278,13 @@ export function useSim(): SimHub {
     endedCb.current = cb;
     return () => { if (endedCb.current === cb) endedCb.current = () => undefined; };
   }, []);
-  const clearLog = useCallback(() => { setLog([]); setLastExchange(null); }, []);
+  const clearLog = useCallback(() => { radioGeneration.current++; stopRadioPlayback(); resetRadioChannel(); setLog([]); setLastExchange(null); }, []);
 
   return {
     connection, stateRef, state, providers, log, lastExchange, report,
     exerciseLive: state.exercise ?? null,
     exerciseActive: !!state.exercise,
+    radioNoise, setRadioNoise,
     pushLog,
     clearLog,
     refreshHealth,

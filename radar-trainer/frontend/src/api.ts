@@ -1,5 +1,6 @@
 /** Client REST minimal vers le serveur FastAPI local. */
 import type { ExerciseReport, ExerciseState, NavData, Providers, ScenarioMeta } from "./types";
+import { sessionFetch as fetch } from './session';
 
 async function request<T>(url: string, init?: RequestInit): Promise<T> {
   const r = await fetch(url, init);

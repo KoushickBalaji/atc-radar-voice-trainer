@@ -95,3 +95,4 @@ export default function WeatherStrip({ icao }: { icao: string }) {
     </> : <span className="text-mut">{status === 'loading' ? 'Loading…' : 'Unavailable'}</span>}
   </section>;
 }
+import { sessionFetch as fetch } from '../session';

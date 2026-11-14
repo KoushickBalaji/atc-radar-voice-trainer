@@ -17,10 +17,8 @@ AUCUN repli silencieux : toute erreur de fournisseur leve ProviderError, que
 l'application remonte visiblement (HTTP 502 + log UI). L'__init__ ne fait AUCUN
 appel reseau (import instantane, testable sans reseau).
 
-L'intelligence de prompt reste dans le projet : la KB OACI (kb_oaci, ~2,5 Ko)
-est inlinee INTEGRALEMENT dans le prompt systeme et la validation deterministe
-des bornes (03_bluesky_connector) s'applique a toute sortie LLM - identique
-pour tous les fournisseurs.
+Command interpretation uses the English capability schema in command_interpreter.
+The legacy scenario generator remains separate from the command boundary.
 """
 import io
 import os
@@ -114,16 +112,32 @@ def ping(cfg):
 
 
 # --- clients ----------------------------------------------------------------
-def radio_keywords(airport=None):
-    """Domain vocabulary, never full flight IDs, exercise values or expected orders."""
+def radio_keywords(airport=None, aircraft=()):
+    """Recognition vocabulary from live traffic, without clearance/answer data."""
     from atc_callsign import AIRLINE, PHON
-    terms = set(AIRLINE) | set(PHON)
+    from readback import callsign_telephony
+    import re
+
+    terms = set(PHON)
+    for ac in aircraft:
+        callsign = ac.get('id')
+        if not isinstance(callsign, str):
+            continue
+        callsign = callsign.strip().upper()
+        if not re.fullmatch(r'[A-Z][A-Z0-9-]{1,11}', callsign):
+            continue
+        terms.add(callsign)
+        terms.add(callsign_telephony(callsign))
+        for telephony, code in AIRLINE.items():
+            suffix = callsign[len(code):] if callsign.startswith(code) else ''
+            if suffix and suffix[0].isdigit():
+                terms.add(telephony)
+                terms.add(telephony + ' ' + callsign_telephony(suffix))
     if airport:
         terms.add(airport.NAME)
         terms.update(getattr(airport.ats_routes, 'fixes', {}))
         terms.update(p['fix'] for p in airport.holds.values())
-    import re
-    return sorted(t for t in terms if re.fullmatch(r"[A-Za-z][A-Za-z '-]{0,63}", t))
+    return sorted(t for t in terms if re.fullmatch(r"[A-Za-z][A-Za-z0-9 '-]{0,127}", t))
 
 
 class SttClient:
@@ -135,7 +149,10 @@ class SttClient:
         _require_url(self.cfg)
         prompt = ("English air traffic control radio. Aircraft identifiers may use airline "
                   "telephony, phonetic letters and spoken digits. Preserve numbers, direction, "
-                  "negation and repetitions as heard. Do not supply missing speech.")
+                  "negation and repetitions as heard. Do not supply missing speech. "
+                  "Vocabulary hints are possible spellings, not a required answer list. "
+                  "An aircraft identifier may be absent from the hints. Never substitute "
+                  "a listed identifier or change its digits to fit the hints.")
         data = {"model": self.cfg.model, "response_format": "json", "prompt": prompt}
         if self.cfg.model == 'gpt-transcribe':
             data['languages[]'] = 'en'
@@ -169,11 +186,13 @@ class LlmClient:
     def __init__(self, cfg):
         self.cfg = cfg
 
-    def chat(self, messages, temperature=0.0, max_tokens=512, timeout=90):
+    def chat(self, messages, temperature=0.0, max_tokens=512, timeout=90, response_format=None):
         """messages chat -> contenu texte de la 1re completion. POST /v1/chat/completions."""
         _require_url(self.cfg)
         payload = {"model": self.cfg.model, "messages": messages,
                    "temperature": temperature, "max_tokens": max_tokens}
+        if response_format is not None:
+            payload['response_format'] = response_format
         try:
             r = requests.post(f"{self.cfg.url}/v1/chat/completions",
                               headers=_headers(self.cfg), json=payload, timeout=timeout)
@@ -267,36 +286,10 @@ class AIClient:
     def asr(self, wav_bytes, keywords=()):
         return self._stt.transcribe(wav_bytes, keywords)
 
-    # --- interpretation (prompt + KB inlinee + validation deterministe) ---------
+    # Command interpretation has no dependency on the legacy RAG pipeline.
     def interpret(self, text):
-        """Clairance -> {text, orders, trafscript, rejected, cited}.
-        MEME forme de sortie que l'ancien parseur local (atc_ai.local_interpret) :
-        seuls les ordres VALIDES (bornes 03, waypoints du graphe) sont conserves."""
-        if os.environ.get('ATC_SIMPLE_DEMO') == '1':
-            import approach_radio
-            if approach_radio.is_procedure_text(text):
-                return approach_radio.interpret(text, self._llm.chat)
-        import atc_llm                       # pur sans torch (verifie) ; lazy: numpy
-        import kb_oaci
-        ner = atc_llm.ner_extract(text)
-        docs = kb_oaci.build_documents()     # 9 fiches ~2,5 Ko -> KB inlinee integralement
-        messages = atc_llm.build_messages(text, [(d, 1.0) for d in docs], ner)
-        if os.environ.get('ATC_SIMPLE_DEMO') == '1':
-            from simple_demo import guidance
-            messages[0]['content'] += (
-                '\nPreserve the callsign and every numeric value exactly as spoken. '
-                'Never guess a missing callsign or value. Never repair toward a likely instruction. '
-                'Ambiguous or contradictory instructions must return []. '
-                'This exercise supports immediate heading, level and speed only. '
-                'Keep altitude in feet distinct from flight level; do not infer QNH. '
-                '\nApproved AAI reference context (interpretation, not a grading claim):\n' + guidance())
-        raw = self._llm.chat(messages)
-        valid, rejected = atc_llm.postprocess_orders(atc_llm.parse_orders(raw))
-        return {"text": text,
-                "orders": [v["order"] for v in valid],
-                "trafscript": [v["trafscript"] for v in valid],
-                "rejected": [r["erreur"] for r in rejected],
-                "cited": [d["id"] for d in docs]}
+        from command_interpreter import interpret
+        return interpret(text, self._llm.chat)
 
     # --- generation de scenario --------------------------------------------------
     def scenario(self, description):
@@ -309,9 +302,9 @@ class AIClient:
         return atc_ai._items_to_aircraft(items)
 
     # --- TTS -----------------------------------------------------------------------
-    def tts(self, text, voice=None):
+    def tts(self, text, voice=None, *, clear=False):
         """Texte -> audio WAV (bytes). voice=None -> 1re voix du pool ; degradation
         VHF appliquee cote client si ATC_TTS_VHF=1 (independant du fournisseur)."""
         voice = voice or (self.tts_pool[0] if self.tts_pool else "default")
         audio = self._tts.speak(text, voice, response_format=self._tts_format)
-        return _apply_vhf(audio) if self._tts_vhf else audio
+        return _apply_vhf(audio) if self._tts_vhf and not clear else audio

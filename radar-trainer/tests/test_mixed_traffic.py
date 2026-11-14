@@ -4,7 +4,7 @@ import os
 import pytest
 
 from airport_profiles import get_profile
-from traffic_scenario import catalogue
+from traffic_scenario import TrafficRun, catalogue
 from simple_demo import validate
 
 
@@ -17,6 +17,37 @@ def test_scenario_discovery_and_spoken_target():
     assert not validate('Speedbird four five two, runway two three cleared for takeoff', order, aircraft, profile)
     assert validate('Air France one two three, runway two three cleared for takeoff', order, aircraft, profile)
     assert validate('Speedbird four five two, after landing traffic cleared for takeoff', order, aircraft, profile)
+
+
+@pytest.mark.parametrize('transfer_required', [False, True])
+def test_transit_entry_station_and_exit_policy(transfer_required):
+    airport = get_profile('VOCB')
+    spec = catalogue(airport)['routine-23']
+    flight = next(f for f in spec.flights if f.callsign == 'UAE681')
+    assert flight.initial_station == 'Coimbatore Approach'
+    assert flight.transfer_required is False
+    if transfer_required:
+        flight.transfer_required = True
+        flight.initial_station = None
+    run = TrafficRun(airport, spec)
+    run.schedule(40, lambda *args: None, lambda line: None)
+    lat, lon = airport.from_nm(2, 0)
+    ac = dict(id=flight.callsign, x=2, y=0, lat=lat, lon=lon,
+              alt_ft=7000, pressure_alt_ft=7000, hdg=0, gs=210)
+    run.update(ac, 1, lambda line: None)
+    calls = [c['text'] for c in run.calls if c['callsign'] == flight.callsign]
+    assert calls[0].startswith('Coimbatore ' + ('Tower' if transfer_required else 'Approach'))
+    lat, lon = airport.from_nm(2, 50)
+    ac.update(y=50, lat=lat, lon=lon)
+    run.update(ac, 1, lambda line: None)
+    calls = [c['text'] for c in run.calls if c['callsign'] == flight.callsign]
+    if transfer_required:
+        assert run.phase[flight.callsign] == 'handoff_requested'
+        assert any('confirm frequency change' in call for call in calls)
+    else:
+        assert run.phase[flight.callsign] == 'complete'
+        assert len(calls) == 1
+        assert flight.callsign not in run.overdue
 
 
 def test_routes_clip_at_cta_and_arrivals_spawn_on_the_inbound_leg():
@@ -38,6 +69,86 @@ def test_routes_clip_at_cta_and_arrivals_spawn_on_the_inbound_leg():
         assert contains(start['x'],start['y'],area)
         assert not contains(2*edge[0]-start['x'],2*edge[1]-start['y'],area)
         assert start['inbound'][-1] == 'CCB'
+
+
+def test_coordinated_levels_use_fix_eta_and_published_minimum():
+    airport = get_profile('VOCB')
+    spec = catalogue(airport)['routine-23']
+    for flight in spec.flights:
+        if flight.role == 'arrival':
+            flight.entry_alt_ft = 6000
+    run = TrafficRun(airport, spec)
+    assert run.release_levels == {'DLH908': 6300, 'AFR123': 7300}
+    run.schedule(40, lambda *args: None, lambda line: None)
+    assert all('hold' not in call['text'].lower() for call in run.calls)
+    run.accept_vector('AFR123', ['ALT', 'AFR123', '9000'])
+    run.accept_vector('AFR123', ['SPD', 'AFR123', '170'])
+    assert run.release_levels['AFR123'] == 9000 and 'AFR123' in run.pending_holds
+    run.accept_vector('AFR123', ['HDG', 'AFR123', '90'])
+    assert set(run.pending_holds) == {'DLH908'}
+
+
+@pytest.mark.skipif(os.getenv('ATC_TEST_LIVE_TRAFFIC') != '1', reason='opt-in detached BlueSky integration')
+def test_opening_radio_and_clock_wait_for_start(monkeypatch):
+    import atc_sim
+    import bluesky_runtime as bsk
+
+    monkeypatch.setenv('ATC_SIMPLE_DEMO', '1')
+    sim = atc_sim.SimManager()
+    bsk.reset()
+    airport = get_profile('VOCB')
+    sim._apply(dict(kind='airport', profile=airport, scenario=catalogue(airport)['routine-23']))
+    for _ in range(3):
+        sim._update_snapshot(True, 1)
+        snap = sim.snapshot()
+        assert snap['paused'] and snap['t'] == 0
+        assert snap['aircraft'] and not snap['traffic_calls']
+    opening_calls = list(sim.traffic.calls)
+    assert opening_calls
+    sim.resume()
+    assert not sim._paused
+    sim._advance(1)
+    sim._update_snapshot(False, 1)
+    snap = sim.snapshot()
+    assert snap['t'] > 0 and snap['traffic_calls'] == opening_calls
+    sim.pause()
+    sim._update_snapshot(True, 1)
+    assert sim.snapshot()['t'] == snap['t']
+    assert sim.snapshot()['traffic_calls'] == opening_calls
+
+
+@pytest.mark.skipif(os.getenv('ATC_TEST_LIVE_TRAFFIC') != '1', reason='opt-in detached BlueSky integration')
+def test_unattended_arrivals_fly_separated_circuits(monkeypatch):
+    import atc_sim
+    import bluesky_runtime as bsk
+
+    monkeypatch.setenv('ATC_SIMPLE_DEMO', '1')
+    sim = atc_sim.SimManager()
+    bsk.reset()
+    airport = get_profile('VOCB')
+    sim._apply(dict(kind='airport', profile=airport, scenario=catalogue(airport)['routine-23']))
+    sim.resume()
+    joined = []
+    for _ in range(1200):
+        sim._advance(3)
+        sim._update_snapshot(False, 1)
+        arrivals = [a for a in sim.snapshot()['aircraft'] if a['role'] == 'arrival']
+        if len(arrivals) == 2:
+            assert abs(arrivals[0]['alt_ft'] - arrivals[1]['alt_ft']) >= 999.9
+        for a in arrivals:
+            hold = a['ils'].get('holding')
+            if hold and hold['entry'] and a['id'] not in joined:
+                joined.append(a['id'])
+        if len(arrivals) == 2 and all(a['ils'].get('holding', {}).get('circuits', 0) >= 2 for a in arrivals):
+            break
+    else:
+        pytest.fail(str([(a['id'], a['x'], a['y'], a['ils']) for a in arrivals]))
+    assert joined == ['DLH908', 'AFR123']
+    sim._apply(dict(kind='cmd', line='HDG DLH908 090'))
+    sim._advance(3)
+    sim._update_snapshot(False, 1)
+    assert sim.traffic.phase['DLH908'] == 'awaiting_clearance'
+    assert sim.traffic.phase['AFR123'] == 'holding'
 
 
 @pytest.mark.skipif(os.getenv('ATC_TEST_LIVE_TRAFFIC') != '1', reason='opt-in detached BlueSky integration')
@@ -80,7 +191,8 @@ def test_live_four_handoffs(monkeypatch):
             if tick == 57 and ac['role'] == 'arrival':
                 assert not ac['lnav']
             cs, phase = ac['id'], ac['phase']
-            if phase == 'awaiting_clearance':
+            if phase == 'awaiting_clearance' and tick > 45:
+                sim._apply(dict(kind='cmd', line=f'ALT {cs} 3200'))
                 assert not clearance(cs, 'CLEAR_ILS', runway='23')
             if ac['role'] == 'arrival' and tick > 45 and phase in ('armed', 'awaiting_clearance'):
                 along, cross = airport.approach_geometry(ac['x'], ac['y'])
@@ -110,7 +222,9 @@ def test_live_four_handoffs(monkeypatch):
             if phase == 'handoff_requested':
                 assert clearance(cs, 'CONTACT_UNIT', station='Coimbatore Approach', frequency='118.000')
                 assert not clearance(cs, 'CONTACT_UNIT', station='Coimbatore Approach', frequency='120.050')
-            if phase == 'glideslope':
+            if cs == 'DLH908' and phase == 'localizer' and not sim.traffic.approaches[cs].landing_cleared:
+                assert not clearance(cs, 'CLEAR_LAND', runway='23')
+            if phase == 'glideslope' and cs != 'DLH908':
                 assert not clearance(cs, 'CONTACT_TOWER', station='tower', frequency=airport.tower['frequency_mhz'])
         if sim.snapshot()['traffic']['complete']:
             break

@@ -6,7 +6,10 @@ class RadioCapture extends AudioWorkletProcessor {
     this.cursor = this.filled = 0;
     this.clip = null;
     this.port.onmessage = ({ data }) => {
-      if (data === 'begin' && !this.clip) {
+      if (data === 'cancel') {
+        this.clip = null;
+        this.filled = this.cursor = 0;
+      } else if (data === 'begin' && !this.clip) {
         this.clip = new Float32Array(sampleRate * 30);
         const tail = this.history.subarray(this.history.length - this.filled + this.cursor);
         this.clip.set(tail);

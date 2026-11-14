@@ -53,6 +53,7 @@ Thumbs.db
 *.png
 *.jpg
 *.jpeg
+!frontend/public/onboarding/*.png
 *.safetensors
 *.tsbuildinfo
 frontend/dist/
