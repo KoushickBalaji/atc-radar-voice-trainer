@@ -25,7 +25,8 @@ def test_transit_entry_station_and_exit_policy(transfer_required):
     spec = catalogue(airport)['routine-23']
     flight = next(f for f in spec.flights if f.callsign == 'UAE681')
     assert flight.initial_station == 'Coimbatore Approach'
-    assert flight.transfer_required is False
+    assert flight.transfer_required is True
+    flight.transfer_required = transfer_required
     if transfer_required:
         flight.transfer_required = True
         flight.initial_station = None
@@ -41,9 +42,10 @@ def test_transit_entry_station_and_exit_policy(transfer_required):
     ac.update(y=50, lat=lat, lon=lon)
     run.update(ac, 1, lambda line: None)
     calls = [c['text'] for c in run.calls if c['callsign'] == flight.callsign]
+    assert run.phase[flight.callsign] == 'complete'
     if transfer_required:
-        assert run.phase[flight.callsign] == 'handoff_requested'
         assert any('confirm frequency change' in call for call in calls)
+        assert flight.callsign in run.overdue
     else:
         assert run.phase[flight.callsign] == 'complete'
         assert len(calls) == 1
@@ -215,13 +217,15 @@ def test_live_four_handoffs(monkeypatch):
                 assert ac['gs'] == 0
                 if tick == 45:
                     assert clearance(cs, 'TAKEOFF', runway='05')
+                    assert not clearance(cs, 'DEPARTURE_CLEARANCE', runway='23', turn='left', radial=180, altitude_ft=7000, squawk='0421')
                     assert not clearance(cs, 'TAKEOFF', runway='23')
             if phase == 'transiting' and not issued_level:
                 sim._apply(dict(kind='cmd', line=f'ALT {cs} 7000'))
                 issued_level = True
             if phase == 'handoff_requested':
                 assert clearance(cs, 'CONTACT_UNIT', station='Coimbatore Approach', frequency='118.000')
-                assert not clearance(cs, 'CONTACT_UNIT', station='Coimbatore Approach', frequency='120.050')
+                flight = sim.traffic.flights[cs]
+                assert not clearance(cs, 'CONTACT_UNIT', station=flight.station, frequency=flight.frequency)
             if cs == 'DLH908' and phase == 'localizer' and not sim.traffic.approaches[cs].landing_cleared:
                 assert not clearance(cs, 'CLEAR_LAND', runway='23')
             if phase == 'glideslope' and cs != 'DLH908':
@@ -232,7 +236,7 @@ def test_live_four_handoffs(monkeypatch):
     final = sim.snapshot()
     assert final['traffic']['complete'], [(a['id'], a.get('ils'), a['alt_ft']) for a in final['aircraft']]
     assert final['paused'] and not final['aircraft']
-    assert any('entering' in c['text'] for c in final['traffic_calls'])
+    assert any(c['callsign'] == 'UAE681' and c['text'].startswith('Coimbatore Approach') for c in final['traffic_calls'])
     load()
     assert [(a['id'], a['lat'], a['lon']) for a in sim.snapshot()['aircraft']] == [
         (a['id'], a['lat'], a['lon']) for a in initial]

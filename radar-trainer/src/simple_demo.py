@@ -71,10 +71,17 @@ def validate(text, orders, aircraft, airport=None):
         spoken = spoken_callsigns(text, aircraft)
         if spoken != {orders[0].get('callsign')}:
             return 'Callsign unclear. Address one aircraft and transmit again.'
+        ac = next((a for a in aircraft if a['id'] == orders[0]['callsign']), None)
+        if ac and (ac.get('radio_contact') is False or ac.get('phase') == 'transferred'):
+            return 'This aircraft is not on your frequency.'
     if any(o.get('action') in ACTIONS for o in orders):
         if len(orders) != 1:
             return 'Issue approach clearance or tower handoff as a separate transmission.'
         action = orders[0]['action']
+        if action in ('DEPARTURE_CLEARANCE', 'READBACK_CORRECT'):
+            if re.search(r'\b(not|negative|cancel|correction|unless|if)\b|cleared for take[ -]?off', text, re.I):
+                return 'Issue the departure clearance separately from takeoff clearance.'
+            return None  # Complete values and departure state are checked by the simulator.
         from approach_radio import RADIO_ACTIONS
         if action in RADIO_ACTIONS:
             if re.search(r'\b(not|negative|cancel|correction|after|until|when|if|reaching|passing|established|then)\b', text, re.I):

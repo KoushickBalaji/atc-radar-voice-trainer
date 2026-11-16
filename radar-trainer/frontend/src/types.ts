@@ -1,6 +1,7 @@
 /** Types partages : miroirs des payloads du serveur FastAPI (atc_app.py). */
 
 export interface Aircraft {
+  airspace_alerts?: {id: string; status: 'inside' | 'approaching'; entry_in_s: number}[];
   role?: 'arrival' | 'departure' | 'overflight';
   phase?: string;
   ils?: SimState['ils'];
@@ -99,6 +100,7 @@ export interface AirportProfile {
 }
 
 export interface NavData {
+  prohibited_airspace?: {id: string; name: string; ceiling_ft: number; points: [number, number][]; label: [number, number]; source: string; runway?: [number, number][]}[];
   ats_routes?: {points:[number,number][]; waypoint:string|null; routes:string[]}[];
   holds?: {id:string; fix:string; xy:[number,number]; inbound_magnetic_deg:number; variation_east_deg:number;
     turn:'left'|'right'; leg_seconds:number; minimum_ft:number; max_kias:number}[];

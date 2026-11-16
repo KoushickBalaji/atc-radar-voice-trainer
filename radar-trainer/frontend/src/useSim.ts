@@ -53,10 +53,12 @@ export function useSim(): SimHub {
     setRadioNoiseState(enabled);
   }, []);
 
-  const separationAlarm = connection === "connected" && state.sim_alive !== false &&
-    !state.paused && state.conflicts.length > 0;
+  // Share one alarm across active violations; predictive advisories stay visual.
+  const safetyAlarm = connection === "connected" && state.sim_alive !== false &&
+    !state.paused && (state.conflicts.length > 0 || state.aircraft.some(a =>
+      a.msaw?.status === 'warning' || a.airspace_alerts?.some(z => z.status === 'inside')));
   useEffect(() => {
-    if (!separationAlarm) return;
+    if (!safetyAlarm) return;
     const alarm = new Audio("/separation-alarm.wav");
     alarm.loop = true;
     let active = true;
@@ -75,7 +77,7 @@ export function useSim(): SimHub {
       window.removeEventListener("click", play);
       window.removeEventListener("keydown", play);
     };
-  }, [separationAlarm]);
+  }, [safetyAlarm]);
 
   const pushLog = useCallback((kind: LogEntry["kind"], text: string, context: Partial<Pick<LogEntry, "exchangeId" | "exchange" | "callsigns">> = {}) => {
     setLog((l) => [...l.slice(-249), { id: ++logSeq, t: now(), kind, text, ...context }]);

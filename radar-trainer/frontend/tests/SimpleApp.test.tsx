@@ -11,7 +11,10 @@ const nav: NavData = {range_nm:25,center:[0,0],waypoints:[],fixes:[],routes:[],s
 vi.mock('../src/useSim',()=>({useSim:()=>({connection:'connected',state:{aircraft:[],paused:true,sim_alive:true},stateRef:{current:{}},log:[],providers:{},refreshHealth:vi.fn()})}));
 vi.mock('../src/api',()=>({api:{nav:async()=>nav}}));
 vi.mock('../src/components/RadioPanel',()=>({default:()=>null}));
-vi.mock('../src/components/RadarCanvas',()=>({default:({options}:{options:{hiddenMarkers:string[]}})=><output data-testid="hidden-markers">{JSON.stringify(options.hiddenMarkers)}</output>}));
+vi.mock('../src/components/RadarCanvas',()=>({default:({options}:{options:{hiddenMarkers:string[];mapLabels:boolean}})=><>
+  <output data-testid="hidden-markers">{JSON.stringify(options.hiddenMarkers)}</output>
+  <output data-testid="map-labels">{String(options.mapLabels)}</output>
+</>}));
 afterEach(()=>{cleanup();localStorage.clear();vi.unstubAllGlobals();});
 
 it('offers a collapsed legend with grouped controls, hide/show all and persisted visibility',async()=>{
@@ -26,11 +29,20 @@ it('offers a collapsed legend with grouped controls, hide/show all and persisted
   await waitFor(()=>expect(screen.getByTestId('hidden-markers').textContent).toContain('navaid:Test VOR'));
   expect((screen.getByRole('checkbox',{name:/Radar guides/,hidden:true}) as HTMLInputElement).checked).toBe(true);
   expect(JSON.parse(localStorage.getItem('atc.mapLayers.v2.TEST')!)).toEqual(['navaids']);
+  const labels = screen.getByLabelText<HTMLInputElement>('Show map labels');
+  expect(labels.checked).toBe(true);
+  fireEvent.click(labels);
+  expect(screen.getByTestId('map-labels').textContent).toBe('false');
+  expect(screen.getByTestId('hidden-markers').textContent).toBe('["navaid:Test VOR"]');
   first.unmount();
   render(<SimpleApp/>);
   await waitFor(()=>expect((screen.getByRole('checkbox',{name:/Navigation aids/,hidden:true}) as HTMLInputElement).checked).toBe(false));
+  expect(screen.getByLabelText<HTMLInputElement>('Show map labels').checked).toBe(false);
   fireEvent.click(screen.getByRole('button',{name:'Hide all',hidden:true}));
   expect(screen.getAllByRole('checkbox',{hidden:true}).every(box=>!(box as HTMLInputElement).checked)).toBe(true);
   fireEvent.click(screen.getByRole('button',{name:'Show all',hidden:true}));
-  expect(screen.getAllByRole('checkbox',{hidden:true}).every(box=>(box as HTMLInputElement).checked)).toBe(true);
+  expect(screen.getByTestId('hidden-markers').textContent).toBe('[]');
+  expect(screen.getByLabelText<HTMLInputElement>('Show map labels').checked).toBe(false);
+  fireEvent.click(screen.getByLabelText('Show map labels'));
+  expect(screen.getByTestId('map-labels').textContent).toBe('true');
 });

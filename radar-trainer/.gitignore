@@ -49,6 +49,7 @@ Thumbs.db
 # Large/local binary artifacts kept outside the source backup
 *.pdf
 *.wav
+!frontend/public/separation-alarm.wav
 *.gif
 *.png
 *.jpg

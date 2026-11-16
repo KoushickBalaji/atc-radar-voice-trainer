@@ -120,3 +120,20 @@ it('filters grouped exchanges by callsign while retaining every aircraft warning
   fireEvent.click(screen.getByRole('button', { name: 'Select VEC456' }));
   expect(screen.getAllByRole('article')).toHaveLength(3);
 });
+
+it('shows prohibited entry warnings, escalates incursions, and clears them', () => {
+  const hub = fixture();
+  hub.state.aircraft = [aircraft('ARR123', {airspace_alerts: [{id: 'VOP 190', status: 'approaching', entry_in_s: 30}]})];
+  const view = render(<AircraftHud hub={hub} nav={nav} />);
+  expect(screen.getByText('ARR123 · VOP 190 · PROHIBITED AIRSPACE AHEAD')).toBeTruthy();
+  expect(screen.getByText(/Predicted entry in 30 s/)).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', {name: 'Aircraft with alerts'}));
+  expect(screen.getByRole('button', {name: 'Select ARR123'})).toBeTruthy();
+  hub.state.aircraft = [aircraft('ARR123', {airspace_alerts: [{id: 'VOP 190', status: 'inside', entry_in_s: 0}]})];
+  view.rerender(<AircraftHud hub={hub} nav={nav} />);
+  expect(screen.getByText('ARR123 · VOP 190 · PROHIBITED AIRSPACE ENTERED')).toBeTruthy();
+  hub.state.aircraft = [aircraft('ARR123')];
+  view.rerender(<AircraftHud hub={hub} nav={nav} />);
+  expect(screen.getByText('No aircraft with alerts.')).toBeTruthy();
+  expect(screen.queryByText(/PROHIBITED AIRSPACE/)).toBeNull();
+});

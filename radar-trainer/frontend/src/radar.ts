@@ -14,6 +14,7 @@ export interface View {
 export interface RadarOptions {
   sweep: boolean;
   labels: boolean;
+  mapLabels?: boolean;
   trails: boolean;
   rings: boolean;
   routes: boolean;
@@ -46,7 +47,7 @@ const C = {
 };
 
 export const colorOf = (a: Aircraft) =>
-  a.msaw?.status === 'warning' || a.alert === "los" ? C.dang : a.alert === "predicted" ? C.warn : C.ok;
+  a.airspace_alerts?.some(z => z.status === 'inside') || a.msaw?.status === 'warning' || a.alert === "los" ? C.dang : a.airspace_alerts?.some(z => z.status === "approaching") || a.alert === "predicted" ? C.warn : C.ok;
 
 export const sx = (v: View, x: number) => v.w / 2 + (x - v.panX) * v.scale;
 export const sy = (v: View, y: number) => v.h / 2 - (y - v.panY) * v.scale;
@@ -73,6 +74,7 @@ export function drawScope(
 
   // Visibility only: keep the original navigation and simulator state intact.
   const hidden = new Set(opt.hiddenMarkers ?? []);
+  const showMapLabels = opt.mapLabels !== false;
   const visible = (group: string, name: string) => !hidden.has(`${group}:${name}`);
   const shownNav: NavData = {
     ...nav,
@@ -97,7 +99,7 @@ export function drawScope(
     for (const area of nav.control_areas ?? []) drawSector(ctx, v, [...area.points, area.points[0]]);
   }
   drawMinimumAltitudes(ctx, v, shownNav);
-  if (!hidden.has("ats:routes")) drawAtsRoutes(ctx, v, nav.ats_routes ?? []);
+  if (!hidden.has("ats:routes")) drawAtsRoutes(ctx, v, nav.ats_routes ?? [], showMapLabels);
   for (const hold of nav.holds ?? []) {
     if (!visible('hold', hold.id)) continue;
     const x = sx(v, hold.xy[0]), y = sy(v, hold.xy[1]);
@@ -107,7 +109,7 @@ export function drawScope(
     const leg = scale * 180 * hold.leg_seconds / 3600;
     ctx.save(); ctx.translate(x, y);
     ctx.strokeStyle = '#f3bb78'; ctx.fillStyle = '#f3bb78';
-    ctx.fillText(hold.fix+' hold', 5, 14);
+    if (showMapLabels) ctx.fillText(hold.fix+' hold', 5, 14);
     ctx.rotate((hold.inbound_magnetic_deg + hold.variation_east_deg) * Math.PI / 180);
     ctx.scale(hold.turn === 'left' ? -1 : 1, 1);
     ctx.beginPath(); ctx.arc(radius, 0, radius, Math.PI, 2*Math.PI);
@@ -117,9 +119,26 @@ export function drawScope(
     ctx.beginPath(); ctx.arc(0, 0, 2.5, 0, Math.PI*2); ctx.fill(); ctx.restore();
   }
   drawRunways(ctx, v, shownNav);
-  drawApproach(ctx, v, shownNav, opt.approachMarkers !== false);
-  if (opt.waypoints) { drawRoutes(ctx, v, nav); drawWaypoints(ctx, v, shownNav); }
+  drawApproach(ctx, v, shownNav, opt.approachMarkers !== false, showMapLabels);
+  if (opt.waypoints) { drawRoutes(ctx, v, nav); drawWaypoints(ctx, v, shownNav, showMapLabels); }
   drawZones(ctx, v, st);
+  ctx.save();
+  for (const zone of nav.prohibited_airspace ?? []) {
+    ctx.beginPath();
+    zone.points.forEach(([x, y], i) => i === 0 ? ctx.moveTo(sx(v,x), sy(v,y)) : ctx.lineTo(sx(v,x), sy(v,y)));
+    ctx.closePath(); ctx.fillStyle = 'rgba(255,88,104,0.12)'; ctx.fill();
+    ctx.strokeStyle = C.dang; ctx.lineWidth = 1.5; ctx.setLineDash([6,3]); ctx.stroke();
+    if (zone.runway) {
+      ctx.beginPath(); ctx.setLineDash([]); ctx.lineWidth = 3;
+      zone.runway.forEach(([rx, ry], i) => i === 0 ? ctx.moveTo(sx(v,rx), sy(v,ry)) : ctx.lineTo(sx(v,rx), sy(v,ry)));
+      ctx.stroke();
+    }
+    ctx.fillStyle = C.dang; ctx.font = 'bold 11px Consolas, monospace';
+    const x = sx(v,zone.label[0]), y = sy(v,zone.label[1]);
+    if (showMapLabels) ctx.fillText(zone.id, x-60, y-12);
+    ctx.fillText(`FL${zone.ceiling_ft / 100}/GND`, x-60, y+2);
+  }
+  ctx.restore();
   if (opt.routes) drawFmsRoutes(ctx, v, st);
   if (opt.sweep) drawSweep(ctx, v, nav.range_nm, sweepDeg);
   drawConflictLines(ctx, v, st);
@@ -128,7 +147,7 @@ export function drawScope(
   if (!hidden.has('scope:center')) drawCenterMark(ctx, v);
 }
 
-function drawAtsRoutes(ctx: CanvasRenderingContext2D, v: View, branches: NonNullable<NavData['ats_routes']>) {
+function drawAtsRoutes(ctx: CanvasRenderingContext2D, v: View, branches: NonNullable<NavData['ats_routes']>, showLabels: boolean) {
   if (!branches.length) return;
   ctx.save();
   ctx.strokeStyle = '#fff';
@@ -143,6 +162,10 @@ function drawAtsRoutes(ctx: CanvasRenderingContext2D, v: View, branches: NonNull
       else ctx.lineTo(sx(v,x), sy(v,y));
     });
     ctx.stroke();
+  }
+  if (!showLabels) {
+    ctx.restore();
+    return;
   }
   ctx.setLineDash([]);
   ctx.font = '11px Consolas, monospace';
@@ -188,7 +211,7 @@ function drawMinimumAltitudes(ctx: CanvasRenderingContext2D, v: View, nav: NavDa
   ctx.restore();
 }
 
-function drawApproach(ctx: CanvasRenderingContext2D, v: View, nav: NavData, showMarkers: boolean) {
+function drawApproach(ctx: CanvasRenderingContext2D, v: View, nav: NavData, showMarkers: boolean, showLabels: boolean) {
   ctx.save();
   ctx.strokeStyle = '#64cddb'; ctx.fillStyle = '#98e2eb'; ctx.lineWidth = 1.5;
   ctx.font = '11px Consolas, monospace';
@@ -199,11 +222,19 @@ function drawApproach(ctx: CanvasRenderingContext2D, v: View, nav: NavData, show
     for (const fix of showMarkers ? [...nav.approach.fixes, ...(nav.approach.distance_markers ?? [])] : []) {
       const x = sx(v,fix.x), y = sy(v,fix.y);
       ctx.beginPath(); ctx.moveTo(x-5,y-5); ctx.lineTo(x+5,y+5); ctx.moveTo(x-5,y+5); ctx.lineTo(x+5,y-5); ctx.stroke();
-      ctx.textAlign = fix.type === 'distance' ? 'left' : 'right';
-      ctx.fillText(fix.name, x + (fix.type === 'distance' ? 10 : -10), y-8); ctx.textAlign = 'left';
+      const isDistance = fix.type === 'distance';
+      if (showLabels || isDistance) {
+        ctx.textAlign = isDistance ? 'left' : 'right';
+        ctx.fillText(fix.name, x + (isDistance ? 10 : -10), y-8); ctx.textAlign = 'left';
+      }
     }
     const tip = nav.approach.line[1];
-    if (tip) { ctx.textAlign = 'right'; ctx.fillText(`ILS ${nav.approach.runway} · ${nav.approach.course_magnetic}°M · ${nav.approach.glide_deg}° GS`, sx(v,tip[0])-8, sy(v,tip[1])-8); ctx.textAlign = 'left'; }
+    if (tip) {
+      const course = `${nav.approach.course_magnetic}°M · ${nav.approach.glide_deg}° GS`;
+      ctx.textAlign = 'right';
+      ctx.fillText(showLabels ? `ILS ${nav.approach.runway} · ${course}` : course, sx(v,tip[0])-8, sy(v,tip[1])-8);
+      ctx.textAlign = 'left';
+    }
   }
   (nav.navaids ?? []).forEach((aid, i) => {
     const x = sx(v,aid.x), y = sy(v,aid.y);
@@ -211,10 +242,13 @@ function drawApproach(ctx: CanvasRenderingContext2D, v: View, nav: NavData, show
     if (aid.type === 'ndb') ctx.arc(x,y,4,0,Math.PI*2);
     else { ctx.moveTo(x,y-5); ctx.lineTo(x+5,y); ctx.lineTo(x,y+5); ctx.lineTo(x-5,y); ctx.closePath(); }
     ctx.stroke();
+    // Published navaid strings can combine the identifier with frequency or channel details.
+    const label = showLabels ? aid.name : aid.name.match(/\b(?:\d+(?:\.\d+)?\s*[mk]Hz|CH\s*\d+[XY])\b.*/i)?.[0];
+    if (!label) return;
     // Offset labels to keep the closely spaced airport antennas readable.
     const lx = sx(v,0)-190, ly = sy(v,0)+60+i*19;
     ctx.globalAlpha = .4; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(lx+145,ly-4); ctx.stroke(); ctx.globalAlpha = 1;
-    ctx.fillText(aid.name,lx,ly);
+    ctx.fillText(label,lx,ly);
   });
   ctx.restore();
 }
@@ -291,7 +325,7 @@ function drawRoutes(ctx: CanvasRenderingContext2D, v: View, nav: NavData) {
   }
 }
 
-function drawWaypoints(ctx: CanvasRenderingContext2D, v: View, nav: NavData) {
+function drawWaypoints(ctx: CanvasRenderingContext2D, v: View, nav: NavData, showLabels: boolean) {
   ctx.font = "9.5px Consolas, monospace";
   ctx.lineWidth = 1;
   for (const w of nav.waypoints ?? []) {
@@ -301,7 +335,7 @@ function drawWaypoints(ctx: CanvasRenderingContext2D, v: View, nav: NavData) {
     ctx.globalAlpha = 0.8;
     tri(ctx, x, y, 3.5);
     ctx.globalAlpha = 0.6;
-    ctx.fillText(w.name, x + 5, y + 3);
+    if (showLabels) ctx.fillText(w.name, x + 5, y + 3);
     ctx.globalAlpha = 1;
   }
   ctx.font = "10px Consolas, monospace";
@@ -314,7 +348,7 @@ function drawWaypoints(ctx: CanvasRenderingContext2D, v: View, nav: NavData) {
     ctx.moveTo(x - 4, y); ctx.lineTo(x, y - 4); ctx.lineTo(x + 4, y); ctx.lineTo(x, y + 4);
     ctx.closePath();
     ctx.stroke();
-    ctx.fillText(f.name, x + 6, y - 4);
+    if (showLabels) ctx.fillText(f.name, x + 6, y - 4);
   }
   ctx.font = "bold 10.5px Consolas, monospace";
   for (const p of nav.airports ?? []) {
@@ -323,7 +357,7 @@ function drawWaypoints(ctx: CanvasRenderingContext2D, v: View, nav: NavData) {
     ctx.fillStyle = C.apt;
     ctx.lineWidth = 1.2;
     ctx.strokeRect(x - 4, y - 4, 8, 8);
-    ctx.fillText(p.name, x + 6, y + (nav.runways?.length ? 30 : -4));
+    if (showLabels) ctx.fillText(p.name, x + 6, y + (nav.runways?.length ? 30 : -4));
   }
 }
 
@@ -484,7 +518,7 @@ function drawAircraft(
   const trend = a.vs_fpm > 300 ? "↑" : a.vs_fpm < -300 ? "↓" : "";
   const cfl = a.sel_alt_ft != null && Math.abs(a.sel_alt_ft - a.alt_ft) > 200
     ? String(Math.round(a.sel_alt_ft / 100)).padStart(3, "0") : "";
-  const l1 = [a.id, a.msaw?.status === 'warning' && 'MSAW', a.control_area?.exit_in_s != null && 'EXIT'].filter(Boolean).join(' ');
+  const l1 = [a.id, ...(a.airspace_alerts ?? []).map(z => `${z.id} ${z.status === 'inside' ? 'INSIDE' : 'ENTRY '+z.entry_in_s+'s'}`), a.msaw?.status === 'warning' && 'MSAW', a.control_area?.exit_in_s != null && 'EXIT'].filter(Boolean).join(' ');
   const l2 = `${String(a.fl).padStart(3, "0")}${trend}${cfl ? " " + cfl : ""} ${String(a.gs).padStart(3, "0")}`;
   ctx.font = "11px Consolas, monospace";
   const wd = Math.max(ctx.measureText(l1).width, ctx.measureText(l2).width);

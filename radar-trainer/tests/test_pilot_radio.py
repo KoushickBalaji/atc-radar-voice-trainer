@@ -93,10 +93,13 @@ def test_level_changeovers_require_explicit_contact_and_only_request_once():
     assert run.calls[-1]['text'].startswith('Coimbatore Approach, air france')
     assert run.procedure(order,10,[ac])
     run.phase['BAW452']='climbing'
-    dep=dict(id='BAW452',alt_ft=13999)
+    dep=dict(id='BAW452',alt_ft=13999,x=0,y=0,hdg=180,gs=200)
     run.update(dep,1,lambda line:None)
     assert run.phase['BAW452']=='climbing'
     dep['alt_ft']=14000
+    run.update(dep,1,lambda line:None)
+    assert run.phase['BAW452']=='climbing'  # Combined positions: no departure level handoff.
+    dep.update(x=0,y=-23)
     run.update(dep,1,lambda line:None)
     count=len(run.calls)
     run.update(dep,1,lambda line:None)
@@ -111,6 +114,11 @@ def test_live_radio_and_level_transfer(monkeypatch):
     bsk.reset()
     airport=get_profile('VOCB')
     sim._apply(dict(kind='airport',profile=airport))
+    snap=sim.snapshot()
+    assert snap['paused'] and not snap['traffic_calls']
+    sim.resume()
+    sim._advance(1)
+    sim._update_snapshot(False,1)
     snap=sim.snapshot()
     assert len(snap['traffic_calls'])==1
     cs=snap['aircraft'][0]['id']
@@ -143,6 +151,10 @@ def test_live_radio_and_level_transfer(monkeypatch):
     assert not item['rejected']
     assert any(a['id']=='AFR123' for a in sim.snapshot()['aircraft'])
     assert sim.traffic.calls[-1]['text'].startswith('Coimbatore Approach')
+    item=dict(kind='procedure',order=dict(callsign='BAW452',action='DEPARTURE_CLEARANCE',runway='23',
+                                         turn='left',radial=180,altitude_ft=18000,squawk='0421'))
+    sim._apply(item)
+    assert not item['rejected']
     item=dict(kind='procedure',order=dict(callsign='BAW452',action='TAKEOFF',runway='23'))
     sim._apply(item)
     assert not item['rejected']
@@ -153,7 +165,8 @@ def test_live_radio_and_level_transfer(monkeypatch):
             break
     assert sim.traffic.phase['BAW452']=='handoff_requested'
     dep=next(a for a in sim.snapshot()['aircraft'] if a['id']=='BAW452')
-    assert dep['alt_ft']>=14000
+    assert dep['squawk']=='0421'
+    assert sim.traffic.near_exit(dep, 'cta-b', sim.traffic.flights['BAW452'].lead_s)
 
 @pytest.mark.parametrize('phrase', ['heading runway', 'runway heading', 'fly runway heading', 'maintain runway heading', 'continue runway heading'])
 def test_runway_heading_aliases_preserve_relative_instruction(phrase):

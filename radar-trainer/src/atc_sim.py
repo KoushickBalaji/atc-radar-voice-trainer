@@ -307,7 +307,7 @@ class SimManager:
             if order['action'] in approach_radio.RADIO_ACTIONS:
                 cs = order['callsign']
                 ac = next((a for a in self.snapshot()['aircraft'] if a['id'] == cs), None)
-                if ac is None or ac.get('phase') in ('scheduled', 'inbound', 'complete'):
+                if ac is None or ac.get('phase') in ('scheduled', 'inbound', 'complete', 'transferred') or (self.traffic and not self.traffic.on_frequency(cs)):
                     item['rejected'] = 'This aircraft is not on your frequency.'
                     return
                 meta = self._meta.setdefault(cs, {})
@@ -361,6 +361,8 @@ class SimManager:
             if self.traffic:
                 item['rejected'] = self.traffic.procedure(order, self.traffic.elapsed, self.snapshot()['aircraft'])
                 if not item['rejected']:
+                    if order['action'] == 'DEPARTURE_CLEARANCE':
+                        self._meta.setdefault(order['callsign'], {}).update(squawk=order['squawk'], level_reference='flight_level')
                     if self.traffic.phase[order['callsign']] == 'complete':
                         bsk.cmd(f"DEL {order['callsign']}")
                         bsk.flush_commands()
@@ -458,6 +460,9 @@ class SimManager:
             self._update_snapshot(True, self._speed)
         elif kind == "cmd":
             fields = item['line'].split()
+            if self.traffic and len(fields) > 1 and not self.traffic.on_frequency(fields[1]):
+                item['rejected'] = 'This aircraft is not on your frequency.'
+                return
             if len(fields) >= 3 and fields[1] in self._meta:
                 if fields[0].upper() == 'ALT' and item.get('level_reference'):
                     self._meta[fields[1]]['level_reference'] = item['level_reference']
@@ -617,7 +622,9 @@ class SimManager:
             ac['position_reference'] = self.airport.NAME if self.airport else 'sector centre'
             if meta.get('direct_fix'):
                 ac['route_names'], ac['actwp'] = [meta['direct_fix']], 0
-            if not self.traffic and not meta.get('initial_contact'):
+            # A paused startup/reset still populates the radar, but must not
+            # enqueue an unsolicited check-in for the broadcaster to voice.
+            if not paused and not self.traffic and not meta.get('initial_contact'):
                 from uuid import uuid4
                 from readback import pilot_report
                 station = self.airport.NAME + ' Approach' if self.airport else 'Control'
@@ -662,7 +669,8 @@ class SimManager:
                 phase = self._ils.phase if self._ils and a['id'] == self._ils.callsign else a.get('phase')
                 if phase not in ('ready','rolling'):
                     a['msaw'] = self.airport.msaw.evaluate(a, phase)
-                a['control_area'] = self.airport.control_areas.observe(a, handed_off=phase == 'complete')
+                a['airspace_alerts'] = self.airport.prohibited_airspace.evaluate(a)
+                a['control_area'] = self.airport.control_areas.observe(a, handed_off=phase in ('complete', 'transferred'))
             a["conflict"] = a["id"] in los
             a["alert"] = "los" if a["id"] in los else ("predicted" if a["id"] in warn else "")
         with self._lock:

@@ -6,7 +6,7 @@ State changes are validated again on the simulation thread before readback.
 import re
 from decimal import Decimal, InvalidOperation
 
-ACTIONS = {'TAKEOFF', 'CONTACT_UNIT', 'CLEAR_LAND', 'CLEAR_ILS', 'CONTACT_TOWER', 'MISSED_INSTRUCTION', 'HOLD_PUBLISHED'}
+ACTIONS = {'DEPARTURE_CLEARANCE', 'READBACK_CORRECT', 'TAKEOFF', 'CONTACT_UNIT', 'CLEAR_LAND', 'CLEAR_ILS', 'CONTACT_TOWER', 'MISSED_INSTRUCTION', 'HOLD_PUBLISHED'}
 RADIO_ACTIONS = {'REPORT', 'SQUAWK', 'QNH', 'DIRECT', 'ACK', 'RUNWAY_HEADING'}
 ACTIONS |= RADIO_ACTIONS
 
@@ -70,6 +70,14 @@ def validate(order, airport, phase, callsign=None):
 
 def readback(order):
     from readback import callsign_telephony, num_words
+    if order['action'] == 'READBACK_CORRECT':
+        return 'roger, ' + callsign_telephony(order['callsign'])
+    if order['action'] == 'DEPARTURE_CLEARANCE':
+        radial = num_words(str(order['radial']).zfill(3))
+        level = num_words(str(order['altitude_ft'] // 100).zfill(3))
+        return (f"departure runway {num_words(order['runway'])}, turn {order['turn']}, "
+                f"establish CCB radial {radial}, climb to flight level {level}, "
+                f"squawk {num_words(order['squawk'])}, {callsign_telephony(order['callsign'])}")
     if order['action'] in RADIO_ACTIONS:
         from readback import spell
         if order['action'] == 'RUNWAY_HEADING':

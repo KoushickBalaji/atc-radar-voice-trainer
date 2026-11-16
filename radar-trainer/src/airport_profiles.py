@@ -25,6 +25,8 @@ class AirportProfile:
         self.FT_PER_NM = FT_PER_NM
         from msaw import MinimumAltitudeMonitor
         self.msaw = MinimumAltitudeMonitor(self)
+        from prohibited_airspace import ProhibitedAirspace
+        self.prohibited_airspace = ProhibitedAirspace(self)
         from control_area import ControlAreas
         self.control_areas = ControlAreas(self)
         from ats_routes import AirportRoutes
@@ -124,7 +126,7 @@ class AirportProfile:
         holds = [dict(p, xy=self.to_nm(*p['position'])) for p in self.holds.values()]
         return dict(ats_routes=self.ats_routes.overlay(), holds=holds, airports=[dict(name=f'{self.ICAO} · {self.NAME}',x=0,y=0)],
                     runways=[dict(self.data['runway'],ends=ends)],navaids=self.navaids(),approach=self.approach_nav(),
-                    center=[self.LAT,self.LON],range_nm=self.display_range(),waypoints=[],fixes=[],routes=[],sector=[],entry_areas=polygons(self),control_areas=self.control_areas.nav(),profile=self.info(), msaw=self.msaw.nav())
+                    center=[self.LAT,self.LON],range_nm=self.display_range(),waypoints=[],fixes=[],routes=[],sector=[],entry_areas=polygons(self),control_areas=self.control_areas.nav(),profile=self.info(), msaw=self.msaw.nav(), prohibited_airspace=self.prohibited_airspace.nav())
 
 
 @lru_cache

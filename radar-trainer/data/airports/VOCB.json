@@ -290,5 +290,47 @@
     "altitude_unit": "ft",
     "altitude_reference": "AMSL"
   },
-  "country_code": "IN"
+  "country_code": "IN",
+  "prohibited_airspace": [
+  {
+    "id": "VOP 190",
+    "name": "Arvankadu",
+    "center": [
+      11.365555555555556,
+      76.76333333333334
+    ],
+    "ceiling_ft": 17500,
+    "sectors": [
+      [
+        60,
+        170,
+        1.25
+      ],
+      [
+        170,
+        60,
+        5
+      ]
+    ],
+    "source": "https://aim-india.aai.aero/eaip/eaip-v2-09-2026/eAIP/IN-ENR%205.1-en-GB.html"
+  },
+{
+  "id": "SLR",
+  "name": "Sulur",
+  "center": [
+    10.94468943012946,
+    77.13868702790118
+  ],
+  "ceiling_ft": 4000,
+  "altitude_reference": "STD",
+  "ceiling_exclusive": true,
+  "rectangle": {
+    "bearing_true": 225.72,
+    "runway_length_ft": 10000,
+    "end_clearance_nm": 4,
+    "width_nm": 4
+  },
+  "source": "User-defined training zone: center 7.5 NM southeast (135 true) of CCB VOR; parallel to VOCB RWY 23; prohibited below FL40."
+}
+]
 }

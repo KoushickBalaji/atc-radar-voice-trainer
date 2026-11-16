@@ -43,6 +43,13 @@ CAPABILITIES = {
     'CLEAR_ILS': capability('Explicit ILS approach clearance with a spoken runway.', {'runway': str}),
     'CLEAR_LAND': capability('Explicit cleared-to-land instruction with a spoken runway.', {'runway': str}),
     'TAKEOFF': capability('Explicit cleared-for-takeoff instruction with a spoken runway.', {'runway': str}),
+    'DEPARTURE_CLEARANCE': capability(
+        'Assign the complete departure clearance now for execution after takeoff: runway, left/right turn, '
+        'outbound CCB radial, climb level and departure squawk. Keep this as ONE order, not separate '
+        'heading/altitude/squawk orders. Convert flight level to feet. This does not authorize takeoff.',
+        {'runway': str, 'turn': Literal['left', 'right'], 'radial': int, 'altitude_ft': int, 'squawk': str},
+        {'radial': (0, 360), 'altitude_ft': (1, 18000)}),
+    'READBACK_CORRECT': capability('Controller confirms the departure readback is correct; does not authorize takeoff.'),
     'CONTACT_TOWER': capability('Contact tower. Preserve spoken station; never infer the airport.',
                                 {'station': str, 'frequency': str}),
     'CONTACT_UNIT': capability('Contact a radio unit other than tower.', {'station': str, 'frequency': str}),
@@ -97,6 +104,9 @@ go-around command. Keep other conditions as other_condition; they are not yet ex
 Represent alternative suggestions as unresolved rather than choosing one or executing both.
 Preserve runway L/R/C suffixes; use two runway digits. Frequencies are MHz strings with three decimal places.
 Holding time is four UTC HHMM digits. Null means a value was not spoken; never invent it.
+Departure clearances are immediate assignments of a future departure route, represented by one
+DEPARTURE_CLEARANCE proposal with immediate timing. Do not infer a missing runway, turn, radial, level or squawk.
+"Readback correct" accompanying an explicit takeoff clearance is represented by TAKEOFF alone.
 Capture out-of-range numbers and climb/descent contradictions as stated: the trainer evaluates them later.
 Do not answer aircraft-data requests yourself. Do not judge exercise state or predict what the controller meant.'''
 
@@ -122,6 +132,8 @@ def check_order(order):
             return f'The interpreted {key} is invalid. Check the transcript and state it explicitly.'
     if action == 'SQUAWK' and not re.fullmatch(r'[0-7]{4}', order['value']):
         return 'A squawk needs four digits from zero to seven, including any leading zeroes.'
+    if action == 'DEPARTURE_CLEARANCE' and not re.fullmatch(r'[0-7]{4}', order['squawk']):
+        return 'A departure squawk needs four digits from zero to seven, including leading zeroes.'
     if action == 'REPORT' and not order['fields']:
         return 'Specify which current aircraft information you want reported.'
     if 'station' in order and not order['station'].strip():

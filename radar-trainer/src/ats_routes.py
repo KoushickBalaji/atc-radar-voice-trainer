@@ -32,6 +32,7 @@ def boundary_exit(start, end, polygon):
 class AirportRoutes:
     def __init__(self, airport):
         self.branches = []
+        self.routes = {}
         path = DATA / (airport.ICAO + '.json')
         if not path.exists():
             return
@@ -40,6 +41,7 @@ class AirportRoutes:
         self.area = area['name']
         self.edition = data['edition']
         self.fixes = data['fixes']
+        self.routes = data['routes']
         for route, record in data['routes'].items():
             for names in record['branches']:
                 points = [airport.to_nm(*self.fixes[name]) for name in names]
@@ -53,6 +55,14 @@ class AirportRoutes:
                     # A route ending inside the area has no next fix beyond an edge.
                     self.branches.append(dict(route=route, via=names[1], outside=None,
                                               fixes=names, points=points))
+
+    def outbound(self, route, via):
+        """Full onward waypoint sequence on one airway, excluding its hub."""
+        branches = self.routes.get(route, {}).get('branches', [])
+        branch = next((names for names in branches if len(names) > 1 and names[1] == via), None)
+        if branch is None:
+            raise ValueError(f'No outbound {route} branch via {via}')
+        return list(branch[1:])
 
     def overlay(self):
         grouped = {}

@@ -18,7 +18,7 @@ function role(a: Aircraft, nav: NavData): 'ARR' | 'DEP' | 'OVR' | null {
   return nav.profile?.approach && a.id === nav.profile.aircraft.callsign ? 'ARR' : null;
 }
 function hasAlert(a: Aircraft, hub: SimHub) {
-  return Boolean(a.alert || a.conflict || a.inzone || a.msaw?.status === 'warning' ||
+  return Boolean(a.airspace_alerts?.length || a.alert || a.conflict || a.inzone || a.msaw?.status === 'warning' ||
     a.control_area?.exit_in_s != null ||
     hub.state.conflicts?.some(pair => pair.includes(a.id)) || hub.state.predicted?.some(p => p.pair.includes(a.id)));
 }
@@ -58,7 +58,7 @@ export default function AircraftHud({ hub, nav, selection: externalSelection, on
               <small>{a.sel_alt_ft == null ? '—' : (a.sel_alt_ft / 1000).toFixed(1)}</small>
             </span>
             <span title="Indicated airspeed, knots">{a.cas_kt ?? '—'}</span><span>{heading(a.hdg)}</span>
-            <span className="hud-badge">{alert ? 'ALERT' : role(a, nav) ?? 'VECT'}</span>
+            <span className="hud-badge">{a.airspace_alerts?.some(z => z.status === 'inside') ? 'VOP INSIDE' : a.airspace_alerts?.length ? 'VOP ENTRY' : alert ? 'ALERT' : role(a, nav) ?? 'VECT'}</span>
           </button>;
         })}
         {!visible.length && <p className="hud-empty">{filter === 'ALL' ? 'Waiting for aircraft…' : `No ${filter === 'ALERT' ? 'aircraft with alerts' : labels[filter].toLowerCase()}.`}</p>}
@@ -107,6 +107,7 @@ function AircraftWarnings({ a, hub }: { a: Aircraft; hub: SimHub }) {
       <p>{conflicts.map(pair => pair.join(' / ')).join(', ') || predicted.map(p => `${p.pair.join(' / ')} · ${p.d} NM in ${p.t} s`).join(', ') || 'Review aircraft separation.'}</p></div>}
     {a.msaw?.status === 'warning' && <div className="hud-message hud-warning" role="alert"><strong>{a.id} · MSAW — LOW ALTITUDE</strong><p>{altitude(a.alt_ft)}; minimum {altitude(a.msaw.minimum_ft)} AMSL. {Math.ceil(a.msaw.deficit_ft).toLocaleString()} ft below minimum.</p></div>}
     {a.control_area?.exit_in_s != null && <div className="hud-message hud-warning" role="alert"><strong>{a.id} · Projected airspace exit</strong><p>{a.control_area.exit_in_s} s to exit · {a.phase === 'handoff_requested' ? 'transfer requested.' : 'reroute.'}</p></div>}
+    {a.airspace_alerts?.map(z => <div key={z.id} className="hud-message" role="alert" style={{color: z.status === 'inside' ? '#ff5868' : '#ffb454'}}><strong>{a.id} · {z.id} · {z.status === 'inside' ? 'PROHIBITED AIRSPACE ENTERED' : 'PROHIBITED AIRSPACE AHEAD'}</strong><p>{z.status === 'inside' ? 'Aircraft is inside the prohibited volume.' : `Predicted entry in ${z.entry_in_s} s on current track and vertical speed.`}</p></div>)}
     {a.inzone && <div className="hud-message hud-warning" role="alert"><strong>{a.id} · Zone alert</strong><p>{a.inzone}</p></div>}
   </>;
 }

@@ -11,7 +11,7 @@ def configure():
     values = dotenv_values(ROOT.parent / '.env')
     key = values.get('OPENAI_API_KEY') or os.environ.get('OPENAI_API_KEY')
     if not key:
-        raise SystemExit('Set OPENAI_API_KEY in D:\\ATC\\.env first.')
+        raise SystemExit(f'Set OPENAI_API_KEY in {ROOT.parent / ".env"} or in the environment first.')
     defaults = {'stt': values.get('OPENAI_TRANSCRIPTION_MODEL') or 'gpt-transcribe',
                 'llm': 'gpt-4.1-mini', 'tts': 'gpt-4o-mini-tts'}
     for service, model in defaults.items():

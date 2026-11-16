@@ -11,6 +11,8 @@ import { DEFAULT_RADAR_OPTIONS } from './radar';
 import { mapMarkers, hiddenMarkerIds } from './mapMarkers';
 import type { NavData } from './types';
 
+const mapLabelsKey = 'atc.showMapLabels';
+
 export default function SimpleApp({ onExit }: { onExit?: () => void } = {}) {
   const hub = useSim();
   const [nav, setNav] = useState<NavData>({ waypoints: [], airports: [], fixes: [], routes: [], sector: [], range_nm: 25, center: [0, 0] });
@@ -24,6 +26,9 @@ export default function SimpleApp({ onExit }: { onExit?: () => void } = {}) {
   const [infoOpen, setInfoOpen] = useState(false);
   const [working, setWorking] = useState(false);
   const [hiddenMarkers, setHiddenMarkers] = useState<string[]>([]);
+  const [showMapLabels, setShowMapLabels] = useState(() => {
+    try { return localStorage.getItem(mapLabelsKey) !== 'false'; } catch { return true; }
+  });
   const [loadedVisibility, setLoadedVisibility] = useState('');
   const visibilityKey = `atc.mapLayers.v2.${profile?.icao ?? ''}`;
   const markers = mapMarkers(nav);
@@ -41,6 +46,10 @@ export default function SimpleApp({ onExit }: { onExit?: () => void } = {}) {
   const changeMarkers = (hidden: string[]) => {
     setHiddenMarkers(hidden);
     try { localStorage.setItem(visibilityKey, JSON.stringify(hidden)); } catch { /* Session-only preference. */ }
+  };
+  const changeMapLabels = (show: boolean) => {
+    setShowMapLabels(show);
+    try { localStorage.setItem(mapLabelsKey, String(show)); } catch { /* Session-only preference. */ }
   };
   useEffect(() => { if (hub.connection === 'connected') void api.nav().then(setNav).catch(e => setError(String(e))); }, [hub.connection, hub.state.airport_id]);
   const act = async (operation: () => Promise<unknown>) => {
@@ -112,26 +121,33 @@ export default function SimpleApp({ onExit }: { onExit?: () => void } = {}) {
     <div className="workspace">
       <main className="radar-stage" aria-label={`${profile?.name ?? "Airport"} radar`}>
         <RadarCanvas key={profile?.icao + (traffic?.id ?? '')} stateRef={hub.stateRef} nav={nav} selected={aircraft?.id ?? null} onSelect={setSelected}
-          placeMode={null} onPlace={() => undefined} options={{...DEFAULT_RADAR_OPTIONS, hiddenMarkers: hiddenMarkerIds(nav, loadedVisibility === visibilityKey ? hiddenMarkers : markers.filter(m => m.defaultHidden).map(m => m.id))}} />
+          placeMode={null} onPlace={() => undefined} options={{...DEFAULT_RADAR_OPTIONS, mapLabels: showMapLabels, hiddenMarkers: hiddenMarkerIds(nav, loadedVisibility === visibilityKey ? hiddenMarkers : markers.filter(m => m.defaultHidden).map(m => m.id))}} />
         <p className="pointer-events-none absolute left-5 top-4 text-sm text-green-100">{profile?.name.toUpperCase()} · {profile?.icao} · {nav.range_nm} NM<br/><span className="text-xs">Scroll to zoom · drag to pan</span></p>
-        <details className="radar-controls group absolute bottom-5 left-5 w-56 max-w-[calc(100%-2.5rem)] overflow-hidden rounded-lg text-[13px] shadow-lg">
-          <summary className="flex list-none items-center gap-2 px-3 py-2.5 font-medium [&::-webkit-details-marker]:hidden">
+        <details className="group absolute bottom-5 left-5 z-10 w-56 max-w-[calc(100%-2.5rem)] text-[13px]">
+          <summary className="radar-controls flex cursor-pointer list-none items-center gap-2 rounded-lg px-3 py-2.5 font-medium shadow-lg [&::-webkit-details-marker]:hidden">
             <Layers2 size={15} aria-hidden="true" />
             <span className="flex-1">Map layers</span>
-            <ChevronDown size={14} aria-hidden="true" className="transition-transform group-open:rotate-180" />
+            <ChevronDown size={14} aria-hidden="true" className="rotate-180 transition-transform group-open:rotate-0" />
           </summary>
-          <div className="flex items-center justify-end gap-1 border-t border-white/10 px-2 py-1">
-            <button className="rounded px-2 py-1 text-xs opacity-75 hover:opacity-100" onClick={() => changeMarkers([])}>Show all</button>
-            <span aria-hidden="true" className="text-white/20">/</span>
-            <button className="rounded px-2 py-1 text-xs opacity-75 hover:opacity-100" onClick={() => changeMarkers(markers.map(m => m.id))}>Hide all</button>
-          </div>
-          <div className="max-h-[40vh] overflow-y-auto px-1.5 pb-1.5">
-            {markers.map(marker => <label key={marker.id} className="flex min-h-8 cursor-pointer items-center gap-2 rounded px-2 hover:bg-white/5">
-              <span aria-hidden="true" className="inline-block w-4 text-center" style={{color: marker.color}}>{marker.symbol}</span>
-              <span className="flex-1">{marker.label}</span>
-              <input type="checkbox" className="h-3.5 w-3.5 shrink-0 cursor-pointer" checked={!hiddenMarkers.includes(marker.id)} onChange={e => changeMarkers(e.target.checked
-                ? hiddenMarkers.filter(id => id !== marker.id) : [...hiddenMarkers, marker.id])} />
-            </label>)}
+          <div className="radar-controls absolute inset-x-0 bottom-full mb-1 rounded-lg shadow-lg">
+            <label className="flex min-h-8 cursor-pointer items-center justify-between gap-2 rounded-t-lg border-b border-white/10 px-3.5 py-2 font-medium hover:bg-white/5">
+              Show map labels
+              <input type="checkbox" className="h-3.5 w-3.5 shrink-0 cursor-pointer" checked={showMapLabels}
+                onChange={e => changeMapLabels(e.target.checked)} />
+            </label>
+            <div className="flex items-center justify-end gap-1 px-2 py-1">
+              <button className="rounded px-2 py-1 text-xs opacity-75 hover:opacity-100" onClick={() => changeMarkers([])}>Show all</button>
+              <span aria-hidden="true" className="text-white/20">/</span>
+              <button className="rounded px-2 py-1 text-xs opacity-75 hover:opacity-100" onClick={() => changeMarkers(markers.map(m => m.id))}>Hide all</button>
+            </div>
+            <div className="max-h-[min(40vh,200px)] overflow-y-auto px-1.5 pb-1.5">
+              {markers.map(marker => <label key={marker.id} className="flex min-h-8 cursor-pointer items-center gap-2 rounded px-2 hover:bg-white/5">
+                <span aria-hidden="true" className="inline-block w-4 text-center" style={{color: marker.color}}>{marker.symbol}</span>
+                <span className="flex-1">{marker.label}</span>
+                <input type="checkbox" className="h-3.5 w-3.5 shrink-0 cursor-pointer" checked={!hiddenMarkers.includes(marker.id)} onChange={e => changeMarkers(e.target.checked
+                  ? hiddenMarkers.filter(id => id !== marker.id) : [...hiddenMarkers, marker.id])} />
+              </label>)}
+            </div>
           </div>
         </details>
       </main>

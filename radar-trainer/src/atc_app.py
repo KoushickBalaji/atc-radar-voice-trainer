@@ -182,6 +182,10 @@ def _execute_instruction(text, interpreted):
 
     # Recheck current simulation state immediately before dispatch.
     snap = SIM.snapshot()
+    unavailable = {a['id'] for a in snap['aircraft'] if a.get('radio_contact') is False or a.get('phase') == 'transferred'}
+    if any(o['callsign'] in unavailable for o in orders):
+        return dict(transcript=text, orders=[], trafscript=[], readback_text='',
+                    rejected=['This aircraft is not on your frequency.'])
     from command_interpreter import CAPABILITIES
     if not simple_demo.ENABLED and any(CAPABILITIES[o['action']].dispatch != 'stack' for o in orders):
         return dict(transcript=text, orders=[], trafscript=[], readback_text='',

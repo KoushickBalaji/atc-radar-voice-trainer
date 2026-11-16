@@ -108,6 +108,49 @@ describe("simulation feed lifecycle", () => {
     act(() => socket.close());
     expect(pause).toHaveBeenCalledTimes(2);
   });
+  it('shares the alarm for incursions and SMAC, silences predictions, pause, stale feed and cleanup', async () => {
+    const play = vi.fn(async () => undefined);
+    const pause = vi.fn();
+    const sources: string[] = [];
+    class FakeAudio {
+      loop = false;
+      play = play;
+      pause = pause;
+      constructor(src: string) { sources.push(src); }
+    }
+    vi.stubGlobal('Audio', FakeAudio);
+    const { unmount } = renderHook(useSim);
+    const socket = FakeSocket.instances[0];
+    act(() => socket.open());
+    let t = 0;
+    const update = async (status?: 'inside' | 'approaching', extra = {}) => {
+      await act(async () => {
+        socket.message({...state(++t), aircraft: [{id: 'AFR123', airspace_alerts: status ? [{id: 'VOP 190', status, entry_in_s: 0}] : []}], ...extra});
+        vi.advanceTimersByTime(300);
+      });
+    };
+    await update('approaching');
+    expect(play).not.toHaveBeenCalled();
+    await update('inside');
+    expect(sources).toEqual(['/separation-alarm.wav']);
+    expect(play.mock.contexts[0]).toMatchObject({loop: true});
+    await update('inside', {conflicts: [['AFR123', 'BAW452']]});
+    await update(undefined, {aircraft: [{id: 'BAW452', msaw: {status: 'warning'}}]});
+    expect(play).toHaveBeenCalledTimes(1);
+    expect(pause).not.toHaveBeenCalled();
+    await update();
+    expect(pause).toHaveBeenCalledTimes(1);
+    await update('inside');
+    await update('inside', {paused: true});
+    expect(pause).toHaveBeenCalledTimes(2);
+    await update('inside');
+    await update('inside', {sim_alive: false});
+    expect(pause).toHaveBeenCalledTimes(3);
+    await update('inside');
+    unmount();
+    expect(play).toHaveBeenCalledTimes(4);
+    expect(pause).toHaveBeenCalledTimes(4);
+  });
   it("logs a pilot call once and ignores delayed audio after handover", async () => {
     const { result } = renderHook(useSim);
     const socket = FakeSocket.instances[0];
