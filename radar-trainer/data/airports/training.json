@@ -1,5 +1,5 @@
 {
-  "transition_altitude_ft": 3000,
+  "transition_altitude_ft": 11000,
   "speed_min_kt": 160,
   "speed_max_kt": 180,
   "altitude_tolerance_ft": 75,

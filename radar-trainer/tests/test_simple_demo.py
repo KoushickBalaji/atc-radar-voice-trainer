@@ -31,8 +31,8 @@ def test_single_aircraft_still_requires_its_complete_spoken_address(address):
 
 def test_readback_uses_configured_level_convention():
     orders = [{'callsign': 'AFR123', 'action': 'ALT', 'value': 8000}]
-    assert demo.readback(orders, 'descend eight thousand feet', {'AFR123': 10000}).startswith('descend flight level zero eight zero')
-    assert demo.readback(orders, 'descend flight level zero eight zero', {'AFR123': 10000}).startswith('descend flight level zero eight zero')
+    assert demo.readback(orders, 'descend eight thousand feet', {'AFR123': 10000}).startswith('descend eight thousand feet')
+    assert demo.readback(orders, 'descend flight level zero eight zero', {'AFR123': 10000}).startswith('descend eight thousand feet')
 
 
 def test_silent_audio_rejected_before_asr():

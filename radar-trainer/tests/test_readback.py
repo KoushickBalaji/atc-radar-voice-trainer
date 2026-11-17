@@ -34,20 +34,20 @@ def test_callsign_telephony_code_inconnu_epele_caractere():
 
 # --- readback_for_order : ALT climb vs descend -------------------------------
 def test_alt_descend_si_altitude_courante_superieure():
-    # avion a 13000 ft, ordre FL100 (10000 ft) -> descend
+    # avion a 13000 ft, ordre 10000 ft (below transition altitude) -> descend
     assert readback_for_order({"action": "ALT", "value": 10000}, 13000) == \
-        "descend flight level one zero zero"
+        "descend one zero thousand feet"
 
 
 def test_alt_climb_si_altitude_courante_inferieure():
     assert readback_for_order({"action": "ALT", "value": 10000}, 5000) == \
-        "climb flight level one zero zero"
+        "climb one zero thousand feet"
 
 
 def test_alt_climb_par_defaut_sans_altitude_courante():
     # sans altitude courante connue, le verbe par defaut est 'climb'
     assert readback_for_order({"action": "ALT", "value": 10000}) == \
-        "climb flight level one zero zero"
+        "climb one zero thousand feet"
 
 
 # --- readback_for_order : HDG / SPD / ADDWPT ---------------------------------
@@ -80,7 +80,7 @@ def test_action_inconnue_renvoie_vide():
 def test_readback_text_simple_avec_telephonie():
     txt = readback_text([{"callsign": "AFR1234", "action": "ALT", "value": 10000}],
                         {"AFR1234": 13000})
-    assert txt == "descend flight level one zero zero, air france one two three four"
+    assert txt == "descend one zero thousand feet, air france one two three four"
 
 
 def test_readback_text_ordres_multiples():

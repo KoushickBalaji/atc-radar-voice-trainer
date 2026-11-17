@@ -13,9 +13,11 @@ from traffic_scenario import TrafficRun, catalogue
 
 def test_level_phraseology_uses_configurable_transition_for_reports_and_readbacks():
     from readback import level_telephony, readback_for_order
-    airport = SimpleNamespace(training={'transition_altitude_ft': 3000})
+    airport = SimpleNamespace(training=dict(get_profile('VOCB').training))
+    assert airport.training['transition_altitude_ft'] == 11000
     assert level_telephony(3000, airport) == 'three thousand feet'
-    assert level_telephony(3100, airport) == 'flight level zero three one'
+    assert level_telephony(11000, airport) == 'one one thousand feet'
+    assert level_telephony(11100, airport) == 'flight level one one one'
     assert level_telephony(13000, airport) == 'flight level one three zero'
     ac = dict(id='AFR123', alt_ft=13000, sel_alt_ft=3000, level_reference='altitude')
     text = pilot_report(ac, ['level', 'cleared_level'], airport=airport)
