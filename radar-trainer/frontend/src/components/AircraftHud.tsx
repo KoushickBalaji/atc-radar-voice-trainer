@@ -10,6 +10,7 @@ const filters: Filter[] = ['ALL', 'ARR', 'DEP', 'ALERT'];
 const labels = { ALL: 'All aircraft', ARR: 'Arrivals', DEP: 'Departures', ALERT: 'Aircraft with alerts' };
 const heading = (value: number) => `${Math.round(value).toString().padStart(3, '0')}°`;
 const altitude = (value: number | null | undefined) => value == null ? '—' : `${Math.round(value).toLocaleString()} ft`;
+const stripLevel = (value: number | null | undefined) => value == null ? '—' : Math.round(value / 100).toString().padStart(3, '0');
 
 // Only the configured ILS exercise has a known inbound role. Vectoring traffic
 // stays unclassified; vertical speed is not an arrival/departure indicator.
@@ -54,8 +55,8 @@ export default function AircraftHud({ hub, nav, selection: externalSelection, on
             <span className="hud-dot" aria-hidden="true" />
             <strong>{a.id}</strong>
             <span className="hud-strip-alt" title={`Altitude ${altitude(a.alt_ft)}; cleared ${altitude(a.sel_alt_ft)}`}>
-              <span>{(a.alt_ft / 1000).toFixed(1)}<Trend size={11} aria-hidden="true" /></span>
-              <small>{a.sel_alt_ft == null ? '—' : (a.sel_alt_ft / 1000).toFixed(1)}</small>
+              <span>{stripLevel(a.alt_ft)}<Trend size={11} aria-hidden="true" /></span>
+              <small>{stripLevel(a.sel_alt_ft)}</small>
             </span>
             <span title="Indicated airspeed, knots">{a.cas_kt ?? '—'}</span><span>{heading(a.hdg)}</span>
             <span className="hud-badge">{a.airspace_alerts?.some(z => z.status === 'inside') ? 'VOP INSIDE' : a.airspace_alerts?.length ? 'VOP ENTRY' : alert ? 'ALERT' : role(a, nav) ?? 'VECT'}</span>

@@ -205,7 +205,7 @@ def _execute_instruction(text, interpreted):
         if orders and orders[0].get('action') == 'REPORT':
             ac = next(a for a in snap['aircraft'] if a['id'] == orders[0]['callsign'])
             return dict(transcript=text, orders=orders, trafscript=[], rejected=[],
-                        readback_text=RB.pilot_report(ac, orders[0]['fields']))
+                        readback_text=RB.pilot_report(ac, orders[0]['fields'], airport=SIM.airport))
         if orders and orders[0].get('action') in approach_radio.ACTIONS:
             from ils_trainer import TOO_HIGH
             from readback import callsign_telephony
@@ -216,7 +216,7 @@ def _execute_instruction(text, interpreted):
                             readback_text=f"{callsign_telephony(orders[0]['callsign'])}, {problem}")
             return dict(transcript=text, orders=[] if problem else orders, trafscript=[],
                         rejected=[problem] if problem else [],
-                        readback_text='' if problem else approach_radio.readback(orders[0]))
+                        readback_text='' if problem else approach_radio.readback(orders[0], SIM.airport))
         if (snap.get('ils') or {}).get('phase') in ('handoff_ready', 'complete', 'approach_complete', 'missed', 'missed_finished', 'missed_fix_altitude'):
             return dict(transcript=text, orders=[], trafscript=[],
                         rejected=['Approach stage paused. Complete the tower handoff or reset the exercise.'], readback_text='')
@@ -249,9 +249,9 @@ def _execute_instruction(text, interpreted):
             SIM.enqueue(line)
     if EX.active:
         EX.note_command(text, len(lines), len(rejected))
-    rb = RB.readback_text(orders, cur_alt)
+    rb = RB.readback_text(orders, cur_alt, SIM.airport)
     if simple_demo.ENABLED:
-        rb = simple_demo.readback(orders, text, cur_alt)
+        rb = simple_demo.readback(orders, text, cur_alt, SIM.airport)
     return {"transcript": text, "orders": orders, "trafscript": lines,
             "rejected": rejected, "readback_text": rb}
 

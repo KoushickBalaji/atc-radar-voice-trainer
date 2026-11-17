@@ -26,7 +26,12 @@ def num_words(s):
 
 
 def spell(s):
-    return " ".join(LETTER.get(c.upper(), c) for c in str(s) if c.isalnum())
+    return " ".join(WORD.get(c, LETTER.get(c.upper(), c)) for c in str(s) if c.isalnum())
+
+
+def route_telephony(route):
+    """Speak route designators explicitly before sending them to TTS."""
+    return spell(route)
 
 
 def callsign_telephony(cs):
@@ -42,12 +47,25 @@ def callsign_telephony(cs):
     return " ".join(out)
 
 
-def readback_for_order(o, cur_alt_ft=None):
+def level_telephony(value, airport=None):
+    """Prototype level convention, configurable globally and per airport."""
+    if airport is None:
+        from airport_profiles import get_profile
+        airport = get_profile()
+    if value > airport.training['transition_altitude_ft']:
+        return 'flight level ' + num_words(f'{round(value / 100):03d}')
+    thousands, rest = divmod(round(value / 100) * 100, 1000)
+    words = (num_words(thousands) + ' thousand ' if thousands else '')
+    words += (num_words(rest // 100) + ' hundred ' if rest else '')
+    return (words.strip() or 'zero') + ' feet'
+
+
+def readback_for_order(o, cur_alt_ft=None, airport=None):
     a = str(o.get("action", "")).upper()
     if a == "ALT":
         v = int(o.get("value", 0))
         verb = "maintain" if cur_alt_ft is not None and abs(v-cur_alt_ft) < 50 else ("descend" if (cur_alt_ft is not None and v < cur_alt_ft) else "climb")
-        return f"{verb} flight level {num_words(str(v // 100).zfill(3))}"
+        return f"{verb} {level_telephony(v, airport)}"
     if a == "HDG":
         return f"heading {num_words(str(int(o.get('value', 0))).zfill(3))}"
     if a == "SPD":
@@ -57,7 +75,7 @@ def readback_for_order(o, cur_alt_ft=None):
     return ""
 
 
-def pilot_report(ac, fields, station=None):
+def pilot_report(ac, fields, station=None, airport=None):
     """Speak only measured/configured simulator data; absent data stays unavailable."""
     import math
     phrases = []
@@ -69,14 +87,7 @@ def pilot_report(ac, fields, station=None):
                'squawk':'squawk', 'qnh':'qnh', 'type':'type'}.get(field)
         value = ac.get(key) if key else None
         if field in ('level', 'cleared_level') and value is not None:
-            if ac.get('level_reference') == 'flight_level':
-                phrase = 'flight level ' + num_words(f'{round(value/100):03d}')
-            else:
-                hundreds = round(value/100)*100
-                thousands, rest = divmod(hundreds, 1000)
-                phrase = (num_words(thousands)+' thousand ' if thousands else '')
-                phrase += (num_words(rest//100)+' hundred ' if rest else '')
-                phrase = phrase.strip() + ' feet'
+            phrase = level_telephony(value, airport)
             phrases.append(('cleared ' if field == 'cleared_level' else '') + phrase)
         elif field == 'position' and ac.get('x') is not None and ac.get('y') is not None:
             bearing = round(math.degrees(math.atan2(ac['x'], ac['y']))) % 360
@@ -100,7 +111,7 @@ def pilot_report(ac, fields, station=None):
     return (station + ', ' if station else '') + callsign_telephony(ac['id']) + ', ' + ', '.join(phrases)
 
 
-def readback_text(orders, cur_alt=None):
+def readback_text(orders, cur_alt=None, airport=None):
     """Collationnement du PREMIER indicatif uniquement : une transmission
     radio s'adresse a un seul aeronef (les ordres d'autres indicatifs dans le
     meme lot ne sont ni melanges ni collationnes avec la mauvaise altitude)."""
@@ -109,7 +120,7 @@ def readback_text(orders, cur_alt=None):
         return ""
     cs = orders[0].get("callsign", "")
     mine = [o for o in orders if o.get("callsign", "") == cs]
-    phr = [p for p in (readback_for_order(o, cur_alt.get(cs)) for o in mine) if p]
+    phr = [p for p in (readback_for_order(o, cur_alt.get(cs), airport) for o in mine) if p]
     if not phr:
         return ""
     return ", ".join(phr) + ", " + callsign_telephony(cs)

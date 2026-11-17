@@ -7,6 +7,28 @@ import type { SimHub } from '../src/useSim';
 
 vi.mock('../src/components/RadioPanel', () => ({ default: () => <button>Hold to talk</button> }));
 afterEach(cleanup);
+
+it('shows whole hundreds of feet and follows cleared and measured level updates separately', () => {
+  const hub = fixture();
+  hub.state.aircraft = [aircraft('ARR123', {alt_ft: 13000, sel_alt_ft: 14000})];
+  const view = render(<AircraftHud hub={hub} nav={nav} />);
+  const row = () => within(screen.getByRole('button', {name: 'Select ARR123'}));
+  expect(row().getByText('130')).toBeTruthy();
+  expect(row().getByText('140')).toBeTruthy();
+  hub.state.aircraft = [aircraft('ARR123', {alt_ft: 13000, sel_alt_ft: 12000})];
+  view.rerender(<AircraftHud hub={hub} nav={nav} />);
+  expect(row().getByText('130')).toBeTruthy();
+  expect(row().getByText('120')).toBeTruthy();
+  expect(row().queryByText('140')).toBeNull();
+  hub.state.aircraft = [aircraft('ARR123', {alt_ft: 12800, sel_alt_ft: 12000})];
+  view.rerender(<AircraftHud hub={hub} nav={nav} />);
+  expect(row().getByText('128')).toBeTruthy();
+  expect(row().getByText('120')).toBeTruthy();
+  hub.state.aircraft = [aircraft('ARR123', {alt_ft: 5000, sel_alt_ft: undefined})];
+  view.rerender(<AircraftHud hub={hub} nav={nav} />);
+  expect(row().getByText('050')).toBeTruthy();
+  expect(row().getByText('—')).toBeTruthy();
+});
 const nav = { profile: { icao: 'TEST', aircraft: { callsign: 'ARR123' }, approach: { runway: '23' } } } as NavData;
 const aircraft = (id: string, overrides: Partial<Aircraft> = {}): Aircraft => ({
   id, type: 'A320', x: 0, y: 0, lat: 0, lon: 0, hdg: 90, trk: 90, alt_ft: 5000, fl: 50,

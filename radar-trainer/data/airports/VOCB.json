@@ -321,7 +321,7 @@
     10.94468943012946,
     77.13868702790118
   ],
-  "ceiling_ft": 4000,
+  "ceiling_ft": 3000,
   "altitude_reference": "STD",
   "ceiling_exclusive": true,
   "rectangle": {
@@ -330,7 +330,7 @@
     "end_clearance_nm": 4,
     "width_nm": 4
   },
-  "source": "User-defined training zone: center 7.5 NM southeast (135 true) of CCB VOR; parallel to VOCB RWY 23; prohibited below FL40."
+  "source": "User-defined training zone: center 7.5 NM southeast (135 true) of CCB VOR; parallel to VOCB RWY 23; prohibited below FL30."
 }
 ]
 }

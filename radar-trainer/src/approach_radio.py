@@ -68,15 +68,15 @@ def validate(order, airport, phase, callsign=None):
     return None
 
 
-def readback(order):
-    from readback import callsign_telephony, num_words
+def readback(order, airport=None):
+    from readback import callsign_telephony, num_words, level_telephony
     if order['action'] == 'READBACK_CORRECT':
         return 'roger, ' + callsign_telephony(order['callsign'])
     if order['action'] == 'DEPARTURE_CLEARANCE':
         radial = num_words(str(order['radial']).zfill(3))
-        level = num_words(str(order['altitude_ft'] // 100).zfill(3))
+        level = level_telephony(order['altitude_ft'], airport)
         return (f"departure runway {num_words(order['runway'])}, turn {order['turn']}, "
-                f"establish CCB radial {radial}, climb to flight level {level}, "
+                f"establish CCB radial {radial}, climb to {level}, "
                 f"squawk {num_words(order['squawk'])}, {callsign_telephony(order['callsign'])}")
     if order['action'] in RADIO_ACTIONS:
         from readback import spell
@@ -97,12 +97,8 @@ def readback(order):
         phrase = 'proceed to ' + spell(order['fix'])
         if order['altitude_ft'] is not None:
             altitude = order['altitude_ft']
-            thousands, remainder = divmod(altitude, 1000)
-            words = ([num_words(thousands)+' thousand'] if thousands else [])
-            if remainder:
-                words.append(num_words(remainder//100)+' hundred' if remainder%100 == 0 else num_words(remainder))
             verb = order.get('level_verb')
-            phrase += ', ' + (verb+' to ' if verb else 'maintain ') + ' '.join(words) + ' feet'
+            phrase += ', ' + (verb+' to ' if verb else 'maintain ') + level_telephony(altitude, airport)
         phrase += ', hold as published'
         if order['expected']:
             kind = 'approach' if order.get('expect_approach') else 'further'
@@ -110,7 +106,7 @@ def readback(order):
         return phrase + ', ' + callsign_telephony(order['callsign'])
     if order['action'] == 'MISSED_INSTRUCTION':
         phrase = ('fly heading '+num_words(str(order['value']).zfill(3)) if order['axis']=='HDG'
-                  else 'climb to '+num_words(str(order['value']))+' feet')
+                  else 'climb to '+level_telephony(order['value'], airport))
         return 'on missed approach, '+phrase+', '+callsign_telephony(order['callsign'])
     if order['action'] in ('CLEAR_ILS', 'TAKEOFF', 'CLEAR_LAND'):
         runway = order['runway']

@@ -11,6 +11,52 @@ from simple_demo import validate
 from traffic_scenario import TrafficRun, catalogue
 
 
+def test_level_phraseology_uses_configurable_transition_for_reports_and_readbacks():
+    from readback import level_telephony, readback_for_order
+    airport = SimpleNamespace(training={'transition_altitude_ft': 3000})
+    assert level_telephony(3000, airport) == 'three thousand feet'
+    assert level_telephony(3100, airport) == 'flight level zero three one'
+    assert level_telephony(13000, airport) == 'flight level one three zero'
+    ac = dict(id='AFR123', alt_ft=13000, sel_alt_ft=3000, level_reference='altitude')
+    text = pilot_report(ac, ['level', 'cleared_level'], airport=airport)
+    assert 'flight level one three zero' in text
+    assert 'cleared three thousand feet' in text
+    airport.training['transition_altitude_ft'] = 14000
+    assert level_telephony(13000, airport) == 'one three thousand feet'
+    assert readback_for_order(dict(action='ALT', value=13000), 15000, airport) == 'descend one three thousand feet'
+
+
+def test_arrival_checkin_uses_level_convention():
+    airport = get_profile('VOCB')
+    run = TrafficRun(airport, catalogue(airport)['routine-23'])
+    run.schedule(1000, lambda *args: None, lambda line: None)
+    for cs, level in run.release_levels.items():
+        text = next(c['text'] for c in run.calls if c['callsign'] == cs)
+        assert 'maintaining flight level ' in text
+        assert f'{level} feet' not in text
+
+
+def test_all_arrival_route_calls_expand_designators_before_tts():
+    from readback import route_telephony
+    assert route_telephony('W118') == 'whiskey one one eight'
+    assert route_telephony('R461') == 'romeo four six one'
+    airport = get_profile('VOCB')
+    for spec in catalogue(airport).values():
+        run = TrafficRun(airport, spec)
+        run.schedule(max(f.at_s for f in spec.flights), lambda *args: None, lambda line: None)
+        for flight in spec.flights:
+            if flight.role == 'arrival' and flight.route:
+                text = next(c['text'] for c in run.calls if c['callsign'] == flight.callsign)
+                assert f'on {route_telephony(flight.route)} ' in text
+                assert flight.route not in text
+
+
+def test_requested_route_reports_expand_letters_and_digits():
+    text = pilot_report(dict(id='AFR123', route_names=['W118', 'R461'], actwp=0), ['route'])
+    assert 'whiskey one one eight' in text
+    assert 'romeo four six one' in text
+
+
 @pytest.mark.parametrize('action,key,value,text', [
     ('REPORT','fields',['level','speed'],'report level and speed'),
     ('SQUAWK','value','0421','squawk zero four two one'),

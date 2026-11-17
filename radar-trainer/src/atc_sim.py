@@ -629,7 +629,7 @@ class SimManager:
                 from readback import pilot_report
                 station = self.airport.NAME + ' Approach' if self.airport else 'Control'
                 self._radio_calls.append(dict(id=uuid4().hex, callsign=ac['id'],
-                    text=pilot_report(ac, ['position', 'level', 'cleared_level'], station)))
+                    text=pilot_report(ac, ['position', 'level', 'cleared_level'], station, self.airport)))
                 meta['initial_contact'] = True
         if self.traffic:
             for ac in acs.copy():

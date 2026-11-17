@@ -393,3 +393,7 @@ phraseology standards. The phraseology knowledge base is made of concise factual
 for this project, not a reproduction of any protected document.
 
 Author: Nicolas Marano. Internship in Artificial Intelligence and Air Traffic Control, 2026.
+
+### Pilot level phraseology
+
+The prototype uses `transition_altitude_ft` in `data/airports/training.json` (currently 3000 feet): levels above this value are spoken as flight levels; levels at or below it are spoken in feet. Override this setting for an airport with `training_overrides.transition_altitude_ft` in its airport JSON. Restart the backend after changing it. This is a prototype convention, not a pressure-dependent transition-layer model. ALT / CLRD strips show whole hundreds of feet, with actual and selected levels updated from simulator snapshots.

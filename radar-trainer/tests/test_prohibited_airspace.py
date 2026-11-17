@@ -55,12 +55,13 @@ def sulur_aircraft(along=0, cross=0, **kwargs):
     a = math.radians(zone['rectangle']['bearing_true'])
     u, v = math.sin(a), math.cos(a)
     lat, lon = p.from_nm(cx+along*u+cross*v, cy+along*v-cross*u)
-    return dict(lat=lat, lon=lon, alt_ft=3500, pressure_alt_ft=3500, trk=225.72, gs=0, vs_fpm=0) | kwargs
+    return dict(lat=lat, lon=lon, alt_ft=2500, pressure_alt_ft=2500, trk=225.72, gs=0, vs_fpm=0) | kwargs
 
 
 def test_sulur_geometry():
     p = get_profile('VOCB')
     zone = next(z for z in p.nav()['prohibited_airspace'] if z['id'] == 'SLR')
+    assert zone['ceiling_ft'] == 3000  # Radar FL30/GND label uses this payload.
     ccb = p.to_nm(p.data['navaids'][0]['lat'], p.data['navaids'][0]['lon'])
     dx, dy = (zone['label'][i]-ccb[i] for i in range(2))
     assert math.hypot(dx, dy) == pytest.approx(7.5)
@@ -79,14 +80,15 @@ def test_sulur_limits_and_prediction():
     assert evaluate(sulur_aircraft(half, 2))[0]['id'] == 'SLR'
     assert not evaluate(sulur_aircraft(half+.001))
     assert not evaluate(sulur_aircraft(cross=2.001))
-    assert evaluate(sulur_aircraft(pressure_alt_ft=3999, alt_ft=4200))[0]['status'] == 'inside'
-    assert not evaluate(sulur_aircraft(pressure_alt_ft=4000))
+    assert evaluate(sulur_aircraft(pressure_alt_ft=2999, alt_ft=3200))[0]['status'] == 'inside'
+    assert not evaluate(sulur_aircraft(pressure_alt_ft=3000))
+    assert not evaluate(sulur_aircraft(pressure_alt_ft=3500))
     assert not evaluate(sulur_aircraft(pressure_alt_ft=None))
     snapshot = sulur_aircraft()
     del snapshot['pressure_alt_ft']
     assert evaluate(snapshot)[0]['status'] == 'inside'
     assert evaluate(sulur_aircraft(-half-1, gs=120))[0]['entry_in_s'] == 30
-    assert evaluate(sulur_aircraft(pressure_alt_ft=4500, vs_fpm=-1000))[0]['entry_in_s'] == 30
-    assert not evaluate(sulur_aircraft(pressure_alt_ft=5000, vs_fpm=-1000))
+    assert evaluate(sulur_aircraft(pressure_alt_ft=3500, vs_fpm=-1000))[0]['entry_in_s'] == 30
+    assert not evaluate(sulur_aircraft(pressure_alt_ft=4000, vs_fpm=-1000))
     assert not evaluate(sulur_aircraft(-half-1, gs=120, trk=45.72))
     assert evaluate(sulur_aircraft(-half-1, gs=2000))[0]['status'] == 'approaching'

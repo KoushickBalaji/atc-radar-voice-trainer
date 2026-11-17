@@ -8,7 +8,7 @@ from uuid import uuid4
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from ils_trainer import ILSTrainer
 from holding import TERMINAL_SEPARATION_FT
-from readback import callsign_telephony, pilot_report, num_words
+from readback import callsign_telephony, pilot_report, num_words, route_telephony, level_telephony
 from msaw import contains
 
 DATA = Path(__file__).resolve().parents[1] / 'data' / 'traffic'
@@ -228,12 +228,12 @@ class TrafficRun:
                             lat, lon = routes.fixes[fix]
                             command(f'ADDWPT {cs} {lat:.7f},{lon:.7f}')
                         command(f'LNAV {cs} ON')
-                        level = 'flight level ' + num_words(f'{round(altitude/100):03d}') if f.contact_fl else f'{altitude} feet'
-                        position = f"on {f.route} from {entry['outside']} inbound to {entry['inbound'][0]}, maintaining {level}"
+                        level = level_telephony(altitude, self.airport)
+                        position = f"on {route_telephony(f.route)} from {entry['outside']} inbound to {entry['inbound'][0]}, maintaining {level}"
                     else:
                         lat, lon = self.airport.from_nm(*self.airport.approach_point(f.along_nm, f.cross_nm))
                         create(cs, f.type, lat, lon, self.airport.COURSE, self.airport.INTERCEPT_ALT_FT, f.speed_kt)
-                        position = f'{f.along_nm:g} miles final, maintaining {self.airport.INTERCEPT_ALT_FT} feet'
+                        position = f'{f.along_nm:g} miles final, maintaining {level_telephony(self.airport.INTERCEPT_ALT_FT, self.airport)}'
                     self.phase[cs] = 'awaiting_clearance'
                     station = 'Training Control' if f.contact_fl else self.airport.NAME + ' Approach'
                     self.announce(f, f'{station}, {spoken}, {position}, assigned speed {num_words(round(f.speed_kt))} knots.')
@@ -292,7 +292,7 @@ class TrafficRun:
                 self.entered.add(cs)
             if self.phase[cs] == 'inbound' and (inside or math.hypot(ac['x'], ac['y']) <= f.contact_nm):
                 self.phase[cs] = 'transiting'
-                self.announce(f, pilot_report(ac, ['position', 'level', 'heading'], f.initial_station or self.airport.NAME + ' Tower'))
+                self.announce(f, pilot_report(ac, ['position', 'level', 'heading'], f.initial_station or self.airport.NAME + ' Tower', self.airport))
             if cs in self.entered:
                 due = f.transfer_required and self.near_exit(ac, f.area, f.lead_s)
                 if self.phase[cs] != 'transferred' and due and self.phase[cs] == 'transiting':
@@ -439,7 +439,7 @@ class TrafficRun:
                 if ac is None:
                     return 'Aircraft unavailable.'
                 self.approach_contacted.add(cs)
-                self.announce(f, pilot_report(ac, ['position','level','cleared_level'], f.station))
+                self.announce(f, pilot_report(ac, ['position','level','cleared_level'], f.station, self.airport))
                 return None
             if not isinstance(f, Outbound) or phase not in ('climbing', 'transiting', 'handoff_requested'):
                 return 'The receiving unit has not accepted transfer.'

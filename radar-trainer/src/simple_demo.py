@@ -23,22 +23,15 @@ def validate_audio(wav):
         raise ValueError('No audible speech. Check your microphone and transmit again.')
 
 
-def readback(orders, text, altitudes):
+def readback(orders, text, altitudes, airport=None):
     import readback as rb
     phrases = []
     for order in orders:
-        phrase = rb.readback_for_order(order, altitudes.get(order['callsign']))
+        phrase = rb.readback_for_order(order, altitudes.get(order['callsign']), airport)
         if order['action'] == 'HDG':
             direction = re.search(r'\b(left|right)\b', text, re.I)
             if direction:
                 phrase = 'turn ' + direction.group(1).lower() + ' ' + phrase
-        if order['action'] == 'ALT' and not re.search(r'\bflight\s+level\b|\bFL\s*\d', text, re.I):
-            value = int(order['value'])
-            thousands, remainder = divmod(value, 1000)
-            spoken = rb.num_words(thousands) + ' thousand' if thousands else ''
-            if remainder:
-                spoken += ' ' + rb.num_words(remainder // 100) + ' hundred'
-            phrase = phrase.split(' flight level')[0] + ' ' + spoken.strip() + ' feet'
         phrases.append(phrase)
     return ', '.join(phrases) + ', ' + rb.callsign_telephony(orders[0]['callsign']) if orders else ''
 
