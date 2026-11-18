@@ -183,6 +183,7 @@ export default function SimpleApp({ onExit }: { onExit?: () => void } = {}) {
               msaw.status === 'warning' ? `${aircraft?.id}: ${Math.round(aircraft?.alt_ft ?? 0).toLocaleString()} ft; minimum ${msaw.minimum_ft?.toLocaleString()} ft AMSL. ${Math.ceil(msaw.deficit_ft).toLocaleString()} ft below minimum.` :
               msaw.status === 'clear' ? `At or above the ${msaw.minimum_ft?.toLocaleString()} ft AMSL vectoring minimum here.` :
               msaw.status === 'approach_suspended' ? 'SMAC check suspended while the aircraft tracks the expected ILS profile. Monitoring resumes on deviation or go-around.' :
+              msaw.status === 'departure_suspended' ? 'SMAC check suspended during initial takeoff climb. Monitoring resumes at the assigned altitude or if the climb stops.' :
               msaw.status === 'outside_coverage' ? 'Outside the charted SMAC coverage — minimum unknown.' :
               msaw.status === 'invalid_position' ? 'Monitoring unavailable — invalid aircraft position or altitude.' :
               'SMAC data has not been configured for this airport.'}</p>

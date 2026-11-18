@@ -100,6 +100,72 @@ def test_departure_tracks_radial_and_manual_heading_cancels_guidance():
     assert not commands
 
 
+def departing_run():
+    airport, run = run_ready()
+    run.procedure(CLEARANCE, 40, [])
+    run.procedure(dict(action='TAKEOFF', callsign='BAW452', runway='23'), 40, [])
+    created = []
+    run.schedule(80, lambda *args: created.append(args), lambda line: None)
+    state = next(a for a in created if a[0] == 'BAW452')
+    ac = aircraft(airport, state[0], *airport.to_nm(state[2], state[3]),
+                  alt_ft=state[5], vs_fpm=0)
+    return airport, run, ac
+
+
+def test_takeoff_msaw_tracks_climb_across_sector_minima():
+    airport, run, ac = departing_run()
+    assert airport.msaw.evaluate(ac)['status'] == 'warning'
+    assert run.evaluate_msaw(ac, 'climbing')['status'] == 'departure_suspended'
+    ac.update(vs_fpm=1500, alt_ft=3500, lat=11.02, lon=77.27)
+    assert run.evaluate_msaw(ac, 'climbing')['status'] == 'clear'
+    ac.update(lat=10.90, lon=76.97, alt_ft=4500)
+    result = run.evaluate_msaw(ac, 'transferred')
+    assert result['minimum_ft'] == 5800
+    assert result['status'] == 'departure_suspended'
+    # No time or distance cutoff in a farther, higher-minimum sector.
+    run.elapsed += 600
+    ac.update(lat=11.17, lon=76.63, alt_ft=8000)
+    assert run.evaluate_msaw(ac, 'climbing')['status'] == 'departure_suspended'
+    ac['alt_ft'] = CLEARANCE['altitude_ft']
+    assert run.evaluate_msaw(ac, 'climbing')['status'] == 'warning'
+    ac['alt_ft'] -= 100
+    assert run.evaluate_msaw(ac, 'climbing')['status'] == 'warning'
+
+
+@pytest.mark.parametrize('rate', [0, -100, None, float('nan')])
+def test_initial_climb_exemption_ends_on_interruption(rate):
+    airport, run, ac = departing_run()
+    ac['vs_fpm'] = 1500
+    assert run.evaluate_msaw(ac, 'climbing')['status'] == 'departure_suspended'
+    ac['vs_fpm'] = rate
+    assert run.evaluate_msaw(ac, 'climbing')['status'] == 'warning'
+    ac['vs_fpm'] = 1500
+    assert run.evaluate_msaw(ac, 'climbing')['status'] == 'warning'
+
+
+@pytest.mark.parametrize('target', [2000, 10000])
+def test_departure_msaw_uses_revised_assigned_altitude(target):
+    airport, run, ac = departing_run()
+    ac.update(vs_fpm=1500, sel_alt_ft=target, lat=11.17, lon=76.63,
+              alt_ft=target - 100)
+    assert run.evaluate_msaw(ac, 'climbing')['status'] == 'departure_suspended'
+    ac['alt_ft'] = target
+    assert run.evaluate_msaw(ac, 'climbing')['status'] == 'warning'
+
+
+def test_rotation_zero_rate_is_allowed_only_for_first_sample():
+    _, run, ac = departing_run()
+    assert run.evaluate_msaw(ac, 'climbing')['status'] == 'departure_suspended'
+    assert run.evaluate_msaw(ac, 'climbing')['status'] == 'warning'
+
+
+def test_climbing_phase_without_takeoff_does_not_suppress_msaw():
+    airport, run = run_ready()
+    for cs in ('BAW452', 'UAE681'):
+        ac = aircraft(airport, cs, alt_ft=1500, vs_fpm=1500)
+        assert run.evaluate_msaw(ac, 'climbing')['status'] == 'warning'
+
+
 @pytest.mark.parametrize('cs,station,frequency', [('BAW452', 'Kochi', '128.300'), ('UAE681', 'HAL', '127.700')])
 def test_early_transfer_retains_track_and_blocks_all_radio(cs, station, frequency):
     airport, run = run_ready()

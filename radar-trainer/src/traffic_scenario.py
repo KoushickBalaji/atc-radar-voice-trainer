@@ -161,6 +161,7 @@ class TrafficRun:
         self.departure_confirmed = set()
         self.departure_navigation = set()
         self.departure_turn_complete = set()
+        self.initial_climbs = {}
         # Start unattended arrivals at separated levels in expected fix-arrival order.
         self.pending_holds = {}
         self.release_levels = {}
@@ -260,6 +261,7 @@ class TrafficRun:
                     if cs not in self.departure_clearances:
                         command(f'HDG {cs} {f.departure_heading}')
                     self.phase[cs] = 'climbing'
+                    self.initial_climbs[cs] = dict(rotation_pending=True)
                 else:
                     ground.append(state)
         return ground
@@ -319,6 +321,33 @@ class TrafficRun:
         ac.update(role=f.role, phase=self.phase[cs], radio_contact=self.on_frequency(cs))
         if cs in self.departure_clearances:
             ac['departure_clearance'] = dict(self.departure_clearances[cs], verified=cs in self.departure_confirmed)
+
+    def evaluate_msaw(self, ac, phase):
+        """Suspend departure warnings until assigned altitude or interrupted climb.
+
+        Area minima and coverage boundaries do not end initial-climb tracking.
+        The first rotation sample can have zero vertical rate before BlueSky
+        applies the climb command; subsequent samples must be climbing.
+        """
+        result = self.airport.msaw.evaluate(ac, phase)
+        climb = self.initial_climbs.get(ac['id'])
+        if climb is None:
+            return result
+        target = ac.get('sel_alt_ft')
+        if target is None:
+            target = self.flights[ac['id']].climb_ft
+        altitude = ac.get('alt_ft')
+        rate = ac.get('vs_fpm')
+        valid = all(isinstance(v, (int, float)) and math.isfinite(v)
+                    for v in (target, altitude, rate))
+        climbing = valid and (rate > 0 or (rate == 0 and climb['rotation_pending']))
+        climb['rotation_pending'] = False
+        if not climbing or altitude >= target:
+            del self.initial_climbs[ac['id']]
+            return result
+        if result['status'] == 'warning':
+            return dict(result, status='departure_suspended', deficit_ft=0)
+        return result
 
     def on_frequency(self, cs):
         return self.phase.get(cs) not in (None, 'scheduled', 'inbound', 'transferred', 'complete')

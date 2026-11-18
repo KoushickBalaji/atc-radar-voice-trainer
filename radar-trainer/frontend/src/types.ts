@@ -6,7 +6,7 @@ export interface Aircraft {
   phase?: string;
   ils?: SimState['ils'];
   control_area?: {status: string; areas: string[]; uncertain: string[]; exit_in_s?: number | null};
-  msaw?: {status: 'warning' | 'clear' | 'unavailable' | 'outside_coverage' | 'approach_suspended' | 'invalid_position'; minimum_ft: number | null; deficit_ft: number; regions: string[]};
+  msaw?: {status: 'warning' | 'clear' | 'unavailable' | 'outside_coverage' | 'approach_suspended' | 'departure_suspended' | 'invalid_position'; minimum_ft: number | null; deficit_ft: number; regions: string[]};
   id: string;
   x: number;          // NM est, autour du centre secteur
   y: number;          // NM nord

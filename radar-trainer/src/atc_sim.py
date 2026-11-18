@@ -668,7 +668,8 @@ class SimManager:
             if self.airport:
                 phase = self._ils.phase if self._ils and a['id'] == self._ils.callsign else a.get('phase')
                 if phase not in ('ready','rolling'):
-                    a['msaw'] = self.airport.msaw.evaluate(a, phase)
+                    a['msaw'] = (self.traffic.evaluate_msaw(a, phase) if self.traffic
+                                 else self.airport.msaw.evaluate(a, phase))
                 a['airspace_alerts'] = self.airport.prohibited_airspace.evaluate(a)
                 a['control_area'] = self.airport.control_areas.observe(a, handed_off=phase in ('complete', 'transferred'))
             a["conflict"] = a["id"] in los
